@@ -1229,14 +1229,10 @@ export function EmptyChatBody({ composer }: { readonly composer?: ReactNode }) {
     <div className="flex min-h-0 flex-1 flex-col pt-14 md:pt-8">
       <div className="flex min-h-0 flex-1 items-center justify-center">
         <div className="w-full max-w-2xl space-y-8 sm:space-y-10 md:space-y-12">
-          <h1 className="flex justify-center">
-            <img
-              alt="eve"
-              className="size-16 select-none invert sm:size-20 md:size-24 dark:invert-0"
-              draggable={false}
-              src="/eve.svg"
-            />
-          </h1>
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Business World Agent</h1>
+            <p className="text-sm text-muted-foreground sm:text-base">基于真实输入进行经营分析。</p>
+          </div>
           {composer}
         </div>
       </div>

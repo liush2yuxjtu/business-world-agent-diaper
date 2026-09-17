@@ -404,7 +404,7 @@ export function SessionChatPage({
             onChange={setDraft}
             onStop={handleComposerStop}
             onSubmit={handleComposerSubmit}
-            placeholder="Ask anything..."
+            placeholder="继续输入业务问题..."
             value={draft}
           />
         </div>
@@ -468,7 +468,7 @@ function getSessionComposerDisabledReason({
   }
 
   if (controllerStatus.isBusy) {
-    return "eve is responding.";
+    return "Business World Agent 正在响应。";
   }
 
   return undefined;

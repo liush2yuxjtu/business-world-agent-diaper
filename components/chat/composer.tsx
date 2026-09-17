@@ -28,7 +28,7 @@ export function ChatComposer({
   onChange,
   onStop,
   onSubmit,
-  placeholder = "Ask eve anything...",
+  placeholder = "输入业务问题...",
   value,
 }: {
   readonly autoFocus?: boolean;
@@ -101,7 +101,7 @@ export function ChatComposer({
       onSubmit={handleSubmit}
     >
       <label className="sr-only" htmlFor={composerId}>
-        Message eve
+        给 Business World Agent 发消息
       </label>
       <textarea
         autoFocus={autoFocus}

@@ -8,7 +8,6 @@ import {
 } from "@/app/_components/agent-chat";
 import { useChatShell } from "@/app/_components/chat-shell-context";
 import { ChatComposer } from "@/components/chat/composer";
-import { TemplateFooterLinks } from "@/components/chat/template-footer-links";
 import { getChatMessageLengthError } from "@/lib/chat/limits";
 import {
   createProvisionalChatId,
@@ -142,14 +141,10 @@ export function HomeChatPage() {
       <div className="flex min-h-0 flex-1 flex-col justify-between px-4 pt-8 pb-4 sm:px-6 sm:pb-6">
         <div className="flex min-h-0 flex-1 items-center justify-center pb-20 sm:pb-[12vh]">
           <div className="w-full max-w-2xl space-y-5 sm:space-y-7 md:space-y-8">
-            <h1 className="flex justify-center">
-              <img
-                alt="eve"
-                className="size-16 select-none invert sm:size-20 md:size-24 dark:invert-0"
-                draggable={false}
-                src="/eve.svg"
-              />
-            </h1>
+            <div className="space-y-2 text-center">
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Business World Agent</h1>
+              <p className="text-sm text-muted-foreground sm:text-base">基于你提供或已连接的真实数据进行经营分析，不补造业务数字。</p>
+            </div>
             <ChatComposer
               autoFocus
               disabled={composerDisabled}
@@ -159,12 +154,11 @@ export function HomeChatPage() {
               onChange={setDraft}
               onStop={() => {}}
               onSubmit={handleSubmit}
-              placeholder="Ask anything..."
+              placeholder="输入业务问题，或说明你要分析的数据来源..."
               value={draft}
             />
           </div>
         </div>
-        <TemplateFooterLinks />
       </div>
     </div>
   );

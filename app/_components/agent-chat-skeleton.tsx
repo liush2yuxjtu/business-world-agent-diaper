@@ -5,7 +5,6 @@ import {
   PanelLeftIcon,
   PlusIcon,
 } from "lucide-react";
-import { TemplateFooterLinks } from "@/components/chat/template-footer-links";
 import { VercelIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -72,11 +71,6 @@ export function AgentChatSkeleton({ mode }: { readonly mode: "chat" | "new" }) {
         </div>
 
         <AgentChatContentSkeleton mode={mode} />
-        {isNew ? (
-          <div className="shrink-0 pb-4 sm:pb-6">
-            <TemplateFooterLinks />
-          </div>
-        ) : null}
       </main>
     </div>
   );
@@ -91,14 +85,10 @@ function EmptyChatSkeleton() {
     <div className="flex min-h-0 flex-1 flex-col pt-14 md:pt-8">
       <div className="flex min-h-0 flex-1 items-center justify-center pb-12 sm:pb-[8vh]">
         <div className="w-full max-w-2xl space-y-6 sm:space-y-8 md:space-y-9">
-          <h1 className="flex justify-center">
-            <img
-              alt=""
-              className="size-16 select-none invert sm:size-20 md:size-24 dark:invert-0"
-              draggable={false}
-              src="/eve.svg"
-            />
-          </h1>
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Business World Agent</h1>
+            <p className="text-sm text-muted-foreground sm:text-base">读取真实业务输入后再分析。</p>
+          </div>
           <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
             <StaticComposerFallback />
           </div>
@@ -142,7 +132,7 @@ function StaticComposerFallback() {
       data-chat-composer
     >
       <div className="min-h-12 px-3 pt-3 pb-1 text-[15px] leading-6 text-muted-foreground/45 sm:px-4 dark:text-muted-foreground/60">
-        Ask anything...
+        输入业务问题...
       </div>
       <div className="flex min-h-9 items-center justify-between gap-2 px-3 pt-1 pb-2 sm:gap-3 sm:px-4">
         <div className="-ml-2 flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden">

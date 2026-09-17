@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { EveImageMark } from "./_components/eve-image-mark";
 
 export const size = {
   width: 180,
@@ -14,14 +13,18 @@ export default function AppleIcon() {
       <div
         style={{
           alignItems: "center",
-          background: "#050505",
+          background: "#111111",
+          color: "#ffffff",
           display: "flex",
+          fontSize: 58,
+          fontWeight: 700,
           height: "100%",
           justifyContent: "center",
+          letterSpacing: "-0.06em",
           width: "100%",
         }}
       >
-        <EveImageMark size={122} />
+        BW
       </div>
     ),
     size,
