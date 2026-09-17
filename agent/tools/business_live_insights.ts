@@ -8,9 +8,6 @@ export default defineTool({
   inputSchema: z.object({
     roomId: z.string().min(1).optional().describe("可选 Mock 直播间 ID，例如 live-001"),
   }),
-  label: {
-    start: ({ roomId }) => (roomId ? `读取直播洞察：${roomId}` : "读取直播洞察"),
-  },
   async execute(input) {
     return getLiveInsights(input);
   },

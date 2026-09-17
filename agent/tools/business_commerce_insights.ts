@@ -8,9 +8,6 @@ export default defineTool({
   inputSchema: z.object({
     productId: z.string().min(1).optional().describe("可选 Mock 商品 ID，例如 product-L"),
   }),
-  label: {
-    start: ({ productId }) => (productId ? `读取交易洞察：${productId}` : "读取交易洞察"),
-  },
   async execute(input) {
     return getCommerceInsights(input);
   },

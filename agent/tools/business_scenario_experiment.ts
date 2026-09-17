@@ -19,9 +19,6 @@ export default defineTool({
     changePercent: z.number().min(-80).max(200).describe("相对变化百分比，例如 10 表示 +10%"),
     personaId: persona.optional().describe("可选：只对某个 Persona 的模拟订单基线做推演"),
   }),
-  label: {
-    start: ({ lever, changePercent }) => `推演 ${lever} ${changePercent >= 0 ? "+" : ""}${changePercent}%`,
-  },
   async execute(input) {
     return runScenarioExperiment(input);
   },
