@@ -1,8 +1,7 @@
 import { defineTool } from "eve/tools";
 import { z } from "zod";
-import { runScenarioExperiment } from "@/lib/business-world/mock-service";
+import { runScenarioExperiment } from "@/lib/business-world/real-service";
 
-const persona = z.enum(["xiaoyu", "alin", "wangayi", "mia"]);
 const lever = z.enum([
   "content_engagement",
   "live_watch_time",
@@ -13,11 +12,11 @@ const lever = z.enum([
 
 export default defineTool({
   description:
-    "对 Business World 做透明的 Scenario Experiment。输入经营杠杆和变化幅度，返回基于固定模拟弹性的方向性结果；不是市场预测。",
+    "基于 Business World 已持久化的真实基线运行透明 Scenario Experiment。结果是可复现数学模型，不冒充已观测市场结果。",
   inputSchema: z.object({
+    prompt: z.string().min(3).max(1000).default("Business World scenario"),
     lever,
     changePercent: z.number().min(-80).max(200).describe("相对变化百分比，例如 10 表示 +10%"),
-    personaId: persona.optional().describe("可选：只对某个 Persona 的模拟订单基线做推演"),
   }),
   async execute(input) {
     return runScenarioExperiment(input);

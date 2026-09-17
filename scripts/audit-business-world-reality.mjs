@@ -2,111 +2,39 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.cwd();
-const pagePath = join(root, 'app/page.tsx');
-const page = readFileSync(pagePath, 'utf8');
+const read = (p) => readFileSync(join(root, p), 'utf8');
+const page = read('app/page.tsx');
+const service = read('lib/business-world/real-service.ts');
+const stateRoute = read('app/api/business-world/state/route.ts');
+const scenarioRoute = read('app/api/business-world/scenario/route.ts');
+const toolSources = ['business_world_snapshot','business_content_insights','business_live_insights','business_ad_insights','business_commerce_insights','business_scenario_experiment'].map(n => read(`agent/tools/${n}.ts`)).join('\n');
 
-const surfaces = [
-  ['overview', '总览', 'OverviewView', 'reference-mock'],
-  ['persona', 'Persona Studio', 'PersonaView', 'reference-mock'],
-  ['world', 'World Builder', 'WorldBuilderView', 'reference-mock'],
-  ['content', '内容策略', 'ContentView', 'reference-mock'],
-  ['live', '直播作战室', 'OverviewView', 'route-alias'],
-  ['growth', '投放优化', 'GrowthView', 'reference-mock'],
-  ['product', '商品分析', 'OverviewView', 'route-alias'],
-  ['experiment', '模拟实验', 'OverviewView', 'route-alias'],
-  ['report', '报告', 'OverviewView', 'route-alias'],
+const checks = [
+  ['Data', service.includes('business_world_state') && page.includes('NO VERIFIED SOURCE') ? 2 : service.includes('business_world_state') ? 1 : 0, 'No silent mock fallback; unknown data is shown as unavailable.'],
+  ['Logic', service.includes('runScenarioExperiment') && service.includes('modeled: true') ? 2 : 0, 'Scenario logic is executable and labels modeled output explicitly.'],
+  ['Persistence', service.includes('Neon Postgres') && service.includes('insert into business_world_state') && service.includes('business_world_scenario_run') ? 2 : 0, 'Business state and scenario runs persist server-side.'],
+  ['API/Tool', stateRoute.includes('saveBusinessWorldState') && scenarioRoute.includes('runScenarioExperiment') && !toolSources.includes('mock-service') ? 2 : 0, 'HTTP routes and Eve tools share the real service boundary.'],
+  ['UI', page.includes("active === 'live'") && page.includes("active === 'growth'") && page.includes("active === 'product'") && page.includes("active === 'experiment'") && page.includes('onClick={run}') ? 2 : 0, 'Former aliases/static CTAs are wired to real states/actions.'],
+  ['Agent', !toolSources.includes('mock-service') && toolSources.includes('real-service') ? 2 : 0, 'Business Agent tools read the same persistent source as the UI.'],
+  ['Provenance', service.includes('sourceLabel') && service.includes('observedAt') && service.includes('sourceMode') ? 2 : 0, 'Source label/type, observation time, storage, and update time are returned.'],
+  ['Browser Eval', 0, 'Requires reproducible deployed-browser evidence; source inspection cannot award this.'],
+  ['DB/State Eval', existsSync(join(root,'.eve/business-world-agent.sqlite')) && service.includes('Neon Postgres') ? 1 : 0, 'Implementation exists; deployed DB read/write still requires runtime evidence.'],
+  ['Evidence', existsSync(join(root,'docs/mock-to-real-contract.md')) && existsSync(join(root,'scripts/audit-business-world-reality.mjs')) ? 1 : 0, 'Code/build evidence exists; deployed browser + DB evidence pending.'],
 ];
+const total = checks.reduce((n, [,score]) => n + score, 0);
+const classification = total <= 7 ? 'SIMULATED' : total <= 14 ? 'PARTIAL' : total <= 18 ? 'MOSTLY REAL' : 'REAL';
+const fatal = [
+  toolSources.includes('mock-service') ? 'Agent tools still depend on mock-service' : null,
+  page.includes("['live','product','experiment','report'].includes(id)?'overview':id") ? 'Navigation still contains route aliases' : null,
+  page.includes('ROI 预计从 3.8 提升至 4.2') ? 'UI still presents hard-coded prediction as product output' : null,
+].filter(Boolean);
 
-const tools = [
-  'business_world_snapshot',
-  'business_content_insights',
-  'business_live_insights',
-  'business_ad_insights',
-  'business_commerce_insights',
-  'business_scenario_experiment',
-];
-
-const failures = [];
-const requiredMockFiles = [
-  'lib/business-world/mock-db.ts',
-  'lib/business-world/mock-service.ts',
-];
-
-for (const file of requiredMockFiles) {
-  if (!existsSync(join(root, file))) failures.push(`required reference mock missing: ${file}`);
+const result={total,max:20,classification,checks:checks.map(([item,score,evidence])=>({item,score,evidence})),fatal};
+if(process.argv.includes('--json')) console.log(JSON.stringify(result,null,2));
+else {
+  console.log(`VALUE reality score: ${total}/20 — ${classification}`);
+  for(const [item,score,evidence] of checks) console.log(`${item.padEnd(14)} ${score}/2  ${evidence}`);
+  if(fatal.length) for(const f of fatal) console.error(`FATAL: ${f}`);
+  console.log('Runtime-only points are intentionally withheld until deployed browser/DB evidence exists.');
 }
-
-for (const [id, label] of surfaces) {
-  if (!page.includes(`'${id}','${label}'`)) failures.push(`navigation surface missing: ${id} / ${label}`);
-}
-
-const aliasExpression = "['live','product','experiment','report'].includes(id)?'overview':id";
-if (!page.includes(aliasExpression)) {
-  failures.push('navigation alias behavior changed; update the reality audit and contract with the new product truth');
-}
-
-const toolReality = tools.map((name) => {
-  const path = `agent/tools/${name}.ts`;
-  const source = readFileSync(join(root, path), 'utf8');
-  const simulated = source.includes('mock-service') || source.includes('Demo / simulated') || source.includes('模拟');
-  if (!simulated) failures.push(`tool reality changed; inspect and update audit: ${path}`);
-  return { name, mode: simulated ? 'simulated/mock-sqlite' : 'unknown' };
-});
-
-const onClickCount = (page.match(/onClick=/g) ?? []).length;
-const interactionReality = {
-  onClickHandlers: onClickCount,
-  searchControl: page.includes('<div className="search">') ? 'static-div' : 'changed',
-  worldSimulationButton: page.includes('运行 World Simulation') ? 'visible-static-cta' : 'changed',
-};
-if (onClickCount !== 1) {
-  failures.push(`interaction reality changed; expected only sidebar navigation handler, found ${onClickCount}; inspect and update the audit`);
-}
-if (interactionReality.searchControl !== 'static-div') {
-  failures.push('search interaction changed; inspect and update the audit');
-}
-
-const hardCodedSignals = [
-  "value=\"1,250万\"",
-  "value=\"+48%\"",
-  "value=\"3.8\"",
-  'ROI 预计从 3.8 提升至 4.2',
-];
-for (const signal of hardCodedSignals) {
-  if (!page.includes(signal)) failures.push(`hard-coded UI signal changed; inspect product truth: ${signal}`);
-}
-
-const result = {
-  policy: 'preserve-reference-mock-and-replace-production-boundaries-one-slice-at-a-time',
-  surfaces: surfaces.map(([id, label, view, reality]) => ({ id, label, view, reality })),
-  tools: toolReality,
-  interactionReality,
-  mockFiles: requiredMockFiles,
-  failures,
-};
-
-if (process.argv.includes('--json')) {
-  console.log(JSON.stringify(result, null, 2));
-} else {
-  console.log('Business World Agent /');
-  surfaces.forEach(([id, label, view, reality], index) => {
-    const last = index === surfaces.length - 1;
-    console.log(`${last ? '└──' : '├──'} ${label} (${id}) [${reality}] -> ${view}`);
-  });
-  console.log('');
-  console.log(`UI interaction reality: ${onClickCount} onClick handler(s); sidebar navigation only`);
-  console.log(`Search control: ${interactionReality.searchControl}`);
-  console.log('Visible CTAs: reference/static until each slice wires real behavior');
-  console.log('');
-  console.log('Agent data layer');
-  toolReality.forEach(({ name, mode }, index) => {
-    const last = index === toolReality.length - 1;
-    console.log(`${last ? '└──' : '├──'} ${name} [${mode}]`);
-  });
-  console.log('');
-  console.log(`Mock preservation: ${requiredMockFiles.every((file) => existsSync(join(root, file))) ? 'PASS' : 'FAIL'}`);
-  console.log(`Reality audit: ${failures.length === 0 ? 'PASS' : 'FAIL'}`);
-  for (const failure of failures) console.error(`- ${failure}`);
-}
-
-if (failures.length > 0) process.exitCode = 1;
+if(fatal.length) process.exitCode=1;
