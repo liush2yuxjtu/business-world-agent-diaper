@@ -1,138 +1,63 @@
-# eve Chat Template
+# Business World Agent — 纸尿裤电商 Demo
 
-> [!IMPORTANT]
-> This repository is archived and no longer maintained. The maintained eve
-> templates now live in [`vercel/eve-examples`](https://github.com/vercel/eve-examples).
+这是一个基于 Next.js + Vercel eve 的 Business World Agent 演示项目。当前产品把消费者 Persona、内容、直播、投放、商品交易和 Scenario Experiment 组织成一个可浏览的经营世界。
 
-A Next.js chat template for [eve](https://eve.dev) that starts with password access and browser-persisted chats, then upgrades to Sign in with Vercel, Neon, and Upstash when you need a production multi-user application.
+## 当前可用产品面
 
-## Quick Start
+- `/`：Business World Dashboard。当前真正可切换的视图为总览、Persona Studio、World Builder、内容策略、投放优化。
+- `/api/health`：部署健康检查。
+- `/api/business-world/scenario`：POST Scenario Experiment。输入结构化经营杠杆、变化幅度和可选 Persona，运行服务器端模拟。
+- `/auth/error`：认证错误页。
+- eve channel 与 authored tools：位于 `agent/`，用于 Business World Agent 对话与工具调用。
 
-Deploy the starter without provisioning a database or other Marketplace products:
+侧栏中的直播作战室、商品分析、模拟实验和报告仍是规划模块。UI 会明确显示“规划中”，不会再点击后静默跳回总览。
 
-1. Open the maintained template from [vercel/eve-examples](https://github.com/vercel/eve-examples).
-2. Enter a strong `EVE_CHAT_PASSWORD` (16+ characters recommended).
-3. Open the deployed app and enter that password.
+## 数据真实性
 
-Chats and eve session cursors are stored in that browser. They are not shared across browsers or users.
-Starter mode is intended for one trusted operator: anyone with the password
-shares the same agent identity.
+当前 Business World 业务数据是 **simulated / mock**，不是抖音、巨量千川或抖店真实经营数据。
 
-## Deployment Modes
+- `sourceMode: "simulated"`
+- `provider: "mock-sqlite"`
+- 本地数据库：`.eve/business-world-agent.sqlite`
+- Vercel 数据库：`/tmp/business-world-agent.sqlite`，实例级临时存储
 
-| Mode | Selected when | Authentication | Chat persistence |
-| --- | --- | --- | --- |
-| Starter | `EVE_CHAT_PASSWORD` is configured | Shared password and secure session cookie | Browser localStorage |
-| Production | Neon, Upstash, and all Sign in with Vercel variables are configured | Sign in with Vercel | Neon |
-| Local development | Neither mode is configured and `next dev` is running locally | Local development identity | Browser localStorage |
+模拟数据是确定性种子，便于复现 Agent 行为和 Scenario Experiment。真实 API 的能力映射、认证方式与官方文档见 [`docs/business-world-api-sources.md`](docs/business-world-api-sources.md)。
 
-Production mode takes precedence when its complete environment is present. The app fails closed in a production deployment when neither mode is configured. See [Setup and Deployment](docs/setup-and-deploy.md) for the upgrade path.
+## Business World authored tools
 
-## Getting Started
+- `business_world_snapshot`
+- `business_content_insights`
+- `business_live_insights`
+- `business_ad_insights`
+- `business_commerce_insights`
+- `business_scenario_experiment`
 
-For the starter and production setup flows, see [Setup and Deployment](docs/setup-and-deploy.md). For the runtime architecture, streaming model, persistence flow, and extension points, see [How the Chatbot Works](docs/how-the-chatbot-works.md).
+所有这些工具当前都从 Mock SQLite Service 读取数据，并返回数据源声明。
 
-Install dependencies with pnpm:
+## 本地运行
 
 ```bash
 pnpm install
-```
-
-Run locally without additional services:
-
-```bash
 pnpm dev
 ```
 
-To require the same password locally, put this in `.env.local`:
+验证：
 
 ```bash
-EVE_CHAT_PASSWORD=<at-least-16-characters>
+pnpm typecheck
+pnpm build:eve
+pnpm build
+curl http://localhost:3000/api/health
 ```
 
-To upgrade the linked project to production mode, run the setup script. It provisions Neon and Upstash, registers Sign in with Vercel, pulls environment variables, and runs migrations:
+Scenario API 示例：
 
 ```bash
-./scripts/setup.sh
-# Or: ./scripts/setup.sh --scope <team-slug>
+curl -X POST http://localhost:3000/api/business-world/scenario \
+  -H 'content-type: application/json' \
+  -d '{"lever":"ad_efficiency","changePercent":20,"personaId":"xiaoyu"}'
 ```
 
-Production mode requires:
+## 部署
 
-```bash
-DATABASE_URL=
-BETTER_AUTH_SECRET=
-NEXT_PUBLIC_VERCEL_APP_CLIENT_ID=
-VERCEL_APP_CLIENT_SECRET=
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-KV_REST_API_URL=
-KV_REST_API_TOKEN=
-```
-
-Other optional environment variables:
-
-```bash
-# Override the app origin for custom production domains.
-BETTER_AUTH_URL=
-
-# Enable the hosted Slack channel.
-SLACK_CONNECTOR=
-```
-
-Create the optional Slack channel integration:
-
-```bash
-vercel connect create slack --name eve-chat-template --triggers
-vercel connect attach <slack-connector-uid> --triggers --trigger-path /eve/v1/slack --yes
-```
-
-The deploy button does not require Slack. For manual setup, put the returned connector UID in `SLACK_CONNECTOR`. Local development falls back to `slack/eve-chat-template`, so a connector created with the name above works without editing `agent/`.
-
-If the connector is not attached to the linked project, run:
-
-```bash
-vercel connect attach <connector-uid> --yes
-vercel env pull .env.local
-```
-
-Production mode only: create the database tables:
-
-```bash
-pnpm db:migrate
-```
-
-For production, run migrations with Vercel production env vars:
-
-```bash
-vercel env run -e production -- pnpm db:migrate
-```
-
-Start the development server:
-
-```bash
-pnpm dev
-```
-
-## What Is Included
-
-- Text chat with an eve agent through same-origin `/eve/v1/*` routes
-- Password access with browser-backed chat history by default
-- Optional Better Auth sign-in with Vercel
-- Optional Neon-backed cross-device chat history
-- Optional Upstash Redis rate limiting in production mode
-- Drizzle schema and migrations for production mode under `lib/db`
-- Saved eve session cursors and event snapshots in either storage mode
-- Sidebar history with delete and new-chat actions
-- Vercel Connect-backed Slack channel route at `/eve/v1/slack`
-- First-message chat titles derived locally from the user's prompt
-- Streamdown markdown rendering for assistant text and reasoning
-- shadcn/Tailwind components for messages, tools, HITL prompts, and composer
-
-This template intentionally does not include file uploads, Vercel Blob, guest mode, NextAuth/Auth.js, or AI Elements.
-
-## Agent Code
-
-Edit the agent in `agent/agent.ts`. Its behavior is defined in `agent/instructions.md`, and tools live in `agent/tools/`.
-
-The browser talks to eve with `useEveAgent()` from `eve/react`; the app stores eve stream events and session state so `/chat/[id]` can resume the same durable conversation after refresh.
+仓库已连接 Vercel 项目 `business-world-agent-diaper`。向 PR 分支推送会生成 Preview Deployment；合并到 `main` 后由 Git Integration 生成 production deployment。
