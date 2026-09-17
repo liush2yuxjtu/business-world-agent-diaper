@@ -1,6 +1,6 @@
 import { defineTool } from "eve/tools";
 import { z } from "zod";
-import { getLiveInsights } from "@/lib/business-world/mock-service";
+import { getLiveInsights } from "@/lib/business-world/real-service";
 
 export default defineTool({
   description:

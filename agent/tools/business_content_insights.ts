@@ -1,6 +1,6 @@
 import { defineTool } from "eve/tools";
 import { z } from "zod";
-import { getContentInsights } from "@/lib/business-world/mock-service";
+import { getContentInsights } from "@/lib/business-world/real-service";
 
 const persona = z.enum(["xiaoyu", "alin", "wangayi", "mia"]);
 

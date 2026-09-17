@@ -136,3 +136,15 @@ This template intentionally does not include file uploads, Vercel Blob, guest mo
 Edit the agent in `agent/agent.ts`. Its behavior is defined in `agent/instructions.md`, and tools live in `agent/tools/`.
 
 The browser talks to eve with `useEveAgent()` from `eve/react`; the app stores eve stream events and session state so `/chat/[id]` can resume the same durable conversation after refresh.
+
+## Mock → Real product contract
+
+The Business World dashboard is currently a reference product surface backed by hard-coded UI values and a deterministic SQLite mock service. **Do not delete those surfaces merely because their production backing is incomplete.** Convert them one slice at a time behind stable product/tool boundaries.
+
+Run the reality audit before changing a Business World slice:
+
+```bash
+pnpm audit:reality
+```
+
+The detailed delivery contract and implementation order are in [`docs/mock-to-real-contract.md`](docs/mock-to-real-contract.md). A slice is only considered real when its real source, server-side adapter, shared UI/Agent data path, provenance, and running-deployment verification are all present.
