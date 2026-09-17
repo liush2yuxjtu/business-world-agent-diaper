@@ -11,3 +11,9 @@ Totals: **SIMULATED 0–7 · PARTIAL 8–14 · MOSTLY REAL 15–18 · REAL 19–
 Product-level evaluation fails if any capability appears real while depending on fixtures, hardcoded values, fake APIs/tools, route aliases, local-only state, or silent mock fallback without explicit runtime evidence.
 
 Run `npm run audit:reality` (or `node scripts/audit-business-world-reality.mjs`) before and after each improvement loop. Runtime-only categories must not be awarded from source inspection alone.
+
+## Current verified score
+
+**17/20 — MOSTLY REAL** on the Vercel Preview for commit `e30bd279d1529394cb72e8d17932c447a2af9f8b`.
+
+The remaining gap is not a UI/build issue: the deployed project currently reports `DATABASE_URL` as unconfigured and no verified business source is connected. See `docs/runtime-reality-evidence.md` for the browser/API evidence and per-item score.
