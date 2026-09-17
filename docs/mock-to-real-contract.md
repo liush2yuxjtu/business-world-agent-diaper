@@ -53,6 +53,20 @@ Agent data layer
 └── business_scenario_experiment ... SIMULATED / SQLite Mock + fixed elasticity
 ```
 
+## Current interaction reality
+
+The current dashboard is visually rich, but most control-looking elements are static. In `app/page.tsx`, the only `onClick` handler is the sidebar navigation. In particular:
+
+- the top-bar search is a styled `<div>`, not an input/search flow;
+- the shared `开始模拟` button has no action;
+- `+ 新建人群` and `生成完整策略方案` have no action;
+- content `查看更多` / `查看更多脚本` controls have no action;
+- campaign `查看详情` controls have no action;
+- `运行 World Simulation` has no action; the displayed prediction is hard-coded;
+- the World Builder textarea is editable locally, but it is not connected to the displayed result.
+
+This means a slice is not made real merely by swapping a number source. The interaction path must also be wired and verified end-to-end.
+
 The mock database/service are intentionally preserved:
 
 ```text

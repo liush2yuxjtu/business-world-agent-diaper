@@ -53,6 +53,19 @@ const toolReality = tools.map((name) => {
   return { name, mode: simulated ? 'simulated/mock-sqlite' : 'unknown' };
 });
 
+const onClickCount = (page.match(/onClick=/g) ?? []).length;
+const interactionReality = {
+  onClickHandlers: onClickCount,
+  searchControl: page.includes('<div className="search">') ? 'static-div' : 'changed',
+  worldSimulationButton: page.includes('运行 World Simulation') ? 'visible-static-cta' : 'changed',
+};
+if (onClickCount !== 1) {
+  failures.push(`interaction reality changed; expected only sidebar navigation handler, found ${onClickCount}; inspect and update the audit`);
+}
+if (interactionReality.searchControl !== 'static-div') {
+  failures.push('search interaction changed; inspect and update the audit');
+}
+
 const hardCodedSignals = [
   "value=\"1,250万\"",
   "value=\"+48%\"",
@@ -67,6 +80,7 @@ const result = {
   policy: 'preserve-reference-mock-and-replace-production-boundaries-one-slice-at-a-time',
   surfaces: surfaces.map(([id, label, view, reality]) => ({ id, label, view, reality })),
   tools: toolReality,
+  interactionReality,
   mockFiles: requiredMockFiles,
   failures,
 };
@@ -79,6 +93,10 @@ if (process.argv.includes('--json')) {
     const last = index === surfaces.length - 1;
     console.log(`${last ? '└──' : '├──'} ${label} (${id}) [${reality}] -> ${view}`);
   });
+  console.log('');
+  console.log(`UI interaction reality: ${onClickCount} onClick handler(s); sidebar navigation only`);
+  console.log(`Search control: ${interactionReality.searchControl}`);
+  console.log('Visible CTAs: reference/static until each slice wires real behavior');
   console.log('');
   console.log('Agent data layer');
   toolReality.forEach(({ name, mode }, index) => {
