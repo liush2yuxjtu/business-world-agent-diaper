@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Business World Agent</title>
+<meta name="description" content="查看经营记录、比较情景并整理行动建议">
+<style>
+:root{
+  --navy:#0d1f3a;--navy-2:#142a4c;--ink:#0b1733;--text:#455577;--muted:#7887a3;
+  --brand:#2468e8;--brand-2:#1558d6;--soft:#f5f8fc;--panel:#fff;--line:#e3e9f3;
+  --green:#15965f;--green-soft:#eaf8f1;--purple:#7457db;--purple-soft:#f1edff;
+  --blue-soft:#edf5ff;--warn:#a66c00;--warn-soft:#fff7e3;--shadow:0 14px 40px rgba(16,35,68,.08);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font:14px/1.45 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f7f9fc;color:var(--ink)}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+.hidden{display:none!important}.muted{color:var(--muted)}.tiny{font-size:12px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.browser{min-height:100vh;background:#fff}.browserbar{height:38px;background:#f3f5f8;border-bottom:1px solid #d9dee8;display:flex;align-items:center;padding:0 14px;gap:12px;position:sticky;top:0;z-index:100}
+.dots{display:flex;gap:6px}.dot{width:10px;height:10px;border-radius:50%}.r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
+.url{margin:auto;max-width:680px;flex:1;height:26px;border:1px solid #d9dee8;border-radius:8px;background:#fff;display:flex;align-items:center;padding:0 10px;color:#56637e;font-size:12px}
+.mode-switch{display:flex;gap:5px;background:#e9edf4;padding:3px;border-radius:8px}.mode-switch button{border:0;background:transparent;padding:5px 9px;border-radius:6px;color:#4f607d}.mode-switch button.active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);color:#0e2445}
+.marketing{background:#fff}.mnav{height:68px;display:flex;align-items:center;gap:34px;max-width:1320px;margin:auto;padding:0 26px;border-bottom:1px solid #eef2f7}
+.brandline{display:flex;align-items:center;gap:10px;font-weight:750}.brandicon{width:30px;height:30px;border-radius:8px;background:var(--brand);color:white;display:grid;place-items:center;font-size:16px}
+.mlinks{display:flex;gap:30px;margin-left:30px;color:#243556;font-size:13px}.mnav .spacer{flex:1}.btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:10px 15px;color:#203352;font-weight:650}.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}.btn.primary:hover{background:var(--brand-2)}.btn.ghost{background:transparent}
+.hero{background:linear-gradient(180deg,#f7fbff 0,#fff 100%);padding:62px 0 44px}.hero-grid{max-width:1320px;margin:auto;padding:0 26px;display:grid;grid-template-columns:1fr 1.15fr;gap:54px;align-items:center}
+.eyebrow{display:inline-flex;background:#e7f1ff;color:var(--brand);padding:7px 11px;border-radius:999px;font-weight:700;font-size:12px}.hero h1{font-size:52px;line-height:1.08;letter-spacing:-1.8px;margin:18px 0 18px}.hero p{font-size:17px;color:#50617f;line-height:1.75;max-width:600px}.hero-actions{display:flex;gap:12px;margin:24px 0}.checks{display:flex;gap:18px;flex-wrap:wrap;color:#62718d;font-size:12px}.check:before{content:"✓";color:var(--brand);margin-right:6px}
+.preview{background:#fff;border:1px solid #dbe4ef;border-radius:12px;box-shadow:var(--shadow);overflow:hidden}.preview-head{height:34px;background:#f4f6f8;border-bottom:1px solid #e7ebf0;display:flex;align-items:center;padding:0 10px;gap:5px}.preview-body{display:grid;grid-template-columns:138px 1fr;height:360px}.preview-side{background:#102746;color:#d9e7ff;padding:18px 12px;font-size:11px}.preview-side b{display:block;color:#fff;margin-bottom:18px}.pnav{padding:8px;border-radius:5px;margin:4px 0}.pnav.active{background:#2468e8;color:#fff}.preview-main{padding:14px;background:#fafcff}.source{border:1px solid #bfe8d3;background:#edf9f3;color:#1a8054;padding:8px 10px;border-radius:6px;font-size:10px;font-weight:650;margin-bottom:9px}.mini-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.mini-kpi{background:#fff;border:1px solid #e6ebf2;border-radius:6px;padding:9px;font-size:9px}.mini-kpi b{display:block;font-size:15px;margin-top:3px}.mini-model{margin-top:9px;background:#fff;border:1px solid #e4e9f2;border-radius:7px;padding:10px;height:228px}.mini-title{font-weight:700}.mini-graph{position:relative;height:176px;margin-top:7px;background-image:radial-gradient(#dce4ee .8px,transparent .8px);background-size:12px 12px;border-radius:5px}.mnode{position:absolute;border:1px solid;padding:7px 9px;border-radius:5px;background:white;font-size:9px;min-width:88px}.mnode.obs{border-color:#7dd7aa;color:#176844}.mnode.inf{border-color:#a994ea;color:#5e43b7}.mnode.sim{border-color:#4f91f0;color:#175fbf;box-shadow:0 0 0 2px #dcebff}.features,.workflow,.teams{max-width:1320px;margin:auto;padding:28px 26px}.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.fcard{border:1px solid var(--line);border-radius:10px;padding:22px;background:#fff}.ficon{width:38px;height:38px;border-radius:9px;background:#eaf3ff;color:var(--brand);display:grid;place-items:center;font-weight:800}.fcard h3{font-size:17px;margin:14px 0 8px}.fcard p{color:#61708b;line-height:1.7}.teams{display:flex;align-items:center;gap:26px;border-top:1px solid #edf1f6;border-bottom:1px solid #edf1f6}.teams strong{max-width:250px}.teamitem{display:flex;gap:8px;align-items:center;color:#40506c}.teamitem span{font-size:18px}.workflow h2{text-align:left;margin:0 0 22px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.step{display:flex;gap:12px}.num{min-width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#e9f2ff;color:var(--brand);font-weight:800}.step b{display:block;margin-bottom:5px}.step p{margin:0;color:#697892;font-size:12px}.cta{background:#f3f7fc;padding:34px 26px;text-align:center}.cta h2{margin:0 0 7px}.cta-actions{display:flex;justify-content:center;gap:12px;margin-top:16px}.footer{max-width:1320px;margin:auto;padding:20px 26px;color:#7c899d;font-size:12px;display:flex;justify-content:space-between}
+
+.app{height:calc(100vh - 38px);display:grid;grid-template-columns:236px 1fr;background:#f6f8fb}.sidebar{background:linear-gradient(180deg,#10294b,#0d213d);color:#dce9fb;padding:20px 12px;display:flex;flex-direction:column}.sb-brand{font-size:18px;font-weight:780;padding:0 10px 18px}.sb-brand small{display:block;font-size:10px;font-weight:500;color:#a6bad6;letter-spacing:.7px;margin-top:2px}.navbtn{width:100%;border:0;background:transparent;color:#d8e6f7;text-align:left;padding:11px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;margin:2px 0}.navbtn:hover{background:#16345e}.navbtn.active{background:#2468e8;color:#fff}.navico{width:20px;text-align:center}.sb-bottom{margin-top:auto;border-top:1px solid #29415f;padding:15px 10px 0;color:#b9cbe1;font-size:12px}.sb-bottom strong{display:block;color:#fff;margin-bottom:3px}
+.workspace{min-width:0;overflow:auto}.topbar{height:58px;background:white;border-bottom:1px solid #e5eaf2;display:flex;align-items:center;padding:0 18px;gap:10px;position:sticky;top:0;z-index:20}.searchbox{width:min(510px,48vw);position:relative}.searchbox input{width:100%;height:36px;border:1px solid #dfe5ef;border-radius:7px;padding:0 34px 0 34px;background:#fafbfc;color:#1b2e4f}.searchbox:before{content:"⌕";position:absolute;left:12px;top:7px;color:#687895;font-size:18px}.search-results{position:absolute;top:40px;left:0;right:0;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:8px;padding:6px;z-index:50}.search-results button{display:block;width:100%;text-align:left;border:0;background:#fff;padding:9px;border-radius:5px}.search-results button:hover{background:#f0f5fb}.topbar .push{flex:1}.user{display:flex;align-items:center;gap:8px}.avatar{width:30px;height:30px;border-radius:50%;background:#e7eef9;display:grid;place-items:center;font-weight:800;color:#25446c}
+.canvas{padding:14px 18px 28px}.app-source{border:1px solid #bfe8d3;background:var(--green-soft);border-radius:7px;padding:10px 13px;display:flex;gap:14px;align-items:center;color:#27674d;margin-bottom:12px}.app-source strong{color:#188458}.source-meta{display:flex;gap:12px;font-size:12px;color:#60756d}.kpis{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:12px;margin-bottom:12px}.kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;min-height:94px}.kpi .label{color:#5f6d86;font-size:12px}.kpi .value{font-size:24px;font-weight:780;margin:6px 0 1px}.delta.up{color:var(--green)}.delta.down{color:#c14755}
+.main-grid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:12px}.model-panel,.inspector,.evidence,.scenario-log,.generic-panel{background:#fff;border:1px solid var(--line);border-radius:8px}.model-panel{padding:12px}.model-head{display:flex;gap:12px;align-items:center}.model-title{font-size:18px;font-weight:780}.model-sub{color:#75829a;font-size:12px}.model-controls{margin-left:auto;display:flex;gap:7px;align-items:center}.seg{display:flex;border:1px solid #dce3ee;border-radius:7px;padding:2px;background:#fafbfc}.seg button{border:0;background:transparent;padding:7px 11px;border-radius:5px;color:#5a6880}.seg button.active{background:#eaf2ff;color:#2468e8;font-weight:700}.graph{height:370px;margin-top:12px;border:1px solid #e0e7f0;border-radius:7px;position:relative;background-color:#fbfcfe;background-image:radial-gradient(#dce5f1 .8px,transparent .8px);background-size:15px 15px;overflow:hidden}.node{position:absolute;min-width:145px;background:#fff;border:1px solid;padding:10px 12px;border-radius:7px;box-shadow:0 3px 10px rgba(32,55,90,.04);text-align:left}.node:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(32,55,90,.08)}.node .ntype{font-size:10px;font-weight:700;margin-top:4px}.node.obs{border-color:#83d9af}.node.obs .ntype{color:#178457}.node.inf{border-color:#b0a1ea}.node.inf .ntype{color:#7158ce}.node.sim{border-color:#4f91f0;box-shadow:0 0 0 2px #dfebff}.node.sim .ntype{color:#1c69ce}.edge{position:absolute;height:1px;background:#8da0ba;transform-origin:left center;z-index:0}.graph .node{z-index:2}.legend{display:flex;gap:18px;padding:10px 2px 0;font-size:12px;color:#65728a}.legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}.inspector{padding:14px;min-height:470px}.inspector h3{margin:0 0 14px}.entity-title{font-size:17px;font-weight:760}.entity-value{font-size:22px;font-weight:780;margin:7px 0}.irow{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid #edf1f6;font-size:12px}.state-pill{padding:3px 7px;border-radius:999px;font-weight:700}.state-pill.obs{background:var(--green-soft);color:var(--green)}.state-pill.inf{background:var(--purple-soft);color:var(--purple)}.state-pill.sim{background:var(--blue-soft);color:var(--brand)}.idesc{border-top:1px solid #edf1f6;padding-top:10px;margin-top:6px;color:#5c6a82;font-size:12px;line-height:1.65}.iactions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px}.iactions button{border:1px solid #dfe5ed;background:#fff;border-radius:6px;padding:8px;font-size:11px}.bottom-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:12px}.evidence,.scenario-log{padding:12px}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{text-align:left;padding:8px;border-top:1px solid #edf1f5;color:#596982}.table th{background:#f8fafc;color:#77849a;font-weight:650}.view{display:none}.view.active{display:block}.generic-panel{padding:20px;min-height:570px}.generic-panel h2{margin:0 0 8px}.empty{display:grid;place-items:center;text-align:center;min-height:420px;color:#60708d}.empty .big{font-size:44px}.empty h3{color:#172b4d;margin:12px 0 6px}.empty .btn{margin-top:10px}
+.editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.field label{display:block;color:#5b6980;font-size:12px;margin-bottom:5px}.field input,.field textarea,.field select{width:100%;border:1px solid #dce3ec;border-radius:7px;padding:9px;background:#fff}.field textarea{min-height:88px}.metric-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.metric-form .field{background:#f9fbfd;padding:10px;border-radius:7px;border:1px solid #edf1f6}
+.report-card{border:1px solid #dfe7f1;border-radius:8px;padding:18px;margin-top:14px}.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.report-stat{background:#f7f9fc;padding:12px;border-radius:7px}.report-stat b{font-size:20px;display:block}
+.scenario-form{display:grid;grid-template-columns:1.3fr .8fr .5fr auto;gap:10px;align-items:end;margin-top:14px}.scenario-result{margin-top:16px;padding:18px;border:1px solid #cfe2ff;background:#f5f9ff;border-radius:8px}.scenario-result h3{margin-top:0}.sim-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.sim-cell{background:white;border:1px solid #dce8f7;border-radius:7px;padding:12px}
+.toast{position:fixed;right:22px;bottom:22px;background:#11233f;color:#fff;border-radius:8px;padding:12px 16px;box-shadow:var(--shadow);z-index:200;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
+.modal-wrap{position:fixed;inset:0;background:rgba(4,14,30,.4);display:grid;place-items:center;z-index:150;padding:20px}.modal{width:min(760px,95vw);max-height:90vh;overflow:auto;background:#fff;border-radius:11px;box-shadow:0 30px 100px rgba(0,0,0,.25);padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0}.close{border:0;background:#eef2f6;width:30px;height:30px;border-radius:6px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.mobile-note{display:none}
+@media(max-width:1050px){.hero-grid{grid-template-columns:1fr}.preview{max-width:760px}.feature-grid{grid-template-columns:repeat(2,1fr)}.mnav .mlinks{display:none}.kpis{grid-template-columns:repeat(3,1fr)}.main-grid{grid-template-columns:1fr}.inspector{min-height:auto}.app{grid-template-columns:72px 1fr}.sb-brand{font-size:0}.sb-brand:before{content:"BW";font-size:15px}.navbtn span:last-child{display:none}.navbtn{justify-content:center}.sb-bottom{display:none}}
+@media(max-width:720px){.hero h1{font-size:38px}.feature-grid,.steps{grid-template-columns:1fr}.teams{overflow:auto}.mnav{gap:14px}.kpis{grid-template-columns:repeat(2,1fr)}.bottom-grid{grid-template-columns:1fr}.model-controls{flex-wrap:wrap}.graph{height:460px}.node{transform:scale(.88);transform-origin:top left}.scenario-form{grid-template-columns:1fr}.metric-form{grid-template-columns:repeat(2,1fr)}.editor-grid{grid-template-columns:1fr}.mobile-note{display:block;background:#fff7e3;border:1px solid #f2d38c;padding:8px;border-radius:6px;margin-bottom:10px}}
+
+/* === Deep product surfaces (ImageGen handoff 2026-09-18) === */
+.deep-page{display:grid;gap:12px}.deep-header{display:flex;align-items:flex-end;gap:14px;margin:4px 0 2px}.deep-header h2{margin:0;font-size:22px}.deep-header .sub{color:var(--muted);font-size:12px}.deep-header .push{margin-left:auto}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.span-2{grid-column:span 2}.span-3{grid-column:span 3}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}.card h3{margin:0 0 4px;font-size:15px}.card-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.metric-row{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:12px}.metric{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px}.metric label{font-size:11px;color:#61708b}.metric strong{display:block;font-size:22px;margin:5px 0}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:700}.chip.green{background:#e9f8f0;color:#15965f}.chip.blue{background:#edf5ff;color:#2468e8}.chip.purple{background:#f1edff;color:#7457db}.chip.red{background:#fff0f1;color:#c33f4d}.chip.orange{background:#fff4e5;color:#b76b00}
+.deep-table{width:100%;border-collapse:collapse;font-size:11px}.deep-table th{background:#f7f9fc;color:#728097;font-weight:650}.deep-table td,.deep-table th{padding:7px 8px;border-top:1px solid #edf1f6;text-align:left;vertical-align:middle}.deep-table tbody tr:hover{background:#f9fbfe}
+.stack{display:grid;gap:8px}.list-row{display:flex;gap:9px;align-items:flex-start;padding:9px;border:1px solid #edf1f5;border-radius:7px}.list-row .numx{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#eaf2ff;color:#2468e8;font-size:11px;font-weight:800;flex:0 0 auto}.list-row .grow{flex:1}.list-row b{display:block;font-size:12px}.list-row p{margin:2px 0 0;color:#718098;font-size:10px}
+.alert-row{padding:9px;border-radius:7px;display:flex;gap:9px;align-items:flex-start}.alert-row.red{background:#fff2f3}.alert-row.green{background:#eefaf4}.alert-row.blue{background:#f2f7ff}.alert-row .grow{flex:1}
+.toolbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.toolbar .btn{padding:7px 10px;font-size:11px}.selectish{border:1px solid #dfe6ef;background:#fff;border-radius:6px;padding:7px 10px;font-size:11px;color:#4d5e79}
+.donut{width:150px;height:150px;border-radius:50%;background:conic-gradient(#2468e8 0 25%,#36b57b 25% 47%,#7457db 47% 65%,#f2b84b 65% 79%,#79c9c2 79% 90%,#c5cfdd 90% 100%);position:relative;margin:auto}.donut:after{content:"";position:absolute;inset:32px;border-radius:50%;background:white}.donut-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:2;font-weight:800}.donut-center small{display:block;color:var(--muted);font-weight:500;font-size:10px}
+.legend-list{display:grid;gap:7px;font-size:11px}.legend-list span{display:flex;justify-content:space-between;gap:10px}.legend-list i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.mini-chart{height:160px;border-left:1px solid #dfe7f0;border-bottom:1px solid #dfe7f0;position:relative;background:repeating-linear-gradient(to top,transparent 0 31px,#eef2f7 32px)}.mini-chart svg{width:100%;height:100%;position:absolute;inset:0;overflow:visible}
+.bar-chart{height:160px;display:flex;align-items:flex-end;gap:18px;padding:8px 12px 0;border-bottom:1px solid #dfe7f0}.bar-group{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:5px;height:100%;position:relative}.bar{width:22px;border-radius:3px 3px 0 0}.bar.b{background:#4f91f0}.bar.g{background:#39b87a}.bar.p{background:#8568e8}.bar-label{position:absolute;bottom:-18px;font-size:10px;color:#697892;white-space:nowrap}
+.funnel{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;align-items:center}.fstep{border:1px solid #dce6f2;border-radius:8px;padding:14px 8px;text-align:center;position:relative}.fstep:not(:last-child):after{content:"→";position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:#3c7fe3;font-weight:800}.fstep b{display:block;font-size:18px;margin-top:5px}.fstep:nth-child(1),.fstep:nth-child(2){background:#eef5ff}.fstep:nth-child(3){background:#f3efff}.fstep:nth-child(4){background:#fff4e8}.fstep:nth-child(5),.fstep:nth-child(6){background:#effaf5}
+.persona-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.persona-card{border:1px solid var(--line);border-radius:8px;padding:12px;cursor:pointer;background:#fff}.persona-card.selected{border-color:#2468e8;box-shadow:0 0 0 1px #2468e8}.persona-top{display:flex;gap:9px;align-items:center}.persona-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#f5d9dc;font-size:22px}.persona-title{font-weight:800}.persona-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.persona-stats strong{display:block;font-size:18px}.tags{display:flex;gap:5px;flex-wrap:wrap}.tag{border:1px solid #e2e7ef;background:#fafbfc;border-radius:5px;padding:3px 6px;font-size:9px;color:#60708a}
+.signal-row{display:grid;grid-template-columns:1.4fr .5fr .5fr .8fr;gap:8px;padding:7px;border-top:1px solid #edf1f5;align-items:center;font-size:10px}.strength{height:6px;background:#edf1f5;border-radius:999px;overflow:hidden}.strength i{display:block;height:100%;background:#2468e8;border-radius:999px}
+.lifecycle{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.life{position:relative;border-radius:7px;padding:10px;color:#21334f;background:#edf5ff}.life:nth-child(2){background:#e8f4ff}.life:nth-child(3){background:#f0edff}.life:nth-child(4){background:#eaf9f2}.life:nth-child(5){background:#eef9f3}.life:not(:last-child):after{content:"›";position:absolute;right:-7px;top:42%;font-size:18px;color:#8ca0be}.life b{display:block;font-size:18px;margin-top:8px}
+.bubble-area{height:230px;position:relative;border-left:1px solid #dfe7f0;border-bottom:1px solid #dfe7f0;background:repeating-linear-gradient(to top,transparent 0 54px,#f0f3f7 55px)}.bubble{position:absolute;border-radius:50%;display:grid;place-items:center;text-align:center;color:white;font-size:9px;font-weight:700;box-shadow:0 4px 12px rgba(20,44,80,.12)}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{border:1px solid #e6ebf2;border-radius:6px;padding:7px;min-height:72px;font-size:9px}.day b{display:block;margin-bottom:5px}.eventdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
+.command-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}.live-badge{background:#e9f8f0;color:#15965f;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700}.host-box{display:flex;gap:10px;align-items:center;margin:10px 0}.host-visual{width:96px;height:64px;border-radius:7px;background:linear-gradient(135deg,#dbe7ff,#f6d9df);display:grid;place-items:center;font-size:26px}
+.budget-wrap{display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:center}.budget-donut{width:165px;height:165px;border-radius:50%;background:conic-gradient(#2468e8 0 40.2%,#7457db 40.2% 72.7%,#24ad71 72.7% 91%,#f0a333 91%);position:relative}.budget-donut:after{content:"";position:absolute;inset:38px;border-radius:50%;background:white}.budget-total{position:absolute;inset:0;display:grid;place-items:center;z-index:2;text-align:center;font-weight:800}.budget-total small{display:block;font-weight:500;color:#70809a}
+.product-hero{display:flex;gap:10px}.product-img{width:90px;height:90px;border-radius:8px;background:linear-gradient(145deg,#eef5ff,#fff);border:1px solid #e6ebf2;display:grid;place-items:center;font-size:34px}.sizebar{height:10px;border-radius:6px;overflow:hidden;display:flex;margin-top:5px}.sizebar i:nth-child(1){width:12%;background:#cfe0ff}.sizebar i:nth-child(2){width:46%;background:#4f91f0}.sizebar i:nth-child(3){width:28%;background:#80d6b0}.sizebar i:nth-child(4){width:14%;background:#9a7de7}
+.tornado{display:grid;gap:7px}.tor-row{display:grid;grid-template-columns:120px 1fr 38px;gap:8px;align-items:center;font-size:10px}.tor-track{height:10px;background:#f1f4f8;border-radius:2px;position:relative;overflow:hidden}.tor-track i{display:block;height:100%}.tor-pos{background:#4f91f0}.tor-neg{background:#ef7e7e;margin-left:auto}
+.flow-path{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.flow-node{border:1px solid #a9c9ef;border-radius:7px;padding:9px 11px;background:#f7fbff;font-size:10px}.flow-arrow{color:#6884a9}
+.report-layout{display:grid;grid-template-columns:minmax(0,1.5fr) .65fr .65fr;gap:12px}.report-cover{height:170px;border:1px solid #dfe7f0;border-radius:7px;background:linear-gradient(145deg,#fff 55%,#dbeaff);padding:18px;display:flex;flex-direction:column;justify-content:flex-end}.outline{counter-reset:sec}.outline div{display:flex;gap:8px;padding:7px 0;border-top:1px solid #edf1f5}.outline div:before{counter-increment:sec;content:counter(sec);width:20px;height:20px;border-radius:50%;background:#eaf2ff;color:#2468e8;display:grid;place-items:center;font-size:10px;font-weight:800}
+@media(max-width:1100px){.metric-row,.persona-grid{grid-template-columns:repeat(2,1fr)}.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3,.grid-2,.report-layout{grid-template-columns:1fr}.span-2,.span-3{grid-column:auto}.funnel{grid-template-columns:repeat(3,1fr)}.budget-wrap{grid-template-columns:1fr}}
+
+
+/* === Interaction + polish audit pass 2026-09-18 === */
+:root{--radius:10px;--radius-lg:14px;--shadow-sm:0 1px 2px rgba(17,34,68,.04),0 5px 16px rgba(17,34,68,.045);--shadow-md:0 10px 30px rgba(17,34,68,.09)}
+body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{position:sticky;top:58px;z-index:14;box-shadow:0 6px 18px rgba(16,45,70,.035)}
+.card,.model-panel,.inspector,.evidence,.scenario-log,.kpi,.metric,.generic-panel,.command-card{border-color:#e4eaf2;border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.card{padding:16px}.card h3{letter-spacing:-.01em}.metric{min-height:88px;position:relative;overflow:hidden}.metric:after{content:"";position:absolute;right:-16px;top:-22px;width:72px;height:72px;border-radius:50%;background:#f4f8ff}.metric strong{position:relative;z-index:1}
+.btn,.navbtn,.seg button,.selectish,.persona-card,.fstep,.bubble,.deep-table tbody tr,.list-row,.metric,a{transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease,color .15s ease}
+.btn:hover{border-color:#bdcce0;box-shadow:0 3px 10px rgba(28,55,95,.08);transform:translateY(-1px)}.btn:active{transform:translateY(0)}
+.btn:focus-visible,.navbtn:focus-visible,.seg button:focus-visible,.persona-card:focus-visible,.fstep:focus-visible,.bubble:focus-visible,.deep-table tbody tr:focus-visible,.list-row:focus-visible,.metric:focus-visible,a:focus-visible{outline:2px solid #6ca4f3;outline-offset:2px}
+.deep-table tbody tr,.list-row,.fstep,.bubble,.metric,.persona-card,[data-jump],a:not([href]){cursor:pointer}
+.deep-table tbody tr:hover,.list-row:hover,.metric:hover,.persona-card:hover{background:#f9fbff;box-shadow:0 5px 16px rgba(23,50,90,.055)}
+.metric:hover,.persona-card:hover{transform:translateY(-2px)}.fstep:hover{border-color:#9abcf0;box-shadow:0 4px 12px rgba(35,86,150,.07)}
+.bubble:hover{transform:scale(1.06);box-shadow:0 8px 20px rgba(20,44,80,.16)}
+.panel-head a,a:not([href]){color:#2468e8;font-weight:650}.panel-head a:hover,a:not([href]):hover{text-decoration:underline}
+.deep-header{padding:4px 2px 2px}.deep-header h2{font-size:24px;letter-spacing:-.02em}.deep-header .sub{font-size:12px;margin-top:3px}
+.metric-row{gap:10px}.grid-2,.grid-3,.grid-4{gap:10px}.deep-page{gap:10px}.deep-table th{font-size:10px;letter-spacing:.01em}.deep-table td{color:#50617c}
+.sidebar{box-shadow:8px 0 24px rgba(10,32,63,.06)}.topbar{box-shadow:0 1px 0 rgba(20,45,80,.02)}.navbtn.active{box-shadow:inset 3px 0 0 #8cb7ff,0 5px 16px rgba(0,73,190,.18)}
+.detail-title{font-size:19px;margin:0}.detail-body{color:#5a6b86;line-height:1.7}.detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.detail-meta>div{background:#f7f9fc;border:1px solid #e8edf4;border-radius:8px;padding:10px}.detail-meta small{display:block;color:#7b899e;margin-bottom:3px}
+.prototype-note{font-size:11px;color:#6a7992;background:#f6f9fd;border:1px solid #e1e9f4;border-radius:7px;padding:8px 10px}
+@media(max-width:720px){.app-source{position:static}.card{padding:12px}.deep-header{align-items:flex-start;flex-direction:column}.deep-header .push{margin-left:0}.metric-row{gap:8px}}
+
+
+/* Product access and responsive fixes. */
+:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+body{overflow-x:hidden}.app{grid-template-columns:220px minmax(0,1fr)}.sidebar{min-height:0;overflow-y:auto}.canvas,.card,.workspace,.grid-2>*,.grid-3>*,.grid-4>*,.deep-header>*,.report-layout>*{min-width:0}
+.topbar{height:auto;min-height:58px;flex-wrap:wrap;padding:10px 14px}.topbar .btn{white-space:nowrap}.searchbox{flex:1;min-width:200px;width:auto}.search-results{max-height:320px;overflow:auto}
+.app-source{flex-wrap:wrap;color:#475875;background:#f0f5fc;border-color:#cbd9ed}.app-source strong{color:#254975}.source-meta{flex-wrap:wrap}.kpi .value{overflow-wrap:anywhere}.kpi[role=button]{cursor:pointer}
+.model-head{flex-wrap:wrap}.model-controls{flex-wrap:wrap}.graph-scroll{overflow:auto;width:100%;border-radius:7px;touch-action:pan-x pan-y}.graph{width:1050px;min-width:1050px;overflow:visible;height:390px;margin:0;transform-origin:top left}.node{min-width:136px;max-width:156px;font-size:12px}.node.selected{outline:3px solid #2468e8;outline-offset:2px}.node.unavailable{border-color:#b9c3d2}.node .ntype{color:#52637b}.inspector b{overflow-wrap:anywhere;max-width:65%}.legend{flex-wrap:wrap}.table-scroll{overflow-x:auto;max-width:100%;width:100%}.table-scroll table{min-width:560px}.deep-table tbody tr[role=button],.table tbody tr[role=button]{cursor:pointer}
+.example-catalog{border:1px solid #ccd8e8;border-radius:8px;padding:12px;background:#f4f7fb}.example-catalog>summary{cursor:pointer;font-weight:700}.example-notice{padding:10px;background:#fff7e3;color:#755800;border-radius:6px;margin:10px 0}.page-records{padding:16px;border:1px solid #d9e3ef;background:#fff;border-radius:8px}.page-records h2{margin:0 0 6px}.empty-records{padding:18px;border:1px dashed #ccd6e3;border-radius:7px;margin:10px 0;color:#65738b}.persona-card[hidden]{display:none}.persona-card{color:inherit;text-align:left}.dialog-content{white-space:pre-wrap;overflow-wrap:anywhere}.form-error{color:#b42335;min-height:1.4em}.modal:not([open]){display:none}.modal{border:0;margin:auto}.modal::backdrop{background:rgba(4,14,30,.45)}.modal[open]{display:block}.toast{max-width:min(600px,calc(100vw - 32px))}.report-notes{width:100%;min-height:100px;padding:10px}.simulation-meta{padding:10px;background:#eff5ff;border-radius:6px}.action-link{border:0;background:none;color:var(--brand);padding:4px;cursor:pointer}.mini-chart,.bar-chart,.bubble-area,.funnel{margin-bottom:12px}.browserbar .dots{display:none}.browserbar{padding:0 8px;gap:6px}.browserbar .url{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.browserbar .mode-switch{flex-shrink:0}.mnav{height:auto;min-height:68px;flex-wrap:wrap;padding:14px 26px;gap:12px}.hero-grid>*{min-width:0}.preview-body{overflow:hidden}.preview-main{min-width:0}.preview .source{height:auto}.teams{flex-wrap:wrap}.footer{flex-wrap:wrap;gap:12px}.deep-header{flex-wrap:wrap}.deep-header .push{margin-left:0}.sim-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sim-cell b{overflow-wrap:anywhere}.example-catalog .metric-row{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.report-grid{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+@media(max-width:1050px){.app{grid-template-columns:72px minmax(0,1fr)}.navbtn{min-height:42px}.navbtn .navico{font-size:18px}.navbtn[aria-current=page]{outline:1px solid #84adff}.sb-brand{padding:0 0 16px}.navbtn span:last-child{display:none}}
+@media(max-width:720px){.hero-grid{padding:0 16px;gap:20px}.hero h1{font-size:34px;letter-spacing:-1px}.mnav{padding:12px 16px}.mnav>.brandline{width:100%}.preview-body{grid-template-columns:96px 1fr;height:350px}.mini-kpis{grid-template-columns:repeat(2,1fr)}.preview .mini-model{height:170px;overflow:hidden}.preview .mini-graph{transform:scale(.65);transform-origin:top left;width:340px}.hero-actions{flex-wrap:wrap}.canvas{padding:10px}.topbar{gap:6px;padding:8px}.topbar .searchbox{min-width:100%;order:0}.topbar .btn{font-size:11px;padding:7px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.kpi{padding:9px}.kpi .value{font-size:18px}.node{transform:none}.model-controls .seg{flex-wrap:wrap}.persona-grid,.grid-4{grid-template-columns:1fr}.persona-stats{grid-template-columns:1fr 1fr}.funnel{grid-template-columns:repeat(2,minmax(0,1fr))}.calendar{grid-template-columns:repeat(2,minmax(0,1fr))}.lifecycle{grid-template-columns:1fr}.budget-wrap{grid-template-columns:1fr}.card>div[style*="grid-template-columns:160px"],.card>div[style*="grid-template-columns:150px"]{display:flex!important;flex-wrap:wrap}.signal-row{grid-template-columns:1.4fr .7fr .7fr}.signal-row>*:nth-child(3){display:none}.persona-grid .persona-card{width:100%}.model-controls{margin-left:0}.sim-grid{grid-template-columns:1fr}.metric-form{grid-template-columns:1fr 1fr}.product-hero{flex-wrap:wrap}.deep-page{gap:10px}.fstep{padding:9px 4px}.fstep b{font-size:14px}.tor-row{grid-template-columns:80px 1fr 42px}.app-source{font-size:12px}.hero .checks{gap:8px}.btn{overflow-wrap:anywhere}.modal{padding:16px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+.deep-page{grid-template-columns:minmax(0,1fr)}.deep-page>*,.example-catalog,.model-panel,.bottom-grid>*,.main-grid>*{min-width:0;max-width:100%}
+.bar-chart{overflow-x:auto;overflow-y:hidden;padding-bottom:28px;height:190px}.bar-group{flex:1 0 48px}.bar-label{bottom:-20px}.host-box>*,.list-row .grow{min-width:0}.panel-head{flex-wrap:wrap}
+.node.related{outline:3px dashed #7564c7;outline-offset:2px}.flow-context{background:#edf4ff;border:1px solid #cbdcf7;padding:10px;border-radius:6px;margin:8px 0;overflow-wrap:anywhere}.share-link{width:100%;min-height:100px;word-break:break-all}.shared-report{max-width:900px;margin:30px auto;padding:0 20px}.shared-report table{width:100%;border-collapse:collapse}.shared-report td,.shared-report th{padding:8px;border-bottom:1px solid #dfe6ef}.shared-report p{white-space:pre-wrap;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<div class="browser">
+  <div class="browserbar">
+    <div class="dots"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i></div>
+    <div class="url" id="fakeUrl" aria-live="polite">Business World Agent</div>
+    <div class="mode-switch"><button id="landingMode" class="active">产品介绍</button><button id="appMode">经营工作台</button></div>
+  </div>
+
+  <section id="landing" class="marketing">
+    <nav class="mnav">
+      <div class="brandline"><div class="brandicon">◇</div>Business World Agent</div>
+      <div class="mlinks"><a href="#features">产品功能</a><a href="#workflow">解决方案</a><a href="#teams">适用团队</a><a href="#cta">使用方式</a><a href="#footer">关于我们</a></div>
+      <div class="spacer"></div><button class="btn" data-view="overview">进入工作区</button><button class="btn">了解使用方式</button><button class="btn primary" data-open-app>立即体验</button>
+    </nav>
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">用真实数据，推演更好的生意</div>
+          <h1>把真实经营世界<br>装进一个可推演的系统</h1>
+          <p>Business World Agent 面向内容、直播、电商、广告与商品团队，把人工录入的经营记录、可检查的情景假设和行动草稿放在一起，帮助团队先看清依据，再决定下一步。</p>
+          <div class="hero-actions"><button class="btn primary" data-open-app>立即体验 →</button><button class="btn">了解使用方式</button></div>
+          <div class="checks"><span class="check">经营记录与来源备注</span><span class="check">场景化模拟推演</span><span class="check">可编辑的行动建议</span><span class="check">行动前由你确认</span></div>
+        </div>
+        <div class="preview" aria-label="演示案例，不代表实际经营数据">
+          <div class="preview-head"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i></div>
+          <div class="preview-body">
+            <div class="preview-side"><b>Business World Agent</b><div class="pnav">总览</div><div class="pnav">Persona Studio</div><div class="pnav active">World Builder</div><div class="pnav">内容策略</div><div class="pnav">直播作战室</div><div class="pnav">投放优化</div><div class="pnav">商品分析</div><div class="pnav">模拟实验</div><div class="pnav">报告</div></div>
+            <div class="preview-main">
+              <div class="source">演示案例 · 不代表实际经营数据</div>
+              <div class="mini-kpis"><div class="mini-kpi">GMV<b>¥2,483,221</b></div><div class="mini-kpi">转化率<b>3.24%</b></div><div class="mini-kpi">内容互动量<b>1,204,331</b></div><div class="mini-kpi">广告 ROI<b>4.32</b></div></div>
+              <div class="mini-model"><div class="mini-title">商业世界模型</div><div class="mini-graph">
+                <div class="mnode obs" style="left:6%;top:20%">内容互动量<br><b>1,204,331</b></div>
+                <div class="mnode inf" style="left:8%;top:61%">人群分群<br><b>8 核心人群</b></div>
+                <div class="mnode inf" style="left:38%;top:30%">转化率<br><b>3.24%</b></div>
+                <div class="mnode obs" style="left:38%;top:68%">广告效率<br><b>ROI 4.32</b></div>
+                <div class="mnode sim" style="left:65%;top:45%">GMV<br><b>¥2,483,221</b></div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="features" class="features"><div class="feature-grid">
+      <article class="fcard"><div class="ficon">◇</div><h3>统一商业世界模型</h3><p>把经营记录与相关因素放进同一工作台，查看来源说明，再比较明确的经营假设。</p><button class="action-link" data-info="help">了解更多 →</button></article>
+      <article class="fcard"><div class="ficon">▤</div><h3>记录与来源说明</h3><p>手动添加经营记录，保存来源名称、备注和时间。未核验的记录始终单独标明。</p><button class="action-link" data-info="help">了解更多 →</button></article>
+      <article class="fcard"><div class="ficon">▥</div><h3>情景模拟与推演</h3><p>对市场变化、投放策略、商品组合进行透明建模，在行动前比较不同情景下的业务结果。</p><button class="action-link" data-info="help">了解更多 →</button></article>
+      <article class="fcard"><div class="ficon">✦</div><h3>行动建议与报告</h3><p>从已保存的记录整理报告，区分人工记录、演示案例与情景估算。建议先保存为草稿，再由你决定是否执行。</p><button class="action-link" data-info="help">了解更多 →</button></article>
+    </div></section>
+    <section id="teams" class="teams"><strong>为这些团队<br>整理经营信息与行动建议</strong><div class="teamitem"><span>🛒</span>电商运营</div><div class="teamitem"><span>▤</span>内容团队</div><div class="teamitem"><span>▣</span>直播团队</div><div class="teamitem"><span>◁</span>投放团队</div><div class="teamitem"><span>◇</span>商品团队</div><div class="teamitem"><span>◎</span>管理层</div></section>
+    <section id="workflow" class="workflow"><h2>4 步开启你的商业推演之旅</h2><div class="steps">
+      <div class="step"><div class="num">1</div><div><b>添加经营记录</b><p>填写指标和来源说明，仅保存到当前浏览器。</p></div></div>
+      <div class="step"><div class="num">2</div><div><b>构建商业世界模型</b><p>识别关键变量、业务实体与关系。</p></div></div>
+      <div class="step"><div class="num">3</div><div><b>运行情景模拟</b><p>设置策略变化，得到可复现的模型结果。</p></div></div>
+      <div class="step"><div class="num">4</div><div><b>生成分析报告</b><p>把证据、假设、结果整理成决策材料。</p></div></div>
+    </div></section>
+    <section id="cta" class="cta"><h2>让数据成为更好的经营伙伴</h2><div class="muted">进入 Business World Agent，查看统一经营世界并运行你的第一个情景。</div><div class="cta-actions"><button class="btn primary" data-open-app>立即体验</button><button class="btn">了解使用方式</button></div></section>
+    <footer id="footer" class="footer"><div>◇ <b>Business World Agent</b> · 用真实世界的数据，创造更确定的商业未来。</div><div><a href="#features">产品功能</a>　<a href="#workflow">使用方式</a>　<button class="btn" data-info="privacy">数据与隐私</button></div></footer>
+  </section>
+
+  <section id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="sb-brand">Business World Agent<small>从经营记录出发</small></div>
+      <nav id="appNav">
+        <button class="navbtn" data-view="overview"><span class="navico">▦</span><span>总览</span></button>
+        <button class="navbtn" data-view="persona"><span class="navico">♙</span><span>Persona Studio</span></button>
+        <button class="navbtn active" data-view="world"><span class="navico">◇</span><span>World Builder</span></button>
+        <button class="navbtn" data-view="content"><span class="navico">▤</span><span>内容策略</span></button>
+        <button class="navbtn" data-view="live"><span class="navico">▣</span><span>直播作战室</span></button>
+        <button class="navbtn" data-view="growth"><span class="navico">◉</span><span>投放优化</span></button>
+        <button class="navbtn" data-view="product"><span class="navico">▢</span><span>商品分析</span></button>
+        <button class="navbtn" data-view="experiment"><span class="navico">♜</span><span>模拟实验</span></button>
+        <button class="navbtn" data-view="report"><span class="navico">▧</span><span>报告</span></button>
+      </nav>
+      <div class="sb-bottom"><strong>构建更真实的商业世界</strong><button class="navbtn" data-info="privacy">数据与隐私</button><button class="navbtn" data-info="help">使用帮助</button></div>
+    </aside>
+    <main class="workspace">
+      <header class="topbar">
+        <div class="searchbox"><input id="searchInput" type="search" aria-label="搜索页面、指标、来源或情景" placeholder="搜索页面、指标、来源或情景…" autocomplete="off" aria-controls="searchResults" aria-expanded="false"><div id="searchResults" class="search-results hidden"></div></div>
+        <div class="push"></div>
+        <button class="btn" id="refreshBtn">↻ 刷新数据</button>
+        <button class="btn" id="sourceBtn">▤ 数据来源</button>
+        <button class="btn" data-info="privacy">我的记录</button>
+      </header>
+      <div class="canvas">
+        <div class="mobile-note">可横向滑动表格和关系图，查看完整内容。</div>
+        <div class="app-source" id="sourceBanner" role="status"></div>
+        <div class="kpis" id="kpiRow"></div>
+
+        <section class="view" id="view-overview"></section>
+        <section class="view" id="view-persona"></section>
+        <section class="view active" id="view-world">
+          <div class="main-grid">
+            <div class="model-panel">
+              <div class="model-head"><div><div class="model-title">商业世界模型</div><div class="model-sub">查看经营记录及关联因素，比较不同经营假设。</div></div>
+                <div class="model-controls"><span class="tiny muted">场景选择：</span><div class="seg" id="scenarioSeg"><button data-scenario="baseline" class="active">基准情景</button><button data-scenario="growth">增长计划</button><button data-scenario="downside">下行风险</button></div><button class="btn primary" id="runSim">▶ 运行模拟</button></div>
+              </div>
+              <div class="graph-scroll" tabindex="0" aria-label="商业关系图，可横向滚动"><div class="graph" id="graph">
+                <div class="edge" style="left:24%;top:28%;width:22%;transform:rotate(18deg)"></div>
+                <div class="edge" style="left:23%;top:69%;width:26%;transform:rotate(-19deg)"></div>
+                <div class="edge" style="left:47%;top:36%;width:23%;transform:rotate(20deg)"></div>
+                <div class="edge" style="left:47%;top:66%;width:24%;transform:rotate(-15deg)"></div>
+                <div class="edge" style="left:70%;top:50%;width:20%;transform:rotate(-18deg)"></div>
+                <div class="edge" style="left:70%;top:52%;width:21%;transform:rotate(19deg)"></div>
+                <button class="node obs" data-entity="content" style="left:7%;top:15%">内容互动量<br><b>—</b><div class="ntype">暂无记录</div></button>
+                <button class="node inf" data-entity="persona" style="left:8%;top:62%">人群分群<br><b>—</b><div class="ntype">暂无记录</div></button>
+                <button class="node obs" data-entity="live" style="left:35%;top:8%">直播间表现<br><b>—</b><div class="ntype">暂无记录</div></button>
+                <button class="node inf" data-entity="conversion" style="left:35%;top:38%">转化率<br><b>—</b><div class="ntype">暂无记录</div></button>
+                <button class="node obs" data-entity="ads" style="left:35%;top:70%">广告效率<br><b>—</b><div class="ntype">暂无记录</div></button>
+                <button class="node sim" data-entity="gmv" style="left:66%;top:42%">GMV<br><b id="graphGmv">—</b><div class="ntype">暂无记录</div></button>
+                <button class="node inf" data-entity="revenue" style="left:83%;top:19%">收入<br><b>—</b><div class="ntype">暂无记录</div></button>
+                <button class="node obs" data-entity="repeat" style="left:83%;top:67%">复购率<br><b>—</b><div class="ntype">暂无记录</div></button>
+              </div>
+              </div><div class="legend"><span><i style="background:#24a56b"></i>人工记录</span><span><i style="background:#8066de"></i>推导结果</span><span><i style="background:#2468e8"></i>情景估算</span></div>
+            </div>
+            <aside class="inspector" id="inspector"></aside>
+          </div>
+          <div class="bottom-grid"><div class="evidence"><div class="panel-head"><strong>证据与数据 <span id="evidenceCount" class="muted">0</span></strong><a style="color:var(--brand)">查看更多 →</a></div><table class="table"><thead><tr><th>时间</th><th>来源</th><th>事件</th><th>详情</th></tr></thead><tbody id="evidenceBody"></tbody></table></div><div class="scenario-log"><div class="panel-head"><strong>模拟记录 <span id="scenarioCount" class="muted">0</span></strong><a style="color:var(--brand)">查看更多 →</a></div><table class="table"><thead><tr><th>时间</th><th>场景</th><th>核心假设</th><th>预期结果</th></tr></thead><tbody id="scenarioBody"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-experiment"></section>
+<section class="view" id="view-report"></section>
+<section class="view" id="view-content"></section>
+        <section class="view" id="view-live"></section>
+        <section class="view" id="view-growth"></section>
+        <section class="view" id="view-product"></section>
+      </div>
+    </main>
+  </section>
+</div>
+
+<dialog id="sourceModal" class="modal" aria-labelledby="sourceTitle">
+<form id="sourceForm" novalidate>
+<div class="modal-head"><div><h2 id="sourceTitle">添加经营记录</h2><p class="muted">仅保存到当前浏览器。人工录入不等于来源已经核验。</p></div><button type="button" class="close" data-close-dialog aria-label="关闭数据来源">×</button></div>
+<div class="editor-grid"><div class="field"><label for="sourceName">来源名称</label><input id="sourceName" required maxlength="120" placeholder="例如：9月订单汇总"></div><div class="field"><label for="sourceProvider">录入方式</label><input id="sourceProvider" value="人工录入" readonly></div></div>
+<div class="metric-form">
+<div class="field"><label for="editGmv">GMV（元）</label><input id="editGmv" type="number" min="0" max="1000000000000" step="any" required></div>
+<div class="field"><label for="editConversion">转化率（%）</label><input id="editConversion" type="number" min="0" max="100" step="any" required></div>
+<div class="field"><label for="editRoi">广告投入产出比</label><input id="editRoi" type="number" min="0" max="1000000" step="any" required></div>
+<div class="field"><label for="editRepeat">复购率（%）</label><input id="editRepeat" type="number" min="0" max="100" step="any" required></div>
+<div class="field"><label for="editEngagement">内容互动量（次）</label><input id="editEngagement" type="number" min="0" max="1000000000000" step="1" required></div>
+<div class="field"><label for="editLive">直播观看量（人次）</label><input id="editLive" type="number" min="0" max="1000000000000" step="1" required></div>
+<div class="field"><label for="editRevenue">收入（元）</label><input id="editRevenue" type="number" min="0" max="1000000000000" step="any" required></div>
+</div>
+<div class="field" style="margin-top:12px"><label for="sourceNotes">来源备注</label><textarea id="sourceNotes" maxlength="2000" placeholder="填写统计周期和来源说明，请勿填写密码或密钥。"></textarea></div>
+<p id="sourceError" role="alert" class="form-error"></p>
+<div class="modal-actions"><button type="button" class="btn" id="cancelSource" data-close-dialog>取消</button><button class="btn primary" id="saveSource" type="submit">保存记录</button></div>
+</form></dialog>
+<dialog id="detailModal" class="modal" aria-labelledby="detailTitle"><div class="modal-head"><h2 id="detailTitle"></h2><button class="close" data-close-dialog aria-label="关闭详情">×</button></div><div id="detailBody"></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<script src="./src/vendor/pptxgen.bundle.js"></script>
+<script type="module" src="./src/ui-runtime.mjs"></script>
+<noscript>请启用 JavaScript 以使用经营工作台。未启用时不会显示或保存经营记录。</noscript>
+</body></html>

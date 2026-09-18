@@ -1,0 +1,23 @@
+import {readFileSync,existsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import path from 'node:path';
+const root=process.cwd();
+const read=p=>JSON.parse(readFileSync(path.join(root,p),'utf8'));
+const failures=[];
+const requireGate=(value,message)=>{if(!value)failures.push(message);};
+const evidence=read('docs/ui-shared-audit/runtime/results.json');
+requireGate(evidence.status==='PASS'&&evidence.passed===evidence.checks.length&&evidence.passed>=40&&evidence.checks.every(c=>c.status==='PASS'),'Shared browser run incomplete or failed');
+requireGate(evidence.mockedBrowserResponses===false,'Shared persistence cannot be verified with intercepted API responses');
+requireGate(!evidence.pageErrors.length&&!evidence.unexpectedConsoleErrors.length,'Unexpected browser errors');
+requireGate(evidence.databaseEvidence?.integrity==='ok','Database integrity evidence missing');
+for(const phrase of ['UI save is read verbatim','Database inspection proves','Actual Agent scenario appears','Actual Agent record write appears','stale browser receives','Cross-origin mutations','real server-process restart','separately authenticated browser','Missing storage','Consented shared-workspace report copy','portable report copy never grants','real application home','Unavailable workspace remains unknown','Unavailable source inspection','Source editing waits','Report creation preserves unknown','Scenario action cannot turn unavailable','Draft creation waits'])requireGate(evidence.checks.some(c=>c.status==='PASS'&&c.name.includes(phrase)),'Missing exercised contract: '+phrase);
+const required=['app/page.tsx','lib/business-world/workspace-service.ts','lib/business-world/real-service.ts','lib/business-world/http.ts','agent/tools/business_world_snapshot.ts','agent/tools/business_scenario_experiment.ts','agent/tools/business_world_save_record.ts','public/business-world/ui.html','public/business-world/ui.md','public/business-world/src/ui-client.mjs','public/business-world/src/ui-runtime.mjs','tests/shared_workspace_browser.py','tests/workspace.test.ts'];
+for(const file of required)requireGate(Boolean(evidence.sourceHashes?.[file]),'Unhashed critical source: '+file);
+for(const [file,sha] of Object.entries(evidence.sourceHashes??{}))requireGate(createHash('sha256').update(readFileSync(path.join(root,file))).digest('hex')===sha,'Stale runtime evidence: '+file);
+const paired=read('public/business-world/paired-source.json');
+for(const [file,sha] of Object.entries(paired.files))requireGate(createHash('sha256').update(readFileSync(path.join(root,'public/business-world',file))).digest('hex')===sha,'Paired UI copy drift: '+file);
+for(const width of [1440,390])for(const view of ['overview','persona','world','content','live','growth','product','experiment','report'])requireGate(existsSync(path.join(root,`docs/ui-shared-audit/runtime/${width}-${view}.png`)),'Missing runtime screenshot: '+width+' '+view);
+requireGate(!readFileSync('app/page.tsx','utf8').includes('business-world-restored'),'Home still renders the obsolete, divergent UI');
+if(failures.length){console.error(failures.map(f=>'FAIL: '+f).join('\n'));process.exit(1);}
+console.log(`PASS: ${evidence.passed} real shared-workspace checks; current source hashes and paired files match.`);
+console.log('Profile: production-built self-hosted application, manual-unverified records, actual authenticated authored tools. Cloud deployment, provider ingestion and language-model turns are not certified.');

@@ -12,3 +12,6 @@ dist
 .DS_Store
 *.tsbuildinfo
 .env*.local
+
+# Explicit self-hosted business records are never source artifacts.
+.business-world-data/
