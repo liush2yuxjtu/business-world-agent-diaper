@@ -1,0 +1,69 @@
+name: Browser concept rebuild
+on:
+  push:
+    branches: [feat/browser-concept-rebuild-20260918]
+    paths: [scripts/rebuild-business-workbench.py]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: browser-concept-rebuild-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.14.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install reproducible dependencies
+        run: |
+          npm install -g pnpm@10.12.4
+          pnpm install --frozen-lockfile
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Read available framework guidance
+        run: |
+          if [ -d node_modules/eve/dist/docs/public ]; then find -L node_modules/eve/dist/docs/public -maxdepth 2 -type f -name '*.md' -print; else echo 'Installed eve public guide directory is absent; repository architecture guide governs unchanged integration.'; fi
+      - name: Rebuild paired UI and record source provenance
+        run: python scripts/rebuild-business-workbench.py
+      - name: Syntax and workspace contracts
+        run: |
+          node --check public/business-world/src/ui-workbench.mjs
+          node --check public/business-world/src/ui-runtime.mjs
+          npm run typecheck
+          npm run test:workspace
+      - name: Production build
+        run: npm run build
+      - name: Registered agent and shared-state browser regressions
+        run: |
+          python tests/shared_workspace_browser.py
+          node scripts/check-shared-audit.mjs
+      - name: Nine concepts and complete browser journeys
+        run: python tests/concept_workbench_browser.py
+      - name: Commit verified UI and one concept per screen
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/business-world docs/design-handoff docs/concept-rebuild docs/ui-shared-audit/runtime
+          git diff --cached --quiet || git commit -m 'feat: ship nine browser-rendered concepts and verified workbench flows [skip ci]'
+          git push origin HEAD:${GITHUB_REF_NAME}
+      - name: Export review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: business-world-browser-concept-review
+          if-no-files-found: warn
+          path: |
+            public/business-world/
+            docs/concept-rebuild/
+            docs/ui-shared-audit/runtime/
+            scripts/rebuild-business-workbench.py
+            tests/concept_workbench_browser.py
