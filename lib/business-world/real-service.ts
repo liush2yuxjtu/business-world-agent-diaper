@@ -9,32 +9,86 @@ const SUPABASE_STATE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state?id
 const SUPABASE_SCENARIO_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_scenario_run`;
 
 export const businessWorldPayloadSchema = z.object({
+  meta: z.object({
+    dataMode: z.enum(["simulated", "observed"]),
+    datasetVersion: z.string(),
+    designSource: z.string(),
+    warning: z.string(),
+  }),
+  personas: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    title: z.string(),
+    goal: z.string(),
+    pain: z.string(),
+    content: z.string(),
+    trigger: z.string(),
+    population: z.number().int().min(0).nullable(),
+    conversionRate: z.number().min(0).max(100).nullable(),
+    repeatRate: z.number().min(0).max(100).nullable(),
+    gmvShare: z.number().min(0).max(100).nullable(),
+  })),
   content: z.object({
     engagementRate: z.number().min(0).max(100).nullable(),
     weeklyOpportunities: z.number().int().min(0).nullable(),
+    totalPlays: z.number().int().min(0).nullable(),
+    interactions: z.number().int().min(0).nullable(),
+    topTopics: z.array(z.object({ title: z.string(), persona: z.string(), potential: z.string() })),
+    scripts: z.array(z.object({ name: z.string(), durationSec: z.number().int().min(0), format: z.string() })),
   }),
   live: z.object({
     roomEntryRate: z.number().min(0).max(100).nullable(),
     cartRate: z.number().min(0).max(100).nullable(),
+    avgWatchSec: z.number().min(0).nullable(),
+    payConversionRate: z.number().min(0).max(100).nullable(),
+    exposureUv: z.number().int().min(0).nullable(),
+    watchUv: z.number().int().min(0).nullable(),
+    peakOnline: z.number().int().min(0).nullable(),
+    paidOrders: z.number().int().min(0).nullable(),
+    gmv: z.number().min(0).nullable(),
+    sessions: z.array(z.object({
+      id: z.string(), title: z.string(), durationMin: z.number().min(0), watchUv: z.number().int().min(0),
+      cartRate: z.number().min(0).max(100), paidOrders: z.number().int().min(0), gmv: z.number().min(0),
+    })),
   }),
   commerce: z.object({
     conversionRate: z.number().min(0).max(100).nullable(),
     gmv: z.number().min(0).nullable(),
     newCustomers: z.number().int().min(0).nullable(),
+    refundRate: z.number().min(0).max(100).nullable(),
+    sellThroughRate: z.number().min(0).max(100).nullable(),
+    aov: z.number().min(0).nullable(),
+    products: z.array(z.object({
+      id: z.string(), name: z.string(), size: z.string(), price: z.number().min(0), gmv: z.number().min(0),
+      conversionRate: z.number().min(0).max(100), stockDays: z.number().min(0), refundRate: z.number().min(0).max(100),
+      image: z.string(),
+    })),
   }),
   ads: z.object({
     budget: z.number().min(0).nullable(),
+    spend: z.number().min(0).nullable(),
     roi: z.number().min(0).nullable(),
     cpa: z.number().min(0).nullable(),
+    ctr: z.number().min(0).max(100).nullable(),
+    newCustomerCost: z.number().min(0).nullable(),
+    channelMix: z.array(z.object({ channel: z.string(), share: z.number().min(0).max(100) })),
+    campaigns: z.array(z.object({
+      id: z.string(), name: z.string(), channel: z.string(), budget: z.number().min(0), spend: z.number().min(0),
+      ctr: z.number().min(0).max(100), cpa: z.number().min(0), roi: z.number().min(0), status: z.string(),
+    })),
+    creatives: z.array(z.object({ name: z.string(), roi: z.number().min(0) })),
   }),
-  notes: z.string().max(2000).default(""),
+  report: z.object({
+    period: z.string(), audience: z.string(), headline: z.string(), summary: z.string(), sections: z.array(z.string()),
+  }),
+  notes: z.string().max(4000).default(""),
 });
 
 export type BusinessWorldPayload = z.infer<typeof businessWorldPayloadSchema>;
 
 export const businessWorldWriteSchema = z.object({
   sourceLabel: z.string().trim().min(2).max(120),
-  sourceType: z.enum(["system-record", "manual-entry", "csv-import", "official-api"]),
+  sourceType: z.enum(["system-record", "manual-entry", "csv-import", "official-api", "simulated"]),
   observedAt: z.string().datetime(),
   payload: businessWorldPayloadSchema,
 });
@@ -42,7 +96,7 @@ export const businessWorldWriteSchema = z.object({
 export type BusinessWorldState = {
   id: string;
   sourceLabel: string;
-  sourceType: "system-record" | "manual-entry" | "csv-import" | "official-api";
+  sourceType: "system-record" | "manual-entry" | "csv-import" | "official-api" | "simulated";
   observedAt: string;
   updatedAt: string;
   payload: BusinessWorldPayload;
@@ -146,7 +200,7 @@ export async function saveBusinessWorldState(input: unknown): Promise<BusinessWo
 function provenance(state: BusinessWorldState | null) {
   return state
     ? {
-        sourceMode: "persisted-observation" as const,
+        sourceMode: state.sourceType === "simulated" ? ("simulated" as const) : ("persisted-observation" as const),
         provider: state.sourceType,
         sourceLabel: state.sourceLabel,
         asOf: state.observedAt,
