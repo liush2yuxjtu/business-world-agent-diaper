@@ -1,0 +1,71 @@
+{
+  "fileId": "d8ac01df-6646-81d2-8008-a7f7f0d142ef",
+  "pageId": "4a42a5af-7d50-8059-8008-a8105f12f5f5",
+  "pageName": "07 AI Screen Concepts",
+  "boards": [
+    {
+      "id": "4a42a5af-7d50-8059-8008-a810c373a761",
+      "name": "Concept / Overview",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a810f1643d6f",
+      "name": "Concept / Persona Studio",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a81249ff0609",
+      "name": "Concept / World Builder",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a8128678492f",
+      "name": "Concept / Content Strategy",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a812c7e935a8",
+      "name": "Concept / Live War Room",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a812f4b618a8",
+      "name": "Concept / Ad Optimization",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a81322a95a59",
+      "name": "Concept / Commerce Analytics",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a81352b7226f",
+      "name": "Concept / Simulation Experiment",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    },
+    {
+      "id": "4a42a5af-7d50-8059-8008-a81383196f66",
+      "name": "Concept / Reports",
+      "width": 1586,
+      "height": 992,
+      "images": 1
+    }
+  ],
+  "sourceScreens": 9
+}
