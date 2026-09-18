@@ -5,6 +5,10 @@ import {
   BarChart3, Box, ClipboardList, Database, FlaskConical, Home, Package, Play,
   Radio, RefreshCw, Save, Search, ShieldCheck, Sparkles, Users, Video,
 } from 'lucide-react';
+import {
+  OverviewRestored, PersonaRestored, WorldRestored, ContentRestored, LiveRestored,
+  GrowthRestored, ProductRestored, ExperimentRestored, ReportRestored,
+} from './_components/business-world-restored';
 
 type Payload = {
   content: { engagementRate: number | null; weeklyOpportunities: number | null };
@@ -183,7 +187,16 @@ export default function App() {
   const matches = useMemo(() => search.trim() ? nav.filter(([,label]) => label.toLowerCase().includes(search.trim().toLowerCase())) : [], [search]);
   const data = snapshot?.data ?? null;
   const common = { data, onConnect: () => setEditing(true) };
-  const view = active === 'overview' ? <Overview {...common}/> : active === 'persona' ? <PersonaView {...common}/> : active === 'world' ? <WorldView {...common}/> : active === 'content' ? <DataView title="内容策略" description="仅展示已持久化的内容观测。" {...common} metrics={data ? [['内容互动率',fmt(data.content.engagementRate,'%')],['本周机会',fmt(data.content.weeklyOpportunities,' 条')]] : []}/> : active === 'live' ? <DataView title="直播作战室" description="直播指标来自同一持久化 Business World 状态。" {...common} metrics={data ? [['直播进房率',fmt(data.live.roomEntryRate,'%')],['直播加购率',fmt(data.live.cartRate,'%')]] : []}/> : active === 'growth' ? <DataView title="投放优化" description="不再展示虚构 Campaign；只有核验后的聚合投放数据。" {...common} metrics={data ? [['预算',fmt(data.ads.budget,' 元')],['ROI',fmt(data.ads.roi)],['CPA',fmt(data.ads.cpa,' 元')]] : []}/> : active === 'product' ? <DataView title="商品分析" description="交易数据必须来自核验后的系统记录。" {...common} metrics={data ? [['GMV',fmt(data.commerce.gmv,' 元')],['转化率',fmt(data.commerce.conversionRate,'%')],['新客',fmt(data.commerce.newCustomers,' 人')]] : []}/> : active === 'experiment' ? <ExperimentView snapshot={snapshot}/> : <ReportView snapshot={snapshot} onConnect={() => setEditing(true)}/>;
+  const view =
+    active === 'overview' ? <OverviewRestored data={data}/> :
+    active === 'persona' ? <PersonaRestored/> :
+    active === 'world' ? <WorldRestored data={data}/> :
+    active === 'content' ? <ContentRestored data={data}/> :
+    active === 'live' ? <LiveRestored data={data}/> :
+    active === 'growth' ? <GrowthRestored data={data}/> :
+    active === 'product' ? <ProductRestored data={data}/> :
+    active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
+    <ReportRestored snapshot={snapshot}/>;
 
   return <main className="app-shell"><aside className="sidebar"><div className="brand"><div className="brand-mark">↗</div><div><b>Business<br/>World Agent</b><small>REALITY FIRST</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} onClick={() => { setActive(id); setSearch(''); }}><Icon size={18}/><span>{label}</span></button>)}</nav><div className="sidebar-promo">真实数据优先<br/>无数据不造数<small>Evidence over appearance</small><div className="diaper-box">REAL</div></div></aside><section className="workspace"><div className="topbar"><div className="search real-search"><Search size={16}/><input aria-label="搜索功能" placeholder="搜索功能..." value={search} onChange={e => setSearch(e.target.value)}/>{matches.length>0 && <div className="search-results">{matches.map(([id,label]) => <button key={id} onClick={() => { setActive(id); setSearch(''); }}>{label}</button>)}</div>}</div><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle="只把有运行证据的能力当成真实能力。" onExperiment={() => setActive('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取持久化状态…</section> : error ? <section className="panel empty-panel"><h3>数据边界不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : view}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={() => setEditing(false)} readOnly={!snapshot?.provenance.writable}/>}</main>;
 }
