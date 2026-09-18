@@ -48,11 +48,11 @@ function fmt(value: number | null | undefined, suffix = '') {
 }
 
 function Metric({ label, value, observed = true }: { label: string; value: string; observed?: boolean }) {
-  return <div className="metric"><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-sub">{observed ? '已持久化观测' : 'Not observed yet'}</div></div>;
+  return <div className="metric"><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-sub">{observed ? '已持久化观测' : '待观测'}</div></div>;
 }
 
 function HypothesisTag() {
-  return <span className="hypothesis-tag">HYPOTHESIS</span>;
+  return <span className="hypothesis-tag">研究假设</span>;
 }
 
 function Unknown({ children = '—' }: { children?: React.ReactNode }) {
@@ -73,7 +73,7 @@ export function OverviewRestored({ data }: { data: BusinessPayload | null }) {
         <WorldCard n="3" title="千川 / 巨量投放世界" text="预算 · CPA · ROI" icon={Megaphone}/>
         <WorldCard n="4" title="电商交易世界" text="GMV · 转化 · 新客" icon={ShoppingCart}/>
         <WorldCard n="5" title="家庭使用世界" text="研究假设 · 待真实验证" icon={Heart}/>
-        <WorldCard n="6" title="消费者世界" text="Persona hypothesis · 待分群验证" icon={Users}/>
+        <WorldCard n="6" title="消费者世界" text="Persona 研究假设 · 待分群验证" icon={Users}/>
       </div>
     </section>
     <section className="metrics-row">
@@ -92,7 +92,7 @@ function WorldCard({ n, title, text, icon: Icon }: { n: string; title: string; t
 
 export function PersonaRestored() {
   return <>
-    <section className="hero-panel restored-persona-hero"><div><div className="eyebrow">Persona Studio</div><h2>恢复完整人群结构，但不恢复假的人群规模</h2><p>研究假设可以保留；人口占比、转化、GMV 等必须等待真实分群数据。</p></div><div className="hero-baby">HYPOTHESIS<br/><small>NOT OBSERVED FACT</small></div></section>
+    <section className="hero-panel restored-persona-hero"><div><div className="eyebrow">Persona Studio</div><h2>恢复完整人群结构，但不恢复假的人群规模</h2><p>研究假设可以保留；人口占比、转化、GMV 等必须等待真实分群数据。</p></div><div className="hero-baby">研究假设<br/><small>非已观测事实</small></div></section>
     <div className="two-col">
       <section className="panel">
         <div className="section-title"><span>核心人群假设</span><small>结构保留 · 指标待验证</small></div>
@@ -112,9 +112,9 @@ export function PersonaRestored() {
         </div>
       </section>
       <aside className="panel insight"><div className="section-title"><span>AI 研究框架</span><Bot size={18}/></div><ol>
-        <li><b>保留假设，不冒充事实</b><p>Persona 名称与研究方向是 product contract；数值结论必须由真实行为数据验证。</p></li>
-        <li><b>连接真实分群后再计算指标</b><p>Population、share、conversion、复购等字段当前保持未知。</p></li>
-        <li><b>同一 reality boundary 服务 UI 与 Agent</b><p>避免 UI 看起来真实、Agent 却仍读取 mock。</p></li>
+        <li><b>保留假设，不冒充事实</b><p>Persona 名称与研究方向是 产品结构；数值结论必须由真实行为数据验证。</p></li>
+        <li><b>连接真实分群后再计算指标</b><p>人群规模、占比、转化、复购等字段当前保持未知。</p></li>
+        <li><b>统一经营快照贯穿分析与模拟</b><p>经营指标、策略分析与模拟都引用同一份来源信息。</p></li>
       </ol></aside>
     </div>
   </>;
@@ -129,10 +129,10 @@ export function WorldRestored({ data }: { data: BusinessPayload | null }) {
   ];
   return <section className="panel builder restored-builder">
     <div className="world-hero restored-world-builder">
-      <div className="world-core"><div className="orbit"><Sparkles/><b>REAL<br/>BASELINE</b><small>observation layer</small></div>{personas.map((p,i)=><div className={`orbit-person p${i+1}`} key={p.name}><span>{p.name}</span><small>hypothesis</small></div>)}</div>
+      <div className="world-core"><div className="orbit"><Sparkles/><b>经营<br/>基线</b><small>已连接数据</small></div>{personas.map((p,i)=><div className={`orbit-person p${i+1}`} key={p.name}><span>{p.name}</span><small>研究假设</small></div>)}</div>
       <div className="worlds">{worlds.map(([title,value,label],i)=><div className="world-card" key={title}><span>{i+1}</span><Sparkles/><div><b>{title}</b><small>{label}: {value}</small></div></div>)}</div>
     </div>
-    <div className="observation-note"><b>Observation ≠ assumption</b><span>真实观测进入 baseline；Persona / scenario assumptions 单独标记，不混为市场事实。</span></div>
+    <div className="observation-note"><b>观测数据 ≠ 研究假设</b><span>观测数据进入经营基线；Persona 与模拟假设单独标记，不与实际经营结果混淆。</span></div>
   </section>;
 }
 
@@ -140,9 +140,9 @@ export function ContentRestored({ data }: { data: BusinessPayload | null }) {
   return <>
     <section className="metrics-row"><Metric label="内容互动率" value={fmt(data?.content.engagementRate,'%')} observed={data?.content.engagementRate != null}/><Metric label="本周内容机会" value={fmt(data?.content.weeklyOpportunities,' 条')} observed={data?.content.weeklyOpportunities != null}/><Metric label="真实评论洞察" value="—" observed={false}/><Metric label="素材表现" value="—" observed={false}/></section>
     <div className="content-grid">
-      <section className="panel"><div className="section-title"><span>选题机会</span><small>HYPOTHESIS UNTIL OBSERVED</small></div><div className="topic-list">{topics.map((t,i)=><div className="topic" key={t}><b>{i+1}</b><span><strong>{t}</strong><small>{personas[i%personas.length].title} · research hypothesis</small></span><em>待观测</em></div>)}</div>
-      <div className="section-title spaced"><span>短视频脚本结构</span><small>不显示假的 CTR / uplift</small></div><div className="script-grid">{['问题切入','真实场景','直播桥接'].map((x,i)=><div className="script" key={x}><div className="thumb">{i===2?'LIVE':`${15+i*15}s`}</div><b>{x}</b><p>保留创意结构；表现数据接入真实抖音来源后再显示。</p></div>)}</div></section>
-      <aside className="panel live-plan"><div className="section-title"><span>内容 → 直播桥接</span><span className="live">FLOW</span></div><div className="live-preview"><div className="presenter">内容<br/><span>→ 直播</span></div><Play size={34}/></div><div className="chip-grid"><span>真实测评</span><span>尺码指南</span><span>场景演示</span><span>用户问答</span></div></aside>
+      <section className="panel"><div className="section-title"><span>选题机会</span><small>研究假设 · 待数据验证</small></div><div className="topic-list">{topics.map((t,i)=><div className="topic" key={t}><b>{i+1}</b><span><strong>{t}</strong><small>{personas[i%personas.length].title} · 研究假设</small></span><em>待观测</em></div>)}</div>
+      <div className="section-title spaced"><span>短视频脚本结构</span><small>效果指标待数据验证</small></div><div className="script-grid">{['问题切入','真实场景','直播桥接'].map((x,i)=><div className="script" key={x}><div className="thumb">{i===2?'LIVE':`${15+i*15}s`}</div><b>{x}</b><p>保留创意结构；表现数据接入真实抖音来源后再显示。</p></div>)}</div></section>
+      <aside className="panel live-plan"><div className="section-title"><span>内容 → 直播桥接</span><span className="live">内容桥接</span></div><div className="live-preview"><div className="presenter">内容<br/><span>→ 直播</span></div><Play size={34}/></div><div className="chip-grid"><span>真实测评</span><span>尺码指南</span><span>场景演示</span><span>用户问答</span></div></aside>
     </div>
   </>;
 }
@@ -164,22 +164,22 @@ export function LiveRestored({ data }: { data: BusinessPayload | null }) {
 }
 
 function Funnel({ label, value, observed }: { label: string; value: string; observed: boolean }) {
-  return <div><span>{label}</span><b>{value}</b><small>{observed?'observed':'not observed'}</small></div>;
+  return <div><span>{label}</span><b>{value}</b><small>{observed?'已观测':'待观测'}</small></div>;
 }
 
 export function GrowthRestored({ data }: { data: BusinessPayload | null }) {
   return <>
-    <section className="metrics-row"><Metric label="总预算" value={fmt(data?.ads.budget,' 元')} observed={data?.ads.budget != null}/><Metric label="ROI" value={fmt(data?.ads.roi)} observed={data?.ads.roi != null}/><Metric label="CPA" value={fmt(data?.ads.cpa,' 元')} observed={data?.ads.cpa != null}/><Metric label="Campaign-level data" value="—" observed={false}/></section>
-    <div className="two-col growth-layout"><section className="panel"><div className="section-title"><span>投放活动控制台</span><small>campaign structure preserved</small></div><div className="campaign-grid">{campaignHypotheses.map((name,i)=><div className="campaign" key={name}><div className="campaign-head"><div className="mini-avatar">{i+1}</div><div><b>{name}</b><small>campaign hypothesis</small></div><HypothesisTag/></div><div className="campaign-kpis"><span>预算<b>—</b></span><span>CTR<b>—</b></span><span>CPA<b>—</b></span><span>ROI<b>—</b></span></div><button disabled>等待真实 Campaign 数据</button></div>)}</div>
+    <section className="metrics-row"><Metric label="总预算" value={fmt(data?.ads.budget,' 元')} observed={data?.ads.budget != null}/><Metric label="ROI" value={fmt(data?.ads.roi)} observed={data?.ads.roi != null}/><Metric label="CPA" value={fmt(data?.ads.cpa,' 元')} observed={data?.ads.cpa != null}/><Metric label="活动明细" value="—" observed={false}/></section>
+    <div className="two-col growth-layout"><section className="panel"><div className="section-title"><span>投放活动控制台</span><small>投放结构</small></div><div className="campaign-grid">{campaignHypotheses.map((name,i)=><div className="campaign" key={name}><div className="campaign-head"><div className="mini-avatar">{i+1}</div><div><b>{name}</b><small>活动假设</small></div><HypothesisTag/></div><div className="campaign-kpis"><span>预算<b>—</b></span><span>CTR<b>—</b></span><span>CPA<b>—</b></span><span>ROI<b>—</b></span></div><button disabled>等待投放活动数据</button></div>)}</div>
     <div className="split-lower"><div><div className="section-title"><span>人群投放矩阵</span></div><div className="bars">{personas.map(p=><div key={p.name}><span>{p.title}</span><i style={{width:'0%'}}/><b>—</b></div>)}</div></div><div><div className="section-title"><span>创意 A/B 测试</span></div><div className="creative-row">{['透气实测','夜间防漏','尺码指南','家庭场景'].map((x,i)=><div key={x}><div className="creative-thumb">{i+1}</div><b>{x}</b><span>ROI —</span></div>)}</div></div></div></section>
-    <aside className="panel insight"><div className="section-title"><span>AI 优化框架</span><WandSparkles size={18}/></div><ol><li><b>先连接真实 Campaign 数据</b><p>没有千川观察值时，不生成“增加预算 30%”这类伪精确建议。</p></li><li><b>保留决策结构</b><p>预算、人群、素材、ROI 的界面和交互仍然存在。</p></li><li><b>观测后再给行动建议</b><p>所有建议必须带 provenance 与 freshness。</p></li></ol></aside></div>
+    <aside className="panel insight"><div className="section-title"><span>投放优化建议</span><WandSparkles size={18}/></div><ol><li><b>先连接投放活动数据</b><p>没有千川观察值时，不生成“增加预算 30%”这类伪精确建议。</p></li><li><b>保留决策结构</b><p>预算、人群、素材、ROI 的界面和交互仍然存在。</p></li><li><b>观测后再给行动建议</b><p>所有建议都应显示数据来源与更新时间。</p></li></ol></aside></div>
   </>;
 }
 
 export function ProductRestored({ data }: { data: BusinessPayload | null }) {
   return <>
     <section className="metrics-row"><Metric label="GMV" value={fmt(data?.commerce.gmv,' 元')} observed={data?.commerce.gmv != null}/><Metric label="商品转化率" value={fmt(data?.commerce.conversionRate,'%')} observed={data?.commerce.conversionRate != null}/><Metric label="新客" value={fmt(data?.commerce.newCustomers,' 人')} observed={data?.commerce.newCustomers != null}/><Metric label="库存风险" value="—" observed={false}/></section>
-    <div className="two-col product-restored-layout"><section className="panel"><div className="section-title"><span>商品组合</span><small>AI 概念包装 · 非在售 SKU</small></div><div className="restored-product-grid">{productHypotheses.map(product=><article className="restored-product-card" key={product.name}><figure className="restored-product-image generated-product-art"><Image src={`/business-world/images/${product.image}.png`} width={1254} height={1254} sizes="(max-width: 700px) 75vw, (max-width: 1100px) 30vw, 22vw" alt={product.alt}/><figcaption>{product.size} · AI 概念图</figcaption></figure><div><b>{product.name}</b><small>GMV — · Conversion —</small><HypothesisTag/></div></article>)}</div></section>
+    <div className="two-col product-restored-layout"><section className="panel"><div className="section-title"><span>商品组合</span><small>AI 概念包装 · 非在售 SKU</small></div><div className="restored-product-grid">{productHypotheses.map(product=><article className="restored-product-card" key={product.name}><figure className="restored-product-image generated-product-art"><Image src={`/business-world/images/${product.image}.png`} width={1254} height={1254} sizes="(max-width: 700px) 75vw, (max-width: 1100px) 30vw, 22vw" alt={product.alt}/><figcaption>{product.size} · AI 概念图</figcaption></figure><div><b>{product.name}</b><small>GMV — · 转化率 —</small><HypothesisTag/></div></article>)}</div></section>
     <aside className="panel insight"><div className="section-title"><span>交易洞察结构</span><BarChart3 size={18}/></div><ol><li><b>商品表现</b><p>真实抖店商品 / 订单数据接入后填充。</p></li><li><b>库存与售后</b><p>保持产品信息架构，但未观测值显示未知。</p></li><li><b>人群 × 商品</b><p>等真实 Persona 与交易数据同时存在后再归因。</p></li></ol></aside></div>
   </>;
 }
@@ -188,32 +188,41 @@ export function ExperimentRestored({ snapshot }: { snapshot: BusinessSnapshot | 
   const [prompt,setPrompt]=useState('评估当前投放效率提升 10% 的方向性影响');
   const [lever,setLever]=useState('ad_efficiency');
   const [changePercent,setChangePercent]=useState('10');
-  const [result,setResult]=useState<Record<string,unknown>|null>(null);
+  const [result,setResult]=useState<{
+    id: string;
+    result: {
+      assumption: string;
+      baselineRoi: number | null;
+      modeledRoi: number | null;
+      baselineConversionRate: number | null;
+      modeledConversionRate: number | null;
+    };
+  }|null>(null);
   const [status,setStatus]=useState('');
   async function run(){
     setStatus('运行中…'); setResult(null);
     try{
       const response=await fetch('/api/business-world/scenario',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,lever,changePercent:Number(changePercent)})});
       const body=await response.json();
-      if(!response.ok) throw new Error(body.error||'Scenario failed');
-      setResult(body); setStatus('已持久化 modeled Scenario run');
-    }catch(error){setStatus(error instanceof Error?error.message:'Scenario failed')}
+      if(!response.ok) throw new Error(body.error||'模拟失败');
+      setResult(body); setStatus('模拟结果已保存');
+    }catch(error){setStatus(error instanceof Error?error.message:'模拟失败')}
   }
-  return <div className="simulator restored-simulator"><section className="panel experiment-panel"><div className="section-title"><span>Scenario Experiment</span><small>MODELLED · NOT OBSERVED</small></div><p>真实 baseline + 透明数学模型。没有 baseline 数值时，模型结果保持未知。</p><textarea value={prompt} onChange={e=>setPrompt(e.target.value)}/><div className="experiment-controls"><select value={lever} onChange={e=>setLever(e.target.value)}><option value="ad_efficiency">投放效率</option><option value="content_engagement">内容互动</option><option value="live_watch_time">直播观看</option><option value="checkout_conversion">交易转化</option><option value="repeat_purchase">复购</option></select><input type="number" value={changePercent} onChange={e=>setChangePercent(e.target.value)}/><button className="primary" onClick={run} disabled={!snapshot?.data}><Play size={16}/>运行并保存</button></div><div className="model-warning">Scenario 是 modeled result，不是 observed market outcome。</div></section>
-    <section className="panel sim-result restored-model-result"><div className="pulse">MODEL</div><h3>方向性结果</h3>{status&&<p>{status}</p>}{result?<pre>{JSON.stringify(result,null,2)}</pre>:<p>运行后在这里展示 modeled output；未知 baseline 不会被补成假数字。</p>}</section></div>;
+  return <div className="simulator restored-simulator"><section className="panel experiment-panel"><div className="section-title"><span>模拟实验</span><small>推演结果 · 非实际发生</small></div><p>以当前经营快照为基线进行情景推演；缺少基础指标时不会生成结果。</p><textarea value={prompt} onChange={e=>setPrompt(e.target.value)}/><div className="experiment-controls"><select value={lever} onChange={e=>setLever(e.target.value)}><option value="ad_efficiency">投放效率</option><option value="content_engagement">内容互动</option><option value="live_watch_time">直播观看</option><option value="checkout_conversion">交易转化</option><option value="repeat_purchase">复购</option></select><input type="number" value={changePercent} onChange={e=>setChangePercent(e.target.value)}/><button className="primary" onClick={run} disabled={!snapshot?.data}><Play size={16}/>运行并保存</button></div><div className="model-warning">模拟结果用于方案比较，不代表市场实际已经发生。</div></section>
+    <section className="panel sim-result restored-model-result"><div className="pulse">SIM</div><h3>方向性结果</h3>{status&&<p role="status" aria-live="polite">{status}</p>}{result?<><div className="scenario-result-grid"><div><span>基线 ROI</span><b>{fmt(result.result.baselineRoi)}</b></div><div><span>推演 ROI</span><b>{fmt(result.result.modeledRoi)}</b></div><div><span>基线转化率</span><b>{fmt(result.result.baselineConversionRate,'%')}</b></div><div><span>推演转化率</span><b>{fmt(result.result.modeledConversionRate,'%')}</b></div></div><p className="confidence">假设：{result.result.assumption}</p></>:<p>运行后在这里展示推演结果；缺少基础指标时对应结果保持为空。</p>}</section></div>;
 }
 
 export function ReportRestored({ snapshot }: { snapshot: BusinessSnapshot | null }) {
   const p=snapshot?.provenance;
   const d=snapshot?.data;
-  return <div className="report-restored-grid"><section className="panel report-summary"><div className="section-title"><span>Executive Summary</span><small>EVIDENCE-LINKED</small></div><div className="report-summary-list">
-    <ReportLine label="Source" value={p?.sourceLabel ?? 'Unavailable'}/>
-    <ReportLine label="Storage" value={p?.storage ?? 'Unavailable'}/>
-    <ReportLine label="Content" value={d?.content.engagementRate == null?'Performance not observed':`Engagement ${fmt(d.content.engagementRate,'%')}`}/>
-    <ReportLine label="Live" value={d?.live.cartRate == null?'Performance not observed':`Cart rate ${fmt(d.live.cartRate,'%')}`}/>
-    <ReportLine label="Ads" value={d?.ads.roi == null?'Performance not observed':`ROI ${fmt(d.ads.roi)}`}/>
-    <ReportLine label="Commerce" value={d?.commerce.gmv == null?'Performance not observed':`GMV ${fmt(d.commerce.gmv,' 元')}`}/>
-  </div></section><aside className="panel report-evidence"><div className="section-title"><span>Provenance</span><small>REALITY BOUNDARY</small></div><pre>{JSON.stringify({sourceMode:p?.sourceMode,provider:p?.provider,asOf:p?.asOf,updatedAt:p?.updatedAt,storage:p?.storage},null,2)}</pre><div className="model-warning">Unknown metrics remain null. Report layout is rich; evidence remains strict.</div></aside></div>;
+  return <div className="report-restored-grid"><section className="panel report-summary"><div className="section-title"><span>经营摘要</span><small>来源可追溯</small></div><div className="report-summary-list">
+    <ReportLine label="数据来源" value={p?.sourceLabel ?? '暂无'}/>
+    <ReportLine label="数据存储" value={p?.storage ?? '暂无'}/>
+    <ReportLine label="内容" value={d?.content.engagementRate == null?'暂无观测数据':`互动率 ${fmt(d.content.engagementRate,'%')}`}/>
+    <ReportLine label="直播" value={d?.live.cartRate == null?'暂无观测数据':`加购率 ${fmt(d.live.cartRate,'%')}`}/>
+    <ReportLine label="投放" value={d?.ads.roi == null?'暂无观测数据':`ROI ${fmt(d.ads.roi)}`}/>
+    <ReportLine label="交易" value={d?.commerce.gmv == null?'暂无观测数据':`GMV ${fmt(d.commerce.gmv,' 元')}`}/>
+  </div></section><aside className="panel report-evidence"><div className="section-title"><span>数据来源</span><small>来源详情</small></div><div className="report-summary-list"><ReportLine label="来源名称" value={p?.sourceLabel ?? "暂无"}/><ReportLine label="数据服务" value={p?.provider ?? "暂无"}/><ReportLine label="观测时间" value={p?.asOf ?? "暂无"}/><ReportLine label="最后更新" value={p?.updatedAt ?? "暂无"}/></div><div className="model-warning">暂未获得的指标保持为空，并在报告中保留来源与更新时间。</div></aside></div>;
 }
 
 function ReportLine({label,value}:{label:string;value:string}){return <div><b>{label}</b><span>{value}</span></div>}
