@@ -8,16 +8,39 @@ import {
 } from 'lucide-react';
 
 export type BusinessPayload = {
-  content: { engagementRate: number | null; weeklyOpportunities: number | null };
-  live: { roomEntryRate: number | null; cartRate: number | null };
-  commerce: { conversionRate: number | null; gmv: number | null; newCustomers: number | null };
-  ads: { budget: number | null; roi: number | null; cpa: number | null };
+  meta: { dataMode: 'simulated' | 'observed'; datasetVersion: string; designSource: string; warning: string };
+  personas: Array<{
+    id: string; name: string; title: string; goal: string; pain: string; content: string; trigger: string;
+    population: number | null; conversionRate: number | null; repeatRate: number | null; gmvShare: number | null;
+  }>;
+  content: {
+    engagementRate: number | null; weeklyOpportunities: number | null; totalPlays: number | null; interactions: number | null;
+    topTopics: Array<{ title: string; persona: string; potential: string }>;
+    scripts: Array<{ name: string; durationSec: number; format: string }>;
+  };
+  live: {
+    roomEntryRate: number | null; cartRate: number | null; avgWatchSec: number | null; payConversionRate: number | null;
+    exposureUv: number | null; watchUv: number | null; peakOnline: number | null; paidOrders: number | null; gmv: number | null;
+    sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;
+  };
+  commerce: {
+    conversionRate: number | null; gmv: number | null; newCustomers: number | null; refundRate: number | null;
+    sellThroughRate: number | null; aov: number | null;
+    products: Array<{ id: string; name: string; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;
+  };
+  ads: {
+    budget: number | null; spend: number | null; roi: number | null; cpa: number | null; ctr: number | null; newCustomerCost: number | null;
+    channelMix: Array<{ channel: string; share: number }>;
+    campaigns: Array<{ id: string; name: string; channel: string; budget: number; spend: number; ctr: number; cpa: number; roi: number; status: string }>;
+    creatives: Array<{ name: string; roi: number }>;
+  };
+  report: { period: string; audience: string; headline: string; summary: string; sections: string[] };
   notes: string;
 };
 
 export type BusinessSnapshot = {
   provenance: {
-    sourceMode: 'persisted-observation' | 'unavailable';
+    sourceMode: 'persisted-observation' | 'simulated' | 'unavailable';
     provider: string;
     sourceLabel: string;
     asOf: string | null;
@@ -28,27 +51,18 @@ export type BusinessSnapshot = {
   data: BusinessPayload | null;
 };
 
-const personas = [
-  { name: '小雨', title: '新手家庭', goal: '安全、透气、夜间不漏', pain: '怕红屁屁、怕踩坑', content: '测评、成分科普、真实对比', trigger: '医生/达人背书、真实试用反馈' },
-  { name: '阿琳', title: '复购家庭', goal: '高性价比、大包装、稳定复购', pain: '价格波动、优惠复杂', content: '囤货攻略、套装促销、直播福利', trigger: '满减、赠品、直播间限时价' },
-  { name: '王姨', title: '长辈照护', goal: '简单放心、舒适不刺激', pain: '尺码难选、功能术语不懂', content: '大字说明、专家讲解、真实家庭演示', trigger: '子女推荐、口碑信任、线下体验' },
-  { name: 'Mia', title: '内容分享者', goal: '高颜值、好用、愿意分享', pain: '普通内容不愿转发', content: '开箱、挑战、UGC互动、育儿日常', trigger: '社交认同、品牌活动、联名礼盒' },
-];
 
-const topics = ['宝宝整夜不漏尿挑战','夏季透气纸尿裤测评','新生儿囤货清单','红屁屁护理误区','纸尿裤尺码怎么选','夜用纸尿裤真实对比'];
-const campaignHypotheses = ['新手家庭拉新','复购家庭复购','直播间引流','核心商品转化'];
-const productHypotheses = [
-  { name: '新生儿系列', image: 'diaper-newborn-concept', size: 'NB / S', alt: 'AI 生成的新生儿纸尿裤概念包装，浅蓝云朵图案' },
-  { name: '日常成长系列', image: 'diaper-daily-concept', size: 'M / L', alt: 'AI 生成的日常成长纸尿裤概念包装，蓝色叶片图案' },
-  { name: '夜间加强系列', image: 'diaper-night-concept', size: 'XL+', alt: 'AI 生成的夜间纸尿裤概念包装，深蓝月亮图案' },
-];
+
+
+
+
 
 function fmt(value: number | null | undefined, suffix = '') {
   return value == null ? '—' : `${value.toLocaleString('zh-CN')}${suffix}`;
 }
 
 function Metric({ label, value, observed = true }: { label: string; value: string; observed?: boolean }) {
-  return <div className="metric"><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-sub">{observed ? '已持久化观测' : '待观测'}</div></div>;
+  return <div className="metric"><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-sub">{observed ? '已持久化数据' : '待观测'}</div></div>;
 }
 
 function HypothesisTag() {
@@ -60,6 +74,7 @@ function Unknown({ children = '—' }: { children?: React.ReactNode }) {
 }
 
 export function OverviewRestored({ data }: { data: BusinessPayload | null }) {
+  const personas = data?.personas ?? [];
   return <>
     <section className="world-hero panel restored-world">
       <figure className="world-core generated-world-art">
@@ -90,23 +105,24 @@ function WorldCard({ n, title, text, icon: Icon }: { n: string; title: string; t
   return <div className="world-card"><span>{n}</span><Icon/><div><b>{title}</b><small>{text}</small></div></div>;
 }
 
-export function PersonaRestored() {
+export function PersonaRestored({ data }: { data: BusinessPayload | null }) {
+  const personas = data?.personas ?? [];
   return <>
-    <section className="hero-panel restored-persona-hero"><div><div className="eyebrow">Persona Studio</div><h2>恢复完整人群结构，但不恢复假的人群规模</h2><p>研究假设可以保留；人口占比、转化、GMV 等必须等待真实分群数据。</p></div><div className="hero-baby">研究假设<br/><small>非已观测事实</small></div></section>
+    <section className="hero-panel restored-persona-hero"><div><div className="eyebrow">Persona Studio</div><h2>人群结构与模拟指标来自 Supabase 数据集</h2><p>当前数值是模拟数据，用于完成产品体验；接入真实分群后再切换为 observed。</p></div><div className="hero-baby">研究假设<br/><small>非已观测事实</small></div></section>
     <div className="two-col">
       <section className="panel">
-        <div className="section-title"><span>核心人群假设</span><small>结构保留 · 指标待验证</small></div>
+        <div className="section-title"><span>核心人群</span><small>Supabase simulated dataset</small></div>
         <div className="persona-grid">
           {personas.map(p=><article className="persona-card" key={p.name}>
             <div className="persona-photo"><div className="avatar-orb">{p.name.slice(0,1)}</div><span className="persona-badge">{p.title}</span><HypothesisTag/></div>
-            <div className="persona-name">{p.name}<span>研究假设，不是已观测分群事实</span></div>
+            <div className="persona-name">{p.name}<span>模拟分群 · 非真实客户观测</span></div>
             <dl>
               <div><dt>核心需求</dt><dd>{p.goal}</dd></div>
               <div><dt>主要痛点</dt><dd>{p.pain}</dd></div>
               <div><dt>偏好内容</dt><dd>{p.content}</dd></div>
               <div><dt>购买触发</dt><dd>{p.trigger}</dd></div>
-              <div><dt>人群规模</dt><dd><Unknown/></dd></div>
-              <div><dt>转化率</dt><dd><Unknown/></dd></div>
+              <div><dt>人群规模</dt><dd>{fmt(p.population,' 人')}</dd></div>
+              <div><dt>转化率</dt><dd>{fmt(p.conversionRate,'%')}</dd></div>
             </dl>
           </article>)}
         </div>
@@ -121,6 +137,7 @@ export function PersonaRestored() {
 }
 
 export function WorldRestored({ data }: { data: BusinessPayload | null }) {
+  const personas = data?.personas ?? [];
   const worlds = [
     ['内容世界', fmt(data?.content.engagementRate,'%'), '互动率'],
     ['直播世界', fmt(data?.live.roomEntryRate,'%'), '进房率'],
@@ -137,11 +154,13 @@ export function WorldRestored({ data }: { data: BusinessPayload | null }) {
 }
 
 export function ContentRestored({ data }: { data: BusinessPayload | null }) {
+  const topics = data?.content.topTopics ?? [];
+  const scripts = data?.content.scripts ?? [];
   return <>
     <section className="metrics-row"><Metric label="内容互动率" value={fmt(data?.content.engagementRate,'%')} observed={data?.content.engagementRate != null}/><Metric label="本周内容机会" value={fmt(data?.content.weeklyOpportunities,' 条')} observed={data?.content.weeklyOpportunities != null}/><Metric label="真实评论洞察" value="—" observed={false}/><Metric label="素材表现" value="—" observed={false}/></section>
     <div className="content-grid">
-      <section className="panel"><div className="section-title"><span>选题机会</span><small>研究假设 · 待数据验证</small></div><div className="topic-list">{topics.map((t,i)=><div className="topic" key={t}><b>{i+1}</b><span><strong>{t}</strong><small>{personas[i%personas.length].title} · 研究假设</small></span><em>待观测</em></div>)}</div>
-      <div className="section-title spaced"><span>短视频脚本结构</span><small>效果指标待数据验证</small></div><div className="script-grid">{['问题切入','真实场景','直播桥接'].map((x,i)=><div className="script" key={x}><div className="thumb">{i===2?'LIVE':`${15+i*15}s`}</div><b>{x}</b><p>保留创意结构；表现数据接入真实抖音来源后再显示。</p></div>)}</div></section>
+      <section className="panel"><div className="section-title"><span>选题机会</span><small>研究假设 · 待数据验证</small></div><div className="topic-list">{topics.map((t,i)=><div className="topic" key={t.title}><b>{i+1}</b><span><strong>{t.title}</strong><small>{t.persona} · simulated</small></span><em>{t.potential}</em></div>)}</div>
+      <div className="section-title spaced"><span>短视频脚本结构</span><small>效果指标待数据验证</small></div><div className="script-grid">{scripts.map((x,i)=><div className="script" key={x.name}><div className="thumb">{x.format==='cta'?'LIVE':`${x.durationSec}s`}</div><b>{x.name}</b><p>Supabase 中持久化的模拟脚本结构；真实表现数据接入后替换。</p></div>)}</div></section>
       <aside className="panel live-plan"><div className="section-title"><span>内容 → 直播桥接</span><span className="live">内容桥接</span></div><div className="live-preview"><div className="presenter">内容<br/><span>→ 直播</span></div><Play size={34}/></div><div className="chip-grid"><span>真实测评</span><span>尺码指南</span><span>场景演示</span><span>用户问答</span></div></aside>
     </div>
   </>;
@@ -152,8 +171,8 @@ export function LiveRestored({ data }: { data: BusinessPayload | null }) {
     <section className="panel live-plan"><div className="section-title"><span>直播间作战面板</span><span className="live">LIVE</span></div><div className="live-preview"><div className="presenter">LIVE<br/><span>真实数据待接入</span></div><Play size={34}/></div><div className="live-funnel-grid">
       <Funnel label="进房率" value={fmt(data?.live.roomEntryRate,'%')} observed={data?.live.roomEntryRate != null}/>
       <Funnel label="加购率" value={fmt(data?.live.cartRate,'%')} observed={data?.live.cartRate != null}/>
-      <Funnel label="观看时长" value="—" observed={false}/>
-      <Funnel label="支付转化" value="—" observed={false}/>
+      <Funnel label="观看时长" value={fmt(data?.live.avgWatchSec," 秒")} observed={data?.live.avgWatchSec != null}/>
+      <Funnel label="支付转化" value={fmt(data?.live.payConversionRate,"%")} observed={data?.live.payConversionRate != null}/>
     </div></section>
     <aside className="panel insight"><div className="section-title"><span>直播策略结构</span><Radio size={18}/></div><ol>
       <li><b>开场定位</b><p>策略步骤可保留，实际效果指标必须来自真实直播数据。</p></li>
@@ -164,22 +183,25 @@ export function LiveRestored({ data }: { data: BusinessPayload | null }) {
 }
 
 function Funnel({ label, value, observed }: { label: string; value: string; observed: boolean }) {
-  return <div><span>{label}</span><b>{value}</b><small>{observed?'已观测':'待观测'}</small></div>;
+  return <div><span>{label}</span><b>{value}</b><small>{observed?'已持久化数据':'待观测'}</small></div>;
 }
 
 export function GrowthRestored({ data }: { data: BusinessPayload | null }) {
+  const campaigns = data?.ads.campaigns ?? [];
+  const creatives = data?.ads.creatives ?? [];
   return <>
-    <section className="metrics-row"><Metric label="总预算" value={fmt(data?.ads.budget,' 元')} observed={data?.ads.budget != null}/><Metric label="ROI" value={fmt(data?.ads.roi)} observed={data?.ads.roi != null}/><Metric label="CPA" value={fmt(data?.ads.cpa,' 元')} observed={data?.ads.cpa != null}/><Metric label="活动明细" value="—" observed={false}/></section>
-    <div className="two-col growth-layout"><section className="panel"><div className="section-title"><span>投放活动控制台</span><small>投放结构</small></div><div className="campaign-grid">{campaignHypotheses.map((name,i)=><div className="campaign" key={name}><div className="campaign-head"><div className="mini-avatar">{i+1}</div><div><b>{name}</b><small>活动假设</small></div><HypothesisTag/></div><div className="campaign-kpis"><span>预算<b>—</b></span><span>CTR<b>—</b></span><span>CPA<b>—</b></span><span>ROI<b>—</b></span></div><button disabled>等待投放活动数据</button></div>)}</div>
-    <div className="split-lower"><div><div className="section-title"><span>人群投放矩阵</span></div><div className="bars">{personas.map(p=><div key={p.name}><span>{p.title}</span><i style={{width:'0%'}}/><b>—</b></div>)}</div></div><div><div className="section-title"><span>创意 A/B 测试</span></div><div className="creative-row">{['透气实测','夜间防漏','尺码指南','家庭场景'].map((x,i)=><div key={x}><div className="creative-thumb">{i+1}</div><b>{x}</b><span>ROI —</span></div>)}</div></div></div></section>
+    <section className="metrics-row"><Metric label="总预算" value={fmt(data?.ads.budget,' 元')} observed={data?.ads.budget != null}/><Metric label="ROI" value={fmt(data?.ads.roi)} observed={data?.ads.roi != null}/><Metric label="CPA" value={fmt(data?.ads.cpa,' 元')} observed={data?.ads.cpa != null}/><Metric label="CTR" value={fmt(data?.ads.ctr,"%")} observed={data?.ads.ctr != null}/></section>
+    <div className="two-col growth-layout"><section className="panel"><div className="section-title"><span>投放活动控制台</span><small>投放结构</small></div><div className="campaign-grid">{campaigns.map((c,i)=><div className="campaign" key={c.id}><div className="campaign-head"><div className="mini-avatar">{i+1}</div><div><b>{c.name}</b><small>{c.channel} · {c.status}</small></div><HypothesisTag/></div><div className="campaign-kpis"><span>预算<b>{fmt(c.budget,' 元')}</b></span><span>CTR<b>{fmt(c.ctr,'%')}</b></span><span>CPA<b>{fmt(c.cpa,' 元')}</b></span><span>ROI<b>{fmt(c.roi)}</b></span></div><button disabled>模拟数据 · 只读</button></div>)}</div>
+    <div className="split-lower"><div><div className="section-title"><span>人群投放矩阵</span></div><div className="bars">{(data?.personas ?? []).map(p=><div key={p.name}><span>{p.title}</span><i style={{width:`${Math.min(100,p.gmvShare ?? 0)}%`}}/><b>{fmt(p.gmvShare,'%')}</b></div>)}</div></div><div><div className="section-title"><span>创意 A/B 测试</span></div><div className="creative-row">{creatives.map((x,i)=><div key={x.name}><div className="creative-thumb">{i+1}</div><b>{x.name}</b><span>ROI {fmt(x.roi)}</span></div>)}</div></div></div></section>
     <aside className="panel insight"><div className="section-title"><span>投放优化建议</span><WandSparkles size={18}/></div><ol><li><b>先连接投放活动数据</b><p>没有千川观察值时，不生成“增加预算 30%”这类伪精确建议。</p></li><li><b>保留决策结构</b><p>预算、人群、素材、ROI 的界面和交互仍然存在。</p></li><li><b>观测后再给行动建议</b><p>所有建议都应显示数据来源与更新时间。</p></li></ol></aside></div>
   </>;
 }
 
 export function ProductRestored({ data }: { data: BusinessPayload | null }) {
+  const products = data?.commerce.products ?? [];
   return <>
-    <section className="metrics-row"><Metric label="GMV" value={fmt(data?.commerce.gmv,' 元')} observed={data?.commerce.gmv != null}/><Metric label="商品转化率" value={fmt(data?.commerce.conversionRate,'%')} observed={data?.commerce.conversionRate != null}/><Metric label="新客" value={fmt(data?.commerce.newCustomers,' 人')} observed={data?.commerce.newCustomers != null}/><Metric label="库存风险" value="—" observed={false}/></section>
-    <div className="two-col product-restored-layout"><section className="panel"><div className="section-title"><span>商品组合</span><small>AI 概念包装 · 非在售 SKU</small></div><div className="restored-product-grid">{productHypotheses.map(product=><article className="restored-product-card" key={product.name}><figure className="restored-product-image generated-product-art"><Image src={`/business-world/images/${product.image}.png`} width={1254} height={1254} sizes="(max-width: 700px) 75vw, (max-width: 1100px) 30vw, 22vw" alt={product.alt}/><figcaption>{product.size} · AI 概念图</figcaption></figure><div><b>{product.name}</b><small>GMV — · 转化率 —</small><HypothesisTag/></div></article>)}</div></section>
+    <section className="metrics-row"><Metric label="GMV" value={fmt(data?.commerce.gmv,' 元')} observed={data?.commerce.gmv != null}/><Metric label="商品转化率" value={fmt(data?.commerce.conversionRate,'%')} observed={data?.commerce.conversionRate != null}/><Metric label="新客" value={fmt(data?.commerce.newCustomers,' 人')} observed={data?.commerce.newCustomers != null}/><Metric label="退款率" value={fmt(data?.commerce.refundRate,"%")} observed={data?.commerce.refundRate != null}/></section>
+    <div className="two-col product-restored-layout"><section className="panel"><div className="section-title"><span>商品组合</span><small>AI 概念包装 · 非在售 SKU</small></div><div className="restored-product-grid">{products.map(product=><article className="restored-product-card" key={product.id}><figure className="restored-product-image generated-product-art"><Image src={`/business-world/images/${product.image}.png`} width={1254} height={1254} sizes="(max-width: 700px) 75vw, (max-width: 1100px) 30vw, 22vw" alt={`${product.name} AI 概念包装`}/><figcaption>{product.size} · AI 概念图</figcaption></figure><div><b>{product.name}</b><small>GMV {fmt(product.gmv,' 元')} · 转化率 {fmt(product.conversionRate,'%')} · 库存 {fmt(product.stockDays,' 天')}</small><HypothesisTag/></div></article>)}</div></section>
     <aside className="panel insight"><div className="section-title"><span>交易洞察结构</span><BarChart3 size={18}/></div><ol><li><b>商品表现</b><p>真实抖店商品 / 订单数据接入后填充。</p></li><li><b>库存与售后</b><p>保持产品信息架构，但未观测值显示未知。</p></li><li><b>人群 × 商品</b><p>等真实 Persona 与交易数据同时存在后再归因。</p></li></ol></aside></div>
   </>;
 }
@@ -221,7 +243,7 @@ export function ReportRestored({ snapshot }: { snapshot: BusinessSnapshot | null
     <ReportLine label="内容" value={d?.content.engagementRate == null?'暂无观测数据':`互动率 ${fmt(d.content.engagementRate,'%')}`}/>
     <ReportLine label="直播" value={d?.live.cartRate == null?'暂无观测数据':`加购率 ${fmt(d.live.cartRate,'%')}`}/>
     <ReportLine label="投放" value={d?.ads.roi == null?'暂无观测数据':`ROI ${fmt(d.ads.roi)}`}/>
-    <ReportLine label="交易" value={d?.commerce.gmv == null?'暂无观测数据':`GMV ${fmt(d.commerce.gmv,' 元')}`}/>
+    <ReportLine label="交易" value={d?.commerce.gmv == null?'暂无观测数据':`GMV ${fmt(d.commerce.gmv,' 元')}`}/><ReportLine label="报告周期" value={d?.report.period || "暂无"}/><ReportLine label="摘要" value={d?.report.summary || "暂无"}/>
   </div></section><aside className="panel report-evidence"><div className="section-title"><span>数据来源</span><small>来源详情</small></div><div className="report-summary-list"><ReportLine label="来源名称" value={p?.sourceLabel ?? "暂无"}/><ReportLine label="数据服务" value={p?.provider ?? "暂无"}/><ReportLine label="观测时间" value={p?.asOf ?? "暂无"}/><ReportLine label="最后更新" value={p?.updatedAt ?? "暂无"}/></div><div className="model-warning">暂未获得的指标保持为空，并在报告中保留来源与更新时间。</div></aside></div>;
 }
 

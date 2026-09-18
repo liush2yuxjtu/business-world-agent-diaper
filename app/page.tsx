@@ -11,16 +11,39 @@ import {
 } from './_components/business-world-restored';
 
 type Payload = {
-  content: { engagementRate: number | null; weeklyOpportunities: number | null };
-  live: { roomEntryRate: number | null; cartRate: number | null };
-  commerce: { conversionRate: number | null; gmv: number | null; newCustomers: number | null };
-  ads: { budget: number | null; roi: number | null; cpa: number | null };
+  meta: { dataMode: 'simulated' | 'observed'; datasetVersion: string; designSource: string; warning: string };
+  personas: Array<{
+    id: string; name: string; title: string; goal: string; pain: string; content: string; trigger: string;
+    population: number | null; conversionRate: number | null; repeatRate: number | null; gmvShare: number | null;
+  }>;
+  content: {
+    engagementRate: number | null; weeklyOpportunities: number | null; totalPlays: number | null; interactions: number | null;
+    topTopics: Array<{ title: string; persona: string; potential: string }>;
+    scripts: Array<{ name: string; durationSec: number; format: string }>;
+  };
+  live: {
+    roomEntryRate: number | null; cartRate: number | null; avgWatchSec: number | null; payConversionRate: number | null;
+    exposureUv: number | null; watchUv: number | null; peakOnline: number | null; paidOrders: number | null; gmv: number | null;
+    sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;
+  };
+  commerce: {
+    conversionRate: number | null; gmv: number | null; newCustomers: number | null; refundRate: number | null;
+    sellThroughRate: number | null; aov: number | null;
+    products: Array<{ id: string; name: string; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;
+  };
+  ads: {
+    budget: number | null; spend: number | null; roi: number | null; cpa: number | null; ctr: number | null; newCustomerCost: number | null;
+    channelMix: Array<{ channel: string; share: number }>;
+    campaigns: Array<{ id: string; name: string; channel: string; budget: number; spend: number; ctr: number; cpa: number; roi: number; status: string }>;
+    creatives: Array<{ name: string; roi: number }>;
+  };
+  report: { period: string; audience: string; headline: string; summary: string; sections: string[] };
   notes: string;
 };
 
 type Snapshot = {
   provenance: {
-    sourceMode: 'persisted-observation' | 'unavailable';
+    sourceMode: 'persisted-observation' | 'simulated' | 'unavailable';
     provider: string;
     sourceLabel: string;
     asOf: string | null;
@@ -40,10 +63,13 @@ const nav: Array<[NavId, string, typeof Home]> = [
 ];
 
 const emptyPayload: Payload = {
-  content: { engagementRate: null, weeklyOpportunities: null },
-  live: { roomEntryRate: null, cartRate: null },
-  commerce: { conversionRate: null, gmv: null, newCustomers: null },
-  ads: { budget: null, roi: null, cpa: null },
+  meta: { dataMode: 'simulated', datasetVersion: '', designSource: '', warning: '' },
+  personas: [],
+  content: { engagementRate: null, weeklyOpportunities: null, totalPlays: null, interactions: null, topTopics: [], scripts: [] },
+  live: { roomEntryRate: null, cartRate: null, avgWatchSec: null, payConversionRate: null, exposureUv: null, watchUv: null, peakOnline: null, paidOrders: null, gmv: null, sessions: [] },
+  commerce: { conversionRate: null, gmv: null, newCustomers: null, refundRate: null, sellThroughRate: null, aov: null, products: [] },
+  ads: { budget: null, spend: null, roi: null, cpa: null, ctr: null, newCustomerCost: null, channelMix: [], campaigns: [], creatives: [] },
+  report: { period: '', audience: '', headline: '', summary: '', sections: [] },
   notes: '',
 };
 
@@ -54,10 +80,12 @@ function numberValue(value: string) {
 }
 
 function SourceBanner({ snapshot, onEdit }: { snapshot: Snapshot | null; onEdit: () => void }) {
-  const real = snapshot?.provenance.sourceMode === 'persisted-observation';
-  return <div className={`source-banner ${real ? 'real' : 'missing'}`}>
-    <div><ShieldCheck size={18}/><span><b>{real ? '已连接数据源' : '尚未连接数据源'}</b>{real ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
-    <button onClick={onEdit}>{real ? (snapshot?.provenance.writable ? '更新来源' : '来源详情') : '连接数据'}</button>
+  const mode = snapshot?.provenance.sourceMode;
+  const connected = mode === 'persisted-observation' || mode === 'simulated';
+  const simulated = mode === 'simulated';
+  return <div className={`source-banner ${connected ? 'real' : 'missing'}`}>
+    <div><ShieldCheck size={18}/><span><b>{simulated ? 'Supabase 模拟数据集' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
+    <button onClick={onEdit}>{connected ? '来源详情' : '连接数据'}</button>
   </div>;
 }
 
@@ -80,10 +108,13 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
   async function submit(event: FormEvent) {
     event.preventDefault(); if (readOnly) { setStatus('当前数据源为只读。获得写入权限后才能修改。'); return; } setStatus('保存中…');
     const payload: Payload = {
-      content: { engagementRate: numberValue(values.engagementRate), weeklyOpportunities: numberValue(values.weeklyOpportunities) },
-      live: { roomEntryRate: numberValue(values.roomEntryRate), cartRate: numberValue(values.cartRate) },
-      commerce: { conversionRate: numberValue(values.conversionRate), gmv: numberValue(values.gmv), newCustomers: numberValue(values.newCustomers) },
-      ads: { budget: numberValue(values.budget), roi: numberValue(values.roi), cpa: numberValue(values.cpa) }, notes: values.notes,
+      ...d,
+      meta: { ...d.meta, dataMode: 'observed', warning: 'Human-entered snapshot. Verify source evidence before treating values as official platform truth.' },
+      content: { ...d.content, engagementRate: numberValue(values.engagementRate), weeklyOpportunities: numberValue(values.weeklyOpportunities) },
+      live: { ...d.live, roomEntryRate: numberValue(values.roomEntryRate), cartRate: numberValue(values.cartRate) },
+      commerce: { ...d.commerce, conversionRate: numberValue(values.conversionRate), gmv: numberValue(values.gmv), newCustomers: numberValue(values.newCustomers) },
+      ads: { ...d.ads, budget: numberValue(values.budget), roi: numberValue(values.roi), cpa: numberValue(values.cpa) },
+      notes: values.notes,
     };
     try {
       const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel, sourceType: 'manual-entry', observedAt: new Date(observedAt).toISOString(), payload }) });
@@ -132,7 +163,7 @@ export default function App() {
   const data = snapshot?.data ?? null;
   const view =
     active === 'overview' ? <OverviewRestored data={data}/> :
-    active === 'persona' ? <PersonaRestored/> :
+    active === 'persona' ? <PersonaRestored data={data}/> :
     active === 'world' ? <WorldRestored data={data}/> :
     active === 'content' ? <ContentRestored data={data}/> :
     active === 'live' ? <LiveRestored data={data}/> :
