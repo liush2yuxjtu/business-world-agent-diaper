@@ -108,10 +108,13 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
   async function submit(event: FormEvent) {
     event.preventDefault(); if (readOnly) { setStatus('当前数据源为只读。获得写入权限后才能修改。'); return; } setStatus('保存中…');
     const payload: Payload = {
-      content: { engagementRate: numberValue(values.engagementRate), weeklyOpportunities: numberValue(values.weeklyOpportunities) },
-      live: { roomEntryRate: numberValue(values.roomEntryRate), cartRate: numberValue(values.cartRate) },
-      commerce: { conversionRate: numberValue(values.conversionRate), gmv: numberValue(values.gmv), newCustomers: numberValue(values.newCustomers) },
-      ads: { budget: numberValue(values.budget), roi: numberValue(values.roi), cpa: numberValue(values.cpa) }, notes: values.notes,
+      ...d,
+      meta: { ...d.meta, dataMode: 'observed', warning: 'Human-entered snapshot. Verify source evidence before treating values as official platform truth.' },
+      content: { ...d.content, engagementRate: numberValue(values.engagementRate), weeklyOpportunities: numberValue(values.weeklyOpportunities) },
+      live: { ...d.live, roomEntryRate: numberValue(values.roomEntryRate), cartRate: numberValue(values.cartRate) },
+      commerce: { ...d.commerce, conversionRate: numberValue(values.conversionRate), gmv: numberValue(values.gmv), newCustomers: numberValue(values.newCustomers) },
+      ads: { ...d.ads, budget: numberValue(values.budget), roi: numberValue(values.roi), cpa: numberValue(values.cpa) },
+      notes: values.notes,
     };
     try {
       const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel, sourceType: 'manual-entry', observedAt: new Date(observedAt).toISOString(), payload }) });
