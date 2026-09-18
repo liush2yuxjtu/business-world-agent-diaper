@@ -1,0 +1,69 @@
+{
+  "remotePenpotFile": null,
+  "remoteFileModified": false,
+  "frames": [
+    {
+      "name": "经营总览",
+      "image": "../../public/business-world/concepts/01-overview.png",
+      "route": "#app/overview",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "消费者洞察",
+      "image": "../../public/business-world/concepts/02-persona.png",
+      "route": "#app/persona",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "业务数据",
+      "image": "../../public/business-world/concepts/03-world.png",
+      "route": "#app/world",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "内容策略",
+      "image": "../../public/business-world/concepts/04-content.png",
+      "route": "#app/content",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "直播运营",
+      "image": "../../public/business-world/concepts/05-live.png",
+      "route": "#app/live",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "投放优化",
+      "image": "../../public/business-world/concepts/06-growth.png",
+      "route": "#app/growth",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "商品分析",
+      "image": "../../public/business-world/concepts/07-product.png",
+      "route": "#app/product",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "情景实验",
+      "image": "../../public/business-world/concepts/08-experiment.png",
+      "route": "#app/experiment",
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "name": "经营报告",
+      "image": "../../public/business-world/concepts/09-report.png",
+      "route": "#app/report",
+      "width": 1440,
+      "height": 1100
+    }
+  ]
+}
