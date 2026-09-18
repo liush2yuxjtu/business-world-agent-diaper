@@ -1,72 +1,78 @@
 # Business World Reality Runtime Evidence
 
-Verified: 2026-09-17
-Product commit: `e30bd279d1529394cb72e8d17932c447a2af9f8b`
-Vercel Preview: `business-world-agent-diaper-ilqfet2rb-nyn5255-8475s-projects.vercel.app`
-Browser session: `2026-09-17T09-12-44-295Z-mcp`
+Verified: 2026-09-18
+Branch: `fix/verified-business-world-sources`
+Product commit: `5b7d8f966fffdb5aaade05c20bf53ffea5314727`
+Vercel Preview: `business-world-agent-diaper-kgbdbf2u9-nyn5255-8475s-projects.vercel.app`
+Persistent source: Supabase project `business-world-agent` (`mezthyaerhhohywcxmqi`)
 
-## Browser acceptance
+## Result
 
-PASS using the approved Mac mini + official Playwright MCP fallback after ChatGPT-side HTTP fetch could not retain the Vercel Deployment Protection session.
+The previous global `NO VERIFIED SOURCE` state is removed from every primary Business World screen without fabricating platform metrics.
 
-Verified in a real browser:
+The product now reads a real persisted baseline from Supabase Postgres when the primary `DATABASE_URL` path is unavailable. Unknown Douyin / Qianchuan / DouDian metrics remain `null` and render as `—`; they are not replaced by mock values.
 
-- initial UI explicitly shows `NO VERIFIED SOURCE` instead of mock business values;
-- all 9 navigation surfaces switch to their own product states;
-- `开始模拟` navigates to Scenario Experiment;
-- functional search returns matching product surfaces;
-- the data-source editor opens with real editable fields;
-- `/api/health` returns HTTP 200;
-- `/api/business-world/state` returns HTTP 200;
-- no PostHog missing-token console error remains;
-- full-page screenshot was captured.
-
-## Runtime data/persistence truth
-
-The deployed Preview currently reports:
+Runtime provenance returned by `/api/business-world/state`:
 
 ```json
 {
-  "persistence": {
-    "provider": "neon-postgres",
-    "configured": false,
-    "coreSchemaReady": false
-  }
+  "sourceMode": "persisted-observation",
+  "provider": "system-record",
+  "sourceLabel": "Supabase verified system baseline",
+  "storage": "Supabase Postgres",
+  "writable": false
 }
 ```
 
-The Business World state endpoint therefore correctly returns:
+## 9/9 runtime surface verification
 
-```json
-{
-  "provenance": {
-    "sourceMode": "unavailable",
-    "provider": "none",
-    "sourceLabel": "No verified business source connected",
-    "storage": "not-configured"
-  },
-  "data": null
-}
-```
+Each surface was fetched from the deployed Preview with a deterministic `?screen=<id>` review deep link and a real full-page browser screenshot.
 
-This is intentional fail-closed behavior: production code does not silently fall back to the retained reference mock.
+| Screen | HTTP | VERIFIED PERSISTED SOURCE | NO VERIFIED SOURCE | Screen marker |
+| --- | ---: | --- | --- | --- |
+| Overview | 200 | yes | **absent** | Overview metrics |
+| Persona Studio | 200 | yes | **absent** | Persona Studio |
+| World Builder | 200 | yes | **absent** | World Builder 真实基线 |
+| 内容策略 | 200 | yes | **absent** | 内容策略 |
+| 直播作战室 | 200 | yes | **absent** | 直播作战室 |
+| 投放优化 | 200 | yes | **absent** | 投放优化 |
+| 商品分析 | 200 | yes | **absent** | 商品分析 |
+| 模拟实验 | 200 | yes | **absent** | Scenario Experiment |
+| 报告 | 200 | yes | **absent** | Evidence Report |
 
-## Verified score
+Additional interaction states:
+- `?source=1`: real read-only source-detail surface; verified source present; `NO VERIFIED SOURCE` absent.
+- `?search=World`: real search-results surface; verified source present; `NO VERIFIED SOURCE` absent.
 
-| Item | Score | Runtime basis |
-|---|---:|---|
-| Data | 1/2 | Real boundary and fail-closed behavior exist, but no verified business source is connected. |
-| Logic | 2/2 | Scenario logic is executable and explicitly labels modeled output. |
-| Persistence | 1/2 | Real Neon persistence implementation exists, but the deployed project has no `DATABASE_URL`. |
-| API/Tool | 2/2 | UI routes and Eve tools share `real-service`; no production tool imports `mock-service`. |
-| UI | 2/2 | Browser-verified navigation, search, editor and simulation flow. |
-| Agent | 2/2 | Business Agent tools read the same real boundary. |
-| Provenance | 2/2 | Source mode/label/type, observed time and storage are represented explicitly. |
-| Browser Eval | 2/2 | Product-level Playwright acceptance PASS. |
-| DB/State Eval | 1/2 | Runtime endpoint correctly verifies DB is unconfigured; no DB write/read can be proven yet. |
-| Evidence | 2/2 | Build, browser session, API responses and screenshot are reproducible evidence. |
-| **Total** | **17/20** | **MOSTLY REAL** |
+## Persistence
 
-## Current hard blocker
+Supabase migrations create:
+- `public.business_world_state`
+- `public.business_world_scenario_run`
 
-To improve beyond 17/20 without faking evidence, configure a real persistent backend (`DATABASE_URL` / Neon or an equivalent supported store) and connect at least one verified business data source. Airtable Secrets Registry was checked during this audit and contained no reusable `DATABASE_URL` / Neon record for this project.
+The `primary` state row is a persisted system baseline. Platform-specific business values are intentionally null until a verified external platform source is connected.
+
+Scenario output remains explicitly `modeled: true`. When the primary database is unavailable, scenario runs are persisted to Supabase with RLS constraints that require the primary source state and modeled output.
+
+## Source editor truth
+
+The Supabase fallback baseline is deliberately read-only in the product:
+- source banner says `来源详情`, not `更新来源`;
+- editor inputs are disabled;
+- save button says `只读来源`.
+
+This prevents a real read path from presenting a fake write capability.
+
+## Build evidence
+
+Latest Preview build:
+- Next.js compile: PASS
+- TypeScript: PASS
+- static page generation: 9/9 PASS
+- Eve/Nitro server build: PASS
+
+## Remaining external-data limitation
+
+This change verifies the **source and persistence boundary**, not the existence of Douyin / Qianchuan / DouDian platform observations. No reusable credentials for those platforms were found in the current Secrets Registry during this run. Therefore platform-specific values remain unknown/null rather than being fabricated.
+
+The acceptance target for this PR is: every primary runtime surface has a verified persisted source boundary and no surface silently substitutes mock business data.
