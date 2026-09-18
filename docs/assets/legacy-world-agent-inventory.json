@@ -1,0 +1,286 @@
+{
+  "repository": "liush2yuxjtu/world-agent-interactive",
+  "commit": "2865821244eb98abc5c95b3e6770a7d80c64f213",
+  "assets": [
+    {
+      "path": "design-system/favicon.svg",
+      "bytes": 227,
+      "sha256": "e429844a9d007261a05a48a4c31aae2593dc5c0edbb61d2ce496982e9446f6ed"
+    },
+    {
+      "path": "docs/eli5/pr-7-business-world-mocks.svg",
+      "bytes": 6316,
+      "sha256": "ad793e0676fe787e4b84396aecfe085673485ca1778a82faf20310781b7b742e"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-app-desktop-full.png",
+      "bytes": 271330,
+      "sha256": "dadbfa6d4aca0d1a0b81c09834feae3f0d721d37e3d773e235a1ce6dfaa68185"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-app-desktop.png",
+      "bytes": 201663,
+      "sha256": "44437a58b13035b5ecdbf8f46922495cc975deca9dc767d80ac7f6fdfcd17d60"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-app-mobile-full.png",
+      "bytes": 190456,
+      "sha256": "bad71fd900ce50042237fa4a6cfec7dffb19023cd21adb563a747b16b398d9c2"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-app-mobile.png",
+      "bytes": 80846,
+      "sha256": "abc5acbab9fb5e70674c0de71926f49193c585ff32ae10bad3444a0bedb88e3b"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-app.png",
+      "bytes": 201320,
+      "sha256": "76bc3eb8ba643b2ca52eb251cee64c284b9a0e99f3752819123a249910fe4f03"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-composite.png",
+      "bytes": 1234682,
+      "sha256": "1c7a6f5a1a4b439c1e83806860ec0e3345f3fddac1de2b16cff8d56accc18125"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-landing-desktop-full.png",
+      "bytes": 1627187,
+      "sha256": "99751629c1dc6ad3e46f239f33e7e77bc01984689054d79695b4c68accb46bed"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-landing-desktop.png",
+      "bytes": 1060806,
+      "sha256": "5bd401fdd3b71496966ac413340c86349d1c0833dc1dc031ddc632aaa3699893"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-landing-mobile-full.png",
+      "bytes": 591980,
+      "sha256": "a8d04bd29ce48aec542efdb5ccd7de88f9f9a07db73ca67aea571ab46e83c535"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-landing-mobile.png",
+      "bytes": 277742,
+      "sha256": "a3d1c6d4c9ab3d9eee68b1d163f017fd0fc05c9c8bd28c044dab6d1aa8b05e7b"
+    },
+    {
+      "path": "docs/qa/reference-v2/after-landing.png",
+      "bytes": 716178,
+      "sha256": "ad598483727dc751db08cb68ef807db061acf87140e07296e59af45ac4e6fb33"
+    },
+    {
+      "path": "docs/qa/reference-v2/app-heatmap.png",
+      "bytes": 976148,
+      "sha256": "238a05fba1b1fc292552b21236eefad655593e580ce3e758f790d18940ec4fd8"
+    },
+    {
+      "path": "docs/qa/reference-v2/app-overlay.png",
+      "bytes": 740423,
+      "sha256": "b44cd88cd2fc9eab3f77689ef476abb67aaa9da6cd1888e8cff29263feccbf61"
+    },
+    {
+      "path": "docs/qa/reference-v2/before-app-desktop.png",
+      "bytes": 174002,
+      "sha256": "3dbc802989efa7efef0c71d0d907568dccd8073b252fbceeade3060464062655"
+    },
+    {
+      "path": "docs/qa/reference-v2/before-app-mobile.png",
+      "bytes": 71666,
+      "sha256": "438b4b9a8d4b52bb6b6b12cd2960f4ccef8eb17e39a0566ee8f3aba1973ac88d"
+    },
+    {
+      "path": "docs/qa/reference-v2/before-app.png",
+      "bytes": 131669,
+      "sha256": "128c541d0bb3ecb7d81805a55cd397194266fe19a8506eed85b5e627d75b907e"
+    },
+    {
+      "path": "docs/qa/reference-v2/before-landing-desktop.png",
+      "bytes": 614615,
+      "sha256": "661e68beecdf02ed5d795ff8e929ee47c21987d0f649f2bdaaf5caa5d2f406ae"
+    },
+    {
+      "path": "docs/qa/reference-v2/before-landing-mobile.png",
+      "bytes": 228907,
+      "sha256": "03bc8b0db47ea6d3c4b3bc1cff9fbb22f2a8121d975973a66cfbca516b35a436"
+    },
+    {
+      "path": "docs/qa/reference-v2/before-landing.png",
+      "bytes": 541270,
+      "sha256": "d718e294a83ea0fba742848e71a0585bc484f56650a87d321b9318e1736c2fb0"
+    },
+    {
+      "path": "docs/qa/reference-v2/landing-heatmap.png",
+      "bytes": 1509839,
+      "sha256": "9ecf5e1bf27a4f63ef4b513ccfb3cee57895b3e3b3fd4c87a951a86adf45ddeb"
+    },
+    {
+      "path": "docs/qa/reference-v2/landing-overlay.png",
+      "bytes": 1164979,
+      "sha256": "8140a89af8ac87f9b5005ede567588046981718b5525695c09ba492b3f152411"
+    },
+    {
+      "path": "docs/qa/reference-v2/reference-app.png",
+      "bytes": 785872,
+      "sha256": "7cf0b5be515d6ffd91a7fbc614345c8f1400f58d516be6fd4226337195a788b6"
+    },
+    {
+      "path": "docs/qa/reference-v2/reference-landing.png",
+      "bytes": 1198073,
+      "sha256": "b22d93243e858dc31108e78097c92721b4b3a5f3c5ac40f8e44b3843a033455f"
+    },
+    {
+      "path": "docs/ui-audit/runtime/content-1440.png",
+      "bytes": 204964,
+      "sha256": "8a987939ea3b011245f08515068ed0e4eb2fa9c195fc958a5ca5553bd51612d5"
+    },
+    {
+      "path": "docs/ui-audit/runtime/content-390.png",
+      "bytes": 86018,
+      "sha256": "7d6418d00dfff3afb9f9430812f159353121a072a22d0e2231821d4d35143da2"
+    },
+    {
+      "path": "docs/ui-audit/runtime/experiment-1440.png",
+      "bytes": 158595,
+      "sha256": "aca4f91e4ee4598c221997aa1461cfb43373b7fbce2d688a7a834e81b95d5c82"
+    },
+    {
+      "path": "docs/ui-audit/runtime/experiment-390.png",
+      "bytes": 86506,
+      "sha256": "9ec8f99ab79981fd58df52fb66040d7a1853cdfcddd785d8a1cdbdd16d182f07"
+    },
+    {
+      "path": "docs/ui-audit/runtime/growth-1440.png",
+      "bytes": 200339,
+      "sha256": "58db7a632eee008c9bebdffe00c2f4e29bfc878dea13b5ba8c4ab6089ab70512"
+    },
+    {
+      "path": "docs/ui-audit/runtime/growth-390.png",
+      "bytes": 86557,
+      "sha256": "50497ab008c00b00d80457c47f5c842443542fc2cfae4e9f66bddf2f93354724"
+    },
+    {
+      "path": "docs/ui-audit/runtime/live-1440.png",
+      "bytes": 196888,
+      "sha256": "b454277844adf2ef77d728ea475e4a1a4c78cbafe7b925ac692c5309001ed343"
+    },
+    {
+      "path": "docs/ui-audit/runtime/live-390.png",
+      "bytes": 86379,
+      "sha256": "01e29eb4301ccca2895c512a6875a43d782386a997beedd8c419d5e0a3e887bf"
+    },
+    {
+      "path": "docs/ui-audit/runtime/overview-1440.png",
+      "bytes": 196318,
+      "sha256": "eb14e99e0d5a78541cdcc101928867a44bcffb7c8263e56f0ff79d987dced17e"
+    },
+    {
+      "path": "docs/ui-audit/runtime/overview-390.png",
+      "bytes": 78853,
+      "sha256": "307d141752ab70a8d00ff2a4a2733b3a2a20f57ff238bee61be8bf346f8dd28e"
+    },
+    {
+      "path": "docs/ui-audit/runtime/persona-1440.png",
+      "bytes": 228282,
+      "sha256": "75e40051be3f14a222fe73afee613dd83ef049d4f2c23fbc61cdac61591325e4"
+    },
+    {
+      "path": "docs/ui-audit/runtime/persona-390.png",
+      "bytes": 86876,
+      "sha256": "09c455ed2987546d0d175a2aea14e56d42a22f4534471175a03cefcd881a4bb0"
+    },
+    {
+      "path": "docs/ui-audit/runtime/product-1440.png",
+      "bytes": 181168,
+      "sha256": "fa60f80bb7a95a69c67eaa392326d01d7ab3760836371f3e568214befa3c6ac3"
+    },
+    {
+      "path": "docs/ui-audit/runtime/product-390.png",
+      "bytes": 82758,
+      "sha256": "42dd77269ee6af8d55a9c41074db65d3f76dfede15d9a8639151fab1c77cb22f"
+    },
+    {
+      "path": "docs/ui-audit/runtime/report-1440.png",
+      "bytes": 151845,
+      "sha256": "39205ba79151cac693a131934cb39d1a611c7c93b41dd2a9d471e3484b583929"
+    },
+    {
+      "path": "docs/ui-audit/runtime/report-390.png",
+      "bytes": 83038,
+      "sha256": "d40b71ab2559beb29b05bd109df56e2ec87a78b9ef1feb5310d25a1d812082f6"
+    },
+    {
+      "path": "docs/ui-audit/runtime/world-1440.png",
+      "bytes": 193481,
+      "sha256": "ef752657440b011cca5d75d69425123661598627faaffe8ad6cd96ee766b8675"
+    },
+    {
+      "path": "docs/ui-audit/runtime/world-390.png",
+      "bytes": 86693,
+      "sha256": "531a15b2b6166fb5986892788f3af9d56b6d12342fe726400039eefb33fbf591"
+    },
+    {
+      "path": "prototype/design-system/favicon.svg",
+      "bytes": 227,
+      "sha256": "e429844a9d007261a05a48a4c31aae2593dc5c0edbb61d2ce496982e9446f6ed"
+    },
+    {
+      "path": "prototype/public/assets/generated/consumer-community.jpg",
+      "bytes": 9816,
+      "sha256": "d45efb5c83859d463675ea92a65b933411ce957cd17527f1b9aad83297f3e788"
+    },
+    {
+      "path": "prototype/public/assets/generated/hero-world.jpg",
+      "bytes": 15006,
+      "sha256": "1f56f75307407d123abb2f94f212cd8fce6cc3e7f6c1dda51016d9b5e7edd90e"
+    },
+    {
+      "path": "prototype/public/assets/generated/mountain-cta.jpg",
+      "bytes": 11188,
+      "sha256": "9d57c6283051dc87c3eeb40abc4c0c1489ca937d1c8238beab6a9fa7edbe2fb0"
+    },
+    {
+      "path": "prototype/public/assets/generated/peach-sparkling-water.jpg",
+      "bytes": 11932,
+      "sha256": "5c8278fda2fd1e8385402f317c1501ea874340b2f5299ab7ea922f4a1b84be70"
+    },
+    {
+      "path": "prototype/references/world-agent-reference.jpg",
+      "bytes": 7513,
+      "sha256": "a0258251bcd55579ff26465decf4714d9a9c163279f72a99ec2f349910ccd714"
+    },
+    {
+      "path": "prototype/references/world-agent-reference.png",
+      "bytes": 2709753,
+      "sha256": "33a09ea47412e39b91f7936b7f74c51126ccd92509c891f18e1309021539ac6d"
+    },
+    {
+      "path": "public/assets/generated/consumer-community.jpg",
+      "bytes": 9816,
+      "sha256": "d45efb5c83859d463675ea92a65b933411ce957cd17527f1b9aad83297f3e788"
+    },
+    {
+      "path": "public/assets/generated/hero-world.jpg",
+      "bytes": 15006,
+      "sha256": "1f56f75307407d123abb2f94f212cd8fce6cc3e7f6c1dda51016d9b5e7edd90e"
+    },
+    {
+      "path": "public/assets/generated/mountain-cta.jpg",
+      "bytes": 11188,
+      "sha256": "9d57c6283051dc87c3eeb40abc4c0c1489ca937d1c8238beab6a9fa7edbe2fb0"
+    },
+    {
+      "path": "public/assets/generated/peach-sparkling-water.jpg",
+      "bytes": 11932,
+      "sha256": "5c8278fda2fd1e8385402f317c1501ea874340b2f5299ab7ea922f4a1b84be70"
+    },
+    {
+      "path": "references/world-agent-reference.jpg",
+      "bytes": 7513,
+      "sha256": "a0258251bcd55579ff26465decf4714d9a9c163279f72a99ec2f349910ccd714"
+    },
+    {
+      "path": "references/world-agent-reference.png",
+      "bytes": 2709753,
+      "sha256": "33a09ea47412e39b91f7936b7f74c51126ccd92509c891f18e1309021539ac6d"
+    }
+  ]
+}
