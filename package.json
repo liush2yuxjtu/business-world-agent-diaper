@@ -20,7 +20,10 @@
     "build:eve": "eve build",
     "dev:eve": "eve dev",
     "start:eve": "eve start",
-    "audit:reality": "node scripts/audit-business-world-reality.mjs"
+    "audit:reality": "node scripts/audit-business-world-reality.mjs",
+    "test:workspace": "node --import tsx --test tests/workspace.test.ts",
+    "audit:shared": "node scripts/check-shared-audit.mjs",
+    "verify:shared": "bash scripts/verify-shared.sh"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.0.2",
@@ -63,6 +66,7 @@
     "@typescript/native-preview": "7.0.0-dev.20260523.1",
     "drizzle-kit": "0.31.9",
     "microsandbox": "^0.5.7",
+    "tsx": "4.20.6",
     "typescript": "5.9.3"
   }
 }
