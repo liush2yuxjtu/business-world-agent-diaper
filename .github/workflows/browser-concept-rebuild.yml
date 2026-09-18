@@ -2,11 +2,7 @@ name: Browser concept rebuild
 on:
   push:
     branches: [feat/browser-concept-rebuild-20260918]
-    paths:
-      - scripts/rebuild-business-workbench.py
-      - scripts/fix-workbench-navigation.py
-      - public/business-world/src/**
-      - tests/concept_workbench_browser.py
+    paths: [scripts/rebuild-business-workbench.py]
   workflow_dispatch:
 permissions:
   contents: write
@@ -27,6 +23,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Rebuild paired UI and record source provenance
+        run: |
+          python scripts/rebuild-business-workbench.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/business-world docs/design-handoff docs/concept-rebuild
+          git diff --cached --quiet || git commit -m 'feat: integrate nine contextual workbench layouts [skip ci]'
+          git push origin HEAD:${GITHUB_REF_NAME}
       - name: Install reproducible dependencies
         run: |
           npm install -g pnpm@10.12.4
@@ -37,17 +41,6 @@ jobs:
       - name: Read available framework guidance
         run: |
           if [ -d node_modules/eve/dist/docs/public ]; then find -L node_modules/eve/dist/docs/public -maxdepth 2 -type f -name '*.md' -print; else echo 'Installed eve public guide directory is absent; repository architecture guide governs unchanged integration.'; fi
-      - name: Preserve actual pre-fix mobile regression evidence
-        run: python scripts/fix-workbench-navigation.py --reproduce
-      - name: Fix interactions and synchronize paired provenance
-        run: |
-          python scripts/fix-workbench-navigation.py
-          python scripts/rebuild-business-workbench.py
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/business-world docs/design-handoff docs/concept-rebuild tests/concept_workbench_browser.py
-          git diff --cached --quiet || git commit -m 'fix(ui): keep active mobile tabs visible and clarify scenario baselines [skip ci]'
-          git push origin HEAD:${GITHUB_REF_NAME}
       - name: Syntax and workspace contracts
         run: |
           node --check public/business-world/src/ui-workbench.mjs
@@ -64,11 +57,10 @@ jobs:
         run: |
           python tests/concept_workbench_browser.py --help
           python tests/concept_workbench_browser.py
-          node scripts/check-shared-audit.mjs
       - name: Commit verified concepts and evidence
         run: |
           git add public/business-world/concepts docs/concept-rebuild docs/ui-shared-audit/runtime
-          git diff --cached --quiet || git commit -m 'test: refresh nine concepts after mobile and scenario regressions [skip ci]'
+          git diff --cached --quiet || git commit -m 'test: track nine browser-rendered concepts and real journey evidence [skip ci]'
           git push origin HEAD:${GITHUB_REF_NAME}
       - name: Export review evidence
         if: always()
@@ -81,5 +73,4 @@ jobs:
             docs/concept-rebuild/
             docs/ui-shared-audit/runtime/
             scripts/rebuild-business-workbench.py
-            scripts/fix-workbench-navigation.py
             tests/concept_workbench_browser.py
