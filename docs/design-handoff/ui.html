@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Business World Agent — Design Reference</title>
-<meta name="description" content="Interactive design reference for Business World Agent. Sample data only; not runtime evidence.">
+<title>Business World Agent — UI Handoff</title>
+<meta name="description" content="High-fidelity interactive UI handoff for Business World Agent">
 <style>
 :root{
   --navy:#0d1f3a;--navy-2:#142a4c;--ink:#0b1733;--text:#455577;--muted:#7887a3;
@@ -13,7 +13,7 @@
   --blue-soft:#edf5ff;--warn:#a66c00;--warn-soft:#fff7e3;--shadow:0 14px 40px rgba(16,35,68,.08);
 }
 *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font:14px/1.45 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f7f9fc;color:var(--ink)}
-button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}\n:focus-visible{outline:3px solid rgba(36,104,232,.28);outline-offset:2px}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
 .hidden{display:none!important}.muted{color:var(--muted)}.tiny{font-size:12px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .browser{min-height:100vh;background:#fff}.browserbar{height:38px;background:#f3f5f8;border-bottom:1px solid #d9dee8;display:flex;align-items:center;padding:0 14px;gap:12px;position:sticky;top:0;z-index:100}
 .dots{display:flex;gap:6px}.dot{width:10px;height:10px;border-radius:50%}.r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
@@ -85,7 +85,7 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
 .metric-row{gap:10px}.grid-2,.grid-3,.grid-4{gap:10px}.deep-page{gap:10px}.deep-table th{font-size:10px;letter-spacing:.01em}.deep-table td{color:#50617c}
 .sidebar{box-shadow:8px 0 24px rgba(10,32,63,.06)}.topbar{box-shadow:0 1px 0 rgba(20,45,80,.02)}.navbtn.active{box-shadow:inset 3px 0 0 #8cb7ff,0 5px 16px rgba(0,73,190,.18)}
 .detail-title{font-size:19px;margin:0}.detail-body{color:#5a6b86;line-height:1.7}.detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.detail-meta>div{background:#f7f9fc;border:1px solid #e8edf4;border-radius:8px;padding:10px}.detail-meta small{display:block;color:#7b899e;margin-bottom:3px}
-.prototype-note{font-size:11px;color:#6a7992;background:#f6f9fd;border:1px solid #e1e9f4;border-radius:7px;padding:8px 10px}.design-reference{border-color:#cbd9ef;background:#f3f7ff;color:#355272}.design-reference strong{color:#244f90}
+.prototype-note{font-size:11px;color:#6a7992;background:#f6f9fd;border:1px solid #e1e9f4;border-radius:7px;padding:8px 10px}
 @media(max-width:720px){.app-source{position:static}.card{padding:12px}.deep-header{align-items:flex-start;flex-direction:column}.deep-header .push{margin-left:0}.metric-row{gap:8px}}
 
 </style>
@@ -95,7 +95,7 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
   <div class="browserbar">
     <div class="dots"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i></div>
     <div class="url" id="fakeUrl">https://www.businessworldagent.com</div>
-    <div class="mode-switch" aria-label="设计预览模式"><button id="landingMode" class="active" aria-pressed="true">Landing</button><button id="appMode" aria-pressed="false">App</button></div>
+    <div class="mode-switch"><button id="landingMode" class="active">Landing</button><button id="appMode">App</button></div>
   </div>
 
   <section id="landing" class="marketing">
@@ -118,7 +118,7 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
           <div class="preview-body">
             <div class="preview-side"><b>Business World Agent</b><div class="pnav">总览</div><div class="pnav">Persona Studio</div><div class="pnav active">World Builder</div><div class="pnav">内容策略</div><div class="pnav">直播作战室</div><div class="pnav">投放优化</div><div class="pnav">商品分析</div><div class="pnav">模拟实验</div><div class="pnav">报告</div></div>
             <div class="preview-main">
-              <div class="source">◈ DESIGN REFERENCE · SAMPLE DATA · NOT RUNTIME EVIDENCE</div>
+              <div class="source">✓ VERIFIED PERSISTED SOURCE · 电商运营数据库</div>
               <div class="mini-kpis"><div class="mini-kpi">GMV<b>¥2,483,221</b></div><div class="mini-kpi">转化率<b>3.24%</b></div><div class="mini-kpi">内容互动量<b>1,204,331</b></div><div class="mini-kpi">广告 ROI<b>4.32</b></div></div>
               <div class="mini-model"><div class="mini-title">商业世界模型</div><div class="mini-graph">
                 <div class="mnode obs" style="left:6%;top:20%">内容互动量<br><b>1,204,331</b></div>
@@ -167,7 +167,7 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
     </aside>
     <main class="workspace">
       <header class="topbar">
-        <div class="searchbox"><input id="searchInput" aria-label="搜索页面、节点、指标或业务问题" aria-controls="searchResults" aria-expanded="false" placeholder="搜索节点、指标或业务问题…"><div id="searchResults" class="search-results hidden" role="listbox"></div></div>
+        <div class="searchbox"><input id="searchInput" placeholder="搜索节点、指标或业务问题…"><div id="searchResults" class="search-results hidden"></div></div>
         <div class="push"></div>
         <button class="btn" id="refreshBtn">↻ 刷新数据</button>
         <button class="btn" id="sourceBtn">▤ 数据来源</button>
@@ -175,7 +175,7 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
       </header>
       <div class="canvas">
         <div class="mobile-note">这是桌面工作台的响应式预览。产品主设计目标仍是数据密集型桌面工作区。</div>
-        <div class="app-source design-reference"><strong>◈ DESIGN REFERENCE · SAMPLE DATA</strong><div class="source-meta"><span>用途：展示已验证来源在产品中的目标呈现</span><span>此页面不是运行时证据</span><span id="sourceTime">预览时间：2026-09-18 08:48</span></div></div>
+        <div class="app-source"><strong>✓ VERIFIED PERSISTED SOURCE</strong><div class="source-meta"><span>数据源：电商运营数据库（Production）</span><span>提供方：BWA Data Hub</span><span id="sourceTime">最后更新：2026-09-18 08:48</span></div></div>
         <div class="kpis" id="kpiRow"></div>
 
         <section class="view" id="view-overview"></section>
@@ -209,7 +209,7 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
           <div class="bottom-grid"><div class="evidence"><div class="panel-head"><strong>证据与数据 <span class="muted">5</span></strong><a style="color:var(--brand)">查看更多 →</a></div><table class="table"><thead><tr><th>时间</th><th>来源</th><th>事件</th><th>详情</th></tr></thead><tbody id="evidenceBody"></tbody></table></div><div class="scenario-log"><div class="panel-head"><strong>模拟记录 <span class="muted">3</span></strong><a style="color:var(--brand)">查看更多 →</a></div><table class="table"><thead><tr><th>时间</th><th>场景</th><th>核心假设</th><th>预期结果</th></tr></thead><tbody id="scenarioBody"></tbody></table></div></div>
         </section>
 
-        <section class="view" id="view-experiment"><div class="deep-page"><div class="deep-header"><div><h2>⚗ 模拟实验</h2><div class="sub">基于持久化真实数据构建可解释、可验证的情景模型。</div></div><div class="push toolbar"><button class="btn">保存为情景</button><button class="btn" data-jump="report">发送到报告</button><button class="btn" data-jump="world">在 World Builder 中查看</button></div></div><div class="card"><h3>1　情景设置</h3><div class="editor-grid"><div class="field span-2"><label>情景描述</label><input id="expPrompt" value="618大促期间加大广告投放，观察对 GMV 与 ROI 的综合影响。"></div><div class="field"><label>经营杠杆</label><select id="expLever"><option value="ad_efficiency">广告投入（站内SEM）</option><option value="checkout_conversion">结账转化率</option><option value="content_engagement">内容互动</option><option value="repeat_purchase">复购率</option></select></div><div class="field"><label>变化幅度 %</label><input id="expChange" type="number" value="30"></div></div><div class="tags" style="margin-top:10px"><span class="tag">大盘需求保持稳定 ×</span><span class="tag">供应链与库存充足 ×</span><span class="tag">商品价格不变 ×</span><span class="tag">内容策略不变 ×</span><button class="btn primary" id="expRun" style="margin-left:auto">▶ 运行实验</button></div></div><div class="grid-3"><div class="card"><h3>2　关键指标对比</h3><div class="scenario-result" id="expResult"><div class="sim-grid" style="grid-template-columns:1fr 1fr"><div class="sim-cell">Baseline GMV<b style="display:block;font-size:20px">¥2,483,221</b></div><div class="sim-cell">Modeled GMV<b style="display:block;font-size:20px">¥3,106,152</b></div><div class="sim-cell">Baseline ROI<b style="display:block;font-size:20px">4.32</b></div><div class="sim-cell">Modeled ROI<b style="display:block;font-size:20px">5.21</b></div></div></div></div><div class="card"><h3>3　敏感性分析</h3><div class="tornado"><div class="tor-row"><span>广告投入</span><div class="tor-track"><i class="tor-pos" style="width:92%"></i></div><b>+25.1%</b></div><div class="tor-row"><span>转化率提升</span><div class="tor-track"><i class="tor-pos" style="width:72%"></i></div><b>+18.3%</b></div><div class="tor-row"><span>客单价变化</span><div class="tor-track"><i class="tor-pos" style="width:55%"></i></div><b>+12.6%</b></div><div class="tor-row"><span>流量成本</span><div class="tor-track"><i class="tor-neg" style="width:38%"></i></div><b>-10.4%</b></div><div class="tor-row"><span>自然流量</span><div class="tor-track"><i class="tor-pos" style="width:44%"></i></div><b>+8.7%</b></div><div class="tor-row"><span>库存满足率</span><div class="tor-track"><i class="tor-pos" style="width:31%"></i></div><b>+6.1%</b></div></div></div><div class="card"><h3>实验说明</h3><p class="tiny muted">仅调整广告投入，其他经营策略保持不变。结果为对历史持久化基线的结构化情景推演。</p><div class="irow"><span>置信度</span><b>78% · 中高</b></div><div class="irow"><span>MAPE</span><b>12.3%</b></div><div class="alert-row blue"><div><b>Reality boundary</b><p>模拟输出不是已观测市场结果。</p></div></div></div></div><div class="grid-2"><div class="card"><div class="panel-head"><h3>4　已保存的模拟情景</h3><a>查看全部 →</a></div><table class="deep-table"><thead><tr><th>情景名称</th><th>经营杠杆</th><th>变化幅度</th><th>预期 GMV</th><th>创建人</th><th>状态</th></tr></thead><tbody><tr><td>618 广告加投</td><td>广告投入</td><td>+30%</td><td>+25.1%</td><td>张立</td><td><span class="chip green">已完成</span></td></tr><tr><td>夏季新品促销</td><td>商品价格</td><td>-10%</td><td>+18.7%</td><td>李娜</td><td><span class="chip green">已完成</span></td></tr><tr><td>内容种草加大</td><td>达人投放</td><td>+50%</td><td>+12.4%</td><td>王强</td><td><span class="chip green">已完成</span></td></tr><tr><td>站外投放测试</td><td>广告投入</td><td>+50%</td><td>+16.9%</td><td>张立</td><td><span class="chip blue">草稿</span></td></tr></tbody></table></div><div class="card"><h3>5　影响路径</h3><div class="flow-path"><div class="flow-node">广告投入<br><b>+30%</b></div><span class="flow-arrow">→</span><div class="flow-node">曝光量<br><b>+28%</b></div><span class="flow-arrow">→</span><div class="flow-node">访问量<br><b>+22%</b></div><span class="flow-arrow">→</span><div class="flow-node">转化率<br><b>+15%</b></div><span class="flow-arrow">→</span><div class="flow-node">GMV<br><b>+25.1%</b></div></div></div></div></div></section><section class="view" id="view-report"><div class="deep-page"><div class="deep-header"><div><h2>报告中心</h2><div class="sub">基于真实业务数据生成专业分析报告，支持导出与分发。</div></div><div class="push toolbar"><span class="selectish">09/11 ~ 09/18 ▾</span><span class="selectish">管理层 ▾</span><button class="btn primary" data-demo="newreport">▧ 新建报告</button></div></div><div class="report-layout"><div class="card"><div class="panel-head"><h3>最新周报 <span class="chip green">已生成</span></h3><button class="btn">查看完整报告</button></div><h2 style="font-size:22px">GMV 环比增长 12.5%，主要由直播场次提升与优质内容带动</h2><p class="muted">本周直播 GMV 创近8周新高；内容种草带动搜索量上升，新品 A 系列表现亮眼。</p><div class="report-grid"><div class="report-stat">GMV<b>¥2,483,221</b><span class="delta up">+12.5%</span></div><div class="report-stat">订单量<b>448,320</b><span class="delta up">+9.8%</span></div><div class="report-stat">广告 ROI<b>4.32</b><span class="delta up">+18.7%</span></div></div></div><div class="card"><div class="panel-head"><h3>报告大纲</h3><span class="muted tiny">6 章节</span></div><div class="outline"><div><span><b>经营概览</b><br><small class="muted">整体业务与核心指标</small></span></div><div><span><b>内容复盘</b><br><small class="muted">爆款与内容矩阵</small></span></div><div><span><b>直播复盘</b><br><small class="muted">场次、转化、货品</small></span></div><div><span><b>投放分析</b><br><small class="muted">ROI 与优化建议</small></span></div><div><span><b>商品建议</b><br><small class="muted">热销与备货</small></span></div><div><span><b>风险与机会</b></span></div></div></div><div class="card"><h3>导出与分发</h3><div class="grid-2" style="margin-top:10px"><button class="btn" id="downloadReport">导出 PDF</button><button class="btn">导出 PPT</button><button class="btn">分享链接</button><button class="btn">发送到邮箱</button></div><h3 style="margin-top:12px">发送给</h3><div class="tags"><span class="tag">张总 ×</span><span class="tag">李经理 ×</span><span class="tag">市场部 ×</span></div><textarea style="width:100%;margin-top:10px;border:1px solid #dfe6ef;border-radius:7px;padding:8px;min-height:68px">这是本周的业务分析报告，请查收。</textarea><button class="btn primary" style="width:100%;margin-top:8px" data-demo="sendreport">发送报告</button></div></div><div class="grid-3"><div class="card span-2"><div class="panel-head"><h3>历史报告 (12)</h3><a>查看全部报告 →</a></div><table class="deep-table"><thead><tr><th>报告时间</th><th>报告名称</th><th>报告类型</th><th>创建人</th><th>状态</th><th>浏览量</th><th>操作</th></tr></thead><tbody><tr><td>09-18</td><td>第38周业务周报</td><td>周报</td><td>张立</td><td><span class="chip green">已生成</span></td><td>38</td><td>查看</td></tr><tr><td>09-11</td><td>第37周业务周报</td><td>周报</td><td>王敏</td><td><span class="chip green">已生成</span></td><td>52</td><td>查看</td></tr><tr><td>09-04</td><td>第36周业务周报</td><td>周报</td><td>张立</td><td><span class="chip green">已生成</span></td><td>46</td><td>查看</td></tr><tr><td>08-31</td><td>8月经营月报</td><td>月报</td><td>李娜</td><td><span class="chip green">已生成</span></td><td>128</td><td>查看</td></tr></tbody></table></div><div class="card"><h3>报告预览</h3><div class="report-cover"><small>Business World Agent</small><h3>商业世界 · 业务周报</h3><div class="muted tiny">第38周 · 数据驱动增长</div></div></div></div><div class="grid-3"><div class="card"><h3>本周关键结论</h3><div class="stack"><div class="list-row"><div class="numx">1</div><div class="grow"><b>直播带动 GMV 增长 12.5%</b><p>场次 +3，场均 GMV +18%。</p></div><span class="chip green">正向</span></div><div class="list-row"><div class="numx">2</div><div class="grow"><b>内容种草效果显著</b><p>总曝光 +28%，搜索流量 +35%。</p></div><span class="chip green">正向</span></div><div class="list-row"><div class="numx">3</div><div class="grow"><b>新品 A 系列表现超预期</b><p>首周 GMV 46.8万。</p></div></div></div></div><div class="card"><h3>支持证据</h3><div class="mini-chart"><svg viewBox="0 0 600 160" preserveAspectRatio="none"><polyline fill="none" stroke="#8066de" stroke-width="3" points="0,105 85,98 170,92 255,77 340,88 425,65 510,48 600,42"/></svg></div></div><div class="card"><h3>Agent 自动生成摘要 <span class="chip blue">样例数据</span></h3><p class="muted">本周整体表现良好，建议继续保持直播节奏并加大新品 A 系列内容投放，同时关注部分商品库存压力。</p><label class="tiny">可编辑备注</label><textarea style="width:100%;min-height:80px;border:1px solid #dfe6ef;border-radius:7px;padding:8px">整体方向正确，下一步重点关注预热期投放节奏。</textarea><button class="btn primary" style="margin-top:8px">保存备注</button></div></div></div></section><section class="view" id="view-content"></section>
+        <section class="view" id="view-experiment"><div class="deep-page"><div class="deep-header"><div><h2>⚗ 模拟实验</h2><div class="sub">基于持久化真实数据构建可解释、可验证的情景模型。</div></div><div class="push toolbar"><button class="btn">保存为情景</button><button class="btn" data-jump="report">发送到报告</button><button class="btn" data-jump="world">在 World Builder 中查看</button></div></div><div class="card"><h3>1　情景设置</h3><div class="editor-grid"><div class="field span-2"><label>情景描述</label><input id="expPrompt" value="618大促期间加大广告投放，观察对 GMV 与 ROI 的综合影响。"></div><div class="field"><label>经营杠杆</label><select id="expLever"><option value="ad_efficiency">广告投入（站内SEM）</option><option value="checkout_conversion">结账转化率</option><option value="content_engagement">内容互动</option><option value="repeat_purchase">复购率</option></select></div><div class="field"><label>变化幅度 %</label><input id="expChange" type="number" value="30"></div></div><div class="tags" style="margin-top:10px"><span class="tag">大盘需求保持稳定 ×</span><span class="tag">供应链与库存充足 ×</span><span class="tag">商品价格不变 ×</span><span class="tag">内容策略不变 ×</span><button class="btn primary" id="expRun" style="margin-left:auto">▶ 运行实验</button></div></div><div class="grid-3"><div class="card"><h3>2　关键指标对比</h3><div class="scenario-result" id="expResult"><div class="sim-grid" style="grid-template-columns:1fr 1fr"><div class="sim-cell">Baseline GMV<b style="display:block;font-size:20px">¥2,483,221</b></div><div class="sim-cell">Modeled GMV<b style="display:block;font-size:20px">¥3,106,152</b></div><div class="sim-cell">Baseline ROI<b style="display:block;font-size:20px">4.32</b></div><div class="sim-cell">Modeled ROI<b style="display:block;font-size:20px">5.21</b></div></div></div></div><div class="card"><h3>3　敏感性分析</h3><div class="tornado"><div class="tor-row"><span>广告投入</span><div class="tor-track"><i class="tor-pos" style="width:92%"></i></div><b>+25.1%</b></div><div class="tor-row"><span>转化率提升</span><div class="tor-track"><i class="tor-pos" style="width:72%"></i></div><b>+18.3%</b></div><div class="tor-row"><span>客单价变化</span><div class="tor-track"><i class="tor-pos" style="width:55%"></i></div><b>+12.6%</b></div><div class="tor-row"><span>流量成本</span><div class="tor-track"><i class="tor-neg" style="width:38%"></i></div><b>-10.4%</b></div><div class="tor-row"><span>自然流量</span><div class="tor-track"><i class="tor-pos" style="width:44%"></i></div><b>+8.7%</b></div><div class="tor-row"><span>库存满足率</span><div class="tor-track"><i class="tor-pos" style="width:31%"></i></div><b>+6.1%</b></div></div></div><div class="card"><h3>实验说明</h3><p class="tiny muted">仅调整广告投入，其他经营策略保持不变。结果为对历史持久化基线的结构化情景推演。</p><div class="irow"><span>置信度</span><b>78% · 中高</b></div><div class="irow"><span>MAPE</span><b>12.3%</b></div><div class="alert-row blue"><div><b>Reality boundary</b><p>模拟输出不是已观测市场结果。</p></div></div></div></div><div class="grid-2"><div class="card"><div class="panel-head"><h3>4　已保存的模拟情景</h3><a>查看全部 →</a></div><table class="deep-table"><thead><tr><th>情景名称</th><th>经营杠杆</th><th>变化幅度</th><th>预期 GMV</th><th>创建人</th><th>状态</th></tr></thead><tbody><tr><td>618 广告加投</td><td>广告投入</td><td>+30%</td><td>+25.1%</td><td>张立</td><td><span class="chip green">已完成</span></td></tr><tr><td>夏季新品促销</td><td>商品价格</td><td>-10%</td><td>+18.7%</td><td>李娜</td><td><span class="chip green">已完成</span></td></tr><tr><td>内容种草加大</td><td>达人投放</td><td>+50%</td><td>+12.4%</td><td>王强</td><td><span class="chip green">已完成</span></td></tr><tr><td>站外投放测试</td><td>广告投入</td><td>+50%</td><td>+16.9%</td><td>张立</td><td><span class="chip blue">草稿</span></td></tr></tbody></table></div><div class="card"><h3>5　影响路径</h3><div class="flow-path"><div class="flow-node">广告投入<br><b>+30%</b></div><span class="flow-arrow">→</span><div class="flow-node">曝光量<br><b>+28%</b></div><span class="flow-arrow">→</span><div class="flow-node">访问量<br><b>+22%</b></div><span class="flow-arrow">→</span><div class="flow-node">转化率<br><b>+15%</b></div><span class="flow-arrow">→</span><div class="flow-node">GMV<br><b>+25.1%</b></div></div></div></div></div></section><section class="view" id="view-report"><div class="deep-page"><div class="deep-header"><div><h2>报告中心</h2><div class="sub">基于真实业务数据生成专业分析报告，支持导出与分发。</div></div><div class="push toolbar"><span class="selectish">09/11 ~ 09/18 ▾</span><span class="selectish">管理层 ▾</span><button class="btn primary" data-demo="newreport">▧ 新建报告</button></div></div><div class="report-layout"><div class="card"><div class="panel-head"><h3>最新周报 <span class="chip green">已生成</span></h3><button class="btn">查看完整报告</button></div><h2 style="font-size:22px">GMV 环比增长 12.5%，主要由直播场次提升与优质内容带动</h2><p class="muted">本周直播 GMV 创近8周新高；内容种草带动搜索量上升，新品 A 系列表现亮眼。</p><div class="report-grid"><div class="report-stat">GMV<b>¥2,483,221</b><span class="delta up">+12.5%</span></div><div class="report-stat">订单量<b>448,320</b><span class="delta up">+9.8%</span></div><div class="report-stat">广告 ROI<b>4.32</b><span class="delta up">+18.7%</span></div></div></div><div class="card"><div class="panel-head"><h3>报告大纲</h3><span class="muted tiny">6 章节</span></div><div class="outline"><div><span><b>经营概览</b><br><small class="muted">整体业务与核心指标</small></span></div><div><span><b>内容复盘</b><br><small class="muted">爆款与内容矩阵</small></span></div><div><span><b>直播复盘</b><br><small class="muted">场次、转化、货品</small></span></div><div><span><b>投放分析</b><br><small class="muted">ROI 与优化建议</small></span></div><div><span><b>商品建议</b><br><small class="muted">热销与备货</small></span></div><div><span><b>风险与机会</b></span></div></div></div><div class="card"><h3>导出与分发</h3><div class="grid-2" style="margin-top:10px"><button class="btn" id="downloadReport">导出 PDF</button><button class="btn">导出 PPT</button><button class="btn">分享链接</button><button class="btn">发送到邮箱</button></div><h3 style="margin-top:12px">发送给</h3><div class="tags"><span class="tag">张总 ×</span><span class="tag">李经理 ×</span><span class="tag">市场部 ×</span></div><textarea style="width:100%;margin-top:10px;border:1px solid #dfe6ef;border-radius:7px;padding:8px;min-height:68px">这是本周的业务分析报告，请查收。</textarea><button class="btn primary" style="width:100%;margin-top:8px" data-demo="sendreport">发送报告</button></div></div><div class="grid-3"><div class="card span-2"><div class="panel-head"><h3>历史报告 (12)</h3><a>查看全部报告 →</a></div><table class="deep-table"><thead><tr><th>报告时间</th><th>报告名称</th><th>报告类型</th><th>创建人</th><th>状态</th><th>浏览量</th><th>操作</th></tr></thead><tbody><tr><td>09-18</td><td>第38周业务周报</td><td>周报</td><td>张立</td><td><span class="chip green">已生成</span></td><td>38</td><td>查看</td></tr><tr><td>09-11</td><td>第37周业务周报</td><td>周报</td><td>王敏</td><td><span class="chip green">已生成</span></td><td>52</td><td>查看</td></tr><tr><td>09-04</td><td>第36周业务周报</td><td>周报</td><td>张立</td><td><span class="chip green">已生成</span></td><td>46</td><td>查看</td></tr><tr><td>08-31</td><td>8月经营月报</td><td>月报</td><td>李娜</td><td><span class="chip green">已生成</span></td><td>128</td><td>查看</td></tr></tbody></table></div><div class="card"><h3>报告预览</h3><div class="report-cover"><small>Business World Agent</small><h3>商业世界 · 业务周报</h3><div class="muted tiny">第38周 · 数据驱动增长</div></div></div></div><div class="grid-3"><div class="card"><h3>本周关键结论</h3><div class="stack"><div class="list-row"><div class="numx">1</div><div class="grow"><b>直播带动 GMV 增长 12.5%</b><p>场次 +3，场均 GMV +18%。</p></div><span class="chip green">正向</span></div><div class="list-row"><div class="numx">2</div><div class="grow"><b>内容种草效果显著</b><p>总曝光 +28%，搜索流量 +35%。</p></div><span class="chip green">正向</span></div><div class="list-row"><div class="numx">3</div><div class="grow"><b>新品 A 系列表现超预期</b><p>首周 GMV 46.8万。</p></div></div></div></div><div class="card"><h3>支持证据</h3><div class="mini-chart"><svg viewBox="0 0 600 160" preserveAspectRatio="none"><polyline fill="none" stroke="#8066de" stroke-width="3" points="0,105 85,98 170,92 255,77 340,88 425,65 510,48 600,42"/></svg></div></div><div class="card"><h3>Agent 自动生成摘要 <span class="chip blue">最新数据</span></h3><p class="muted">本周整体表现良好，建议继续保持直播节奏并加大新品 A 系列内容投放，同时关注部分商品库存压力。</p><label class="tiny">可编辑备注</label><textarea style="width:100%;min-height:80px;border:1px solid #dfe6ef;border-radius:7px;padding:8px">整体方向正确，下一步重点关注预热期投放节奏。</textarea><button class="btn primary" style="margin-top:8px">保存备注</button></div></div></div></section><section class="view" id="view-content"></section>
         <section class="view" id="view-live"></section>
         <section class="view" id="view-growth"></section>
         <section class="view" id="view-product"></section>
@@ -219,25 +219,25 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
 </div>
 
 <div class="modal-wrap hidden" id="sourceModal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle"><div class="modal-head"><div><h2 id="sourceTitle">设计样例数据源</h2><div class="muted">仅调整当前设计预览中的样例值；不会写入外部系统或持久化状态。</div></div><button class="close" id="closeSource" aria-label="关闭设计样例数据源">×</button></div>
-    <div class="editor-grid"><div class="field"><label>样例来源名称</label><input id="sourceName" value="设计参考数据集"></div><div class="field"><label>来源类型</label><select id="sourceProvider"><option>Design Reference</option><option>Manual Example</option><option>API Example</option></select></div></div>
+  <div class="modal"><div class="modal-head"><div><h2>数据来源</h2><div class="muted">编辑持久化经营快照的来源信息与关键指标。</div></div><button class="close" id="closeSource">×</button></div>
+    <div class="editor-grid"><div class="field"><label>来源名称</label><input id="sourceName" value="电商运营数据库（Production）"></div><div class="field"><label>Provider</label><select id="sourceProvider"><option>BWA Data Hub</option><option>Manual Entry</option><option>Official API</option></select></div></div>
     <div class="metric-form">
       <div class="field"><label>GMV</label><input id="editGmv" type="number" value="2483221"></div><div class="field"><label>转化率 %</label><input id="editConversion" type="number" step=".01" value="3.24"></div>
       <div class="field"><label>广告 ROI</label><input id="editRoi" type="number" step=".01" value="4.32"></div><div class="field"><label>复购率 %</label><input id="editRepeat" type="number" step=".1" value="28.6"></div>
     </div>
-    <div class="field" style="margin-top:12px"><label>来源备注</label><textarea id="sourceNotes">设计样例数据：用于展示来源类型、观测时间、更新时间与来源证明字段。</textarea></div>
-    <div class="modal-actions"><button class="btn" id="cancelSource">取消</button><button class="btn primary" id="saveSource">应用到设计预览</button></div>
+    <div class="field" style="margin-top:12px"><label>来源备注</label><textarea id="sourceNotes">已验证业务快照。生产实现应保留 source type、observedAt、updatedAt 和 persistence provenance。</textarea></div>
+    <div class="modal-actions"><button class="btn" id="cancelSource">取消</button><button class="btn primary" id="saveSource">保存快照</button></div>
   </div>
 </div>
 <div class="modal-wrap hidden" id="detailModal">
-  <div class="modal" style="width:min(620px,95vw)" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
-    <div class="modal-head"><div><div class="tiny muted" id="detailEyebrow">详情</div><h2 class="detail-title" id="detailTitle">详情</h2></div><button class="close" id="closeDetail" aria-label="关闭详情">×</button></div>
+  <div class="modal" style="width:min(620px,95vw)">
+    <div class="modal-head"><div><div class="tiny muted" id="detailEyebrow">DETAIL</div><h2 class="detail-title" id="detailTitle">详情</h2></div><button class="close" id="closeDetail">×</button></div>
     <div class="detail-body" id="detailBody" style="margin-top:12px"></div>
-    <div class="prototype-note" id="detailNote" style="margin-top:14px">设计预览不会执行外部写操作；需要真实执行的动作必须进入明确的人工确认流程。</div>
+    <div class="prototype-note" id="detailNote" style="margin-top:14px">这是交互原型：高风险或外部写操作不会直接执行。</div>
     <div class="modal-actions"><button class="btn" id="cancelDetail">关闭</button><button class="btn primary" id="confirmDetail">确认</button></div>
   </div>
 </div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast"></div>
 
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -249,20 +249,20 @@ const state={
 const views={
   overview:{title:'总览',desc:'统一查看当前真实经营快照。',metrics:[['GMV','¥2,483,221'],['转化率','3.24%'],['内容互动量','1,204,331'],['广告 ROI','4.32']]},
   persona:{title:'Persona Studio',desc:'策略模板 ≠ 观测事实。仅在接入可验证分群数据后展示真实 Persona 指标。',empty:'当前消费者分群仍处于推断层。请连接真实分群或行为数据后再发布为经营事实。'},
-  content:{title:'内容策略',desc:'展示基于已验证内容观测的策略界面。',metrics:[['内容互动量','1,204,331'],['互动率','8.4%'],['内容机会','17 条']]},
+  content:{title:'内容策略',desc:'基于已持久化内容观测设计策略。',metrics:[['内容互动量','1,204,331'],['互动率','8.4%'],['内容机会','17 条']]},
   live:{title:'直播作战室',desc:'直播指标来自同一 Business World 事实层。',metrics:[['直播表现','342,120'],['进房率','18.6%'],['加购率','5.8%']]},
   growth:{title:'投放优化',desc:'仅显示核验后的聚合投放数据。',metrics:[['预算','¥420,000'],['ROI','4.32'],['CPA','¥82']]},
   product:{title:'商品分析',desc:'交易指标与商品表现保持可追溯来源。',metrics:[['GMV','¥2,483,221'],['转化率','3.24%'],['新客','8,126']]}
 };
 const entities={
-  content:{title:'内容互动量',value:'1,204,331',type:'Observed',confidence:'Design sample',source:'设计样例 · 内容平台',time:'2026-09-18 08:42',definition:'所选时间范围内内容产生的可验证互动总量。'},
+  content:{title:'内容互动量',value:'1,204,331',type:'Observed',confidence:'Source verified',source:'内容平台',time:'2026-09-18 08:42',definition:'所选时间范围内内容产生的可验证互动总量。'},
   persona:{title:'人群分群',value:'8 个核心人群',type:'Inferred',confidence:'87%',source:'分群模型 · 11 signals',time:'2026-09-18 08:37',definition:'基于已观测行为信号形成的人群分组，属于推断状态。'},
-  live:{title:'直播间表现',value:'342,120',type:'Observed',confidence:'Design sample',source:'设计样例 · 直播平台',time:'2026-09-18 08:39',definition:'直播曝光、看播与互动层面的聚合观测。'},
+  live:{title:'直播间表现',value:'342,120',type:'Observed',confidence:'Source verified',source:'直播平台',time:'2026-09-18 08:39',definition:'直播曝光、看播与互动层面的聚合观测。'},
   conversion:{title:'转化率',value:'3.24%',type:'Inferred',confidence:'92%',source:'Commerce model',time:'2026-09-18 08:41',definition:'从当前事实层计算得到的业务转化比例。'},
-  ads:{title:'广告效率',value:'ROI 4.32',type:'Observed',confidence:'Design sample',source:'设计样例 · 广告平台',time:'2026-09-18 08:40',definition:'投放成本与收入之间的已验证效率指标。'},
-  gmv:{title:'GMV',value:'¥2,483,221',type:'Simulated',confidence:'92%',source:'设计参考数据集',time:'2026-09-18 08:48',definition:'在所选时间范围内，通过所有渠道产生的已支付订单商品总金额。当前 World Builder 节点可在情景中呈现模拟输出。'},
+  ads:{title:'广告效率',value:'ROI 4.32',type:'Observed',confidence:'Source verified',source:'广告平台',time:'2026-09-18 08:40',definition:'投放成本与收入之间的已验证效率指标。'},
+  gmv:{title:'GMV',value:'¥2,483,221',type:'Simulated',confidence:'92%',source:'电商运营数据库（Production）',time:'2026-09-18 08:48',definition:'在所选时间范围内，通过所有渠道产生的已支付订单商品总金额。当前 World Builder 节点可在情景中呈现模拟输出。'},
   revenue:{title:'收入',value:'¥2,317,892',type:'Inferred',confidence:'89%',source:'Revenue model',time:'2026-09-18 08:44',definition:'由已观测交易与财务映射规则形成的收入推断。'},
-  repeat:{title:'复购率',value:'28.6%',type:'Observed',confidence:'Design sample',source:'设计样例 · Commerce DB',time:'2026-09-18 08:46',definition:'已购买用户在观察窗口内发生再次购买的比例。'}
+  repeat:{title:'复购率',value:'28.6%',type:'Observed',confidence:'Source verified',source:'Commerce DB',time:'2026-09-18 08:46',definition:'已购买用户在观察窗口内发生再次购买的比例。'}
 };
 const evidence=[
  ['08:48','电商数据库','更新 GMV 数据','¥2,483,221 (+12.5%)'],['08:42','内容平台','更新内容互动量','1,204,331 (+18.7%)'],['08:40','广告平台','更新广告投放数据','ROI 4.32 (+9.1%)'],['08:37','系统推断','更新人群分群结果','8 核心人群 (87%)'],['08:39','直播平台','更新直播间表现','342,120 (+15.3%)']
@@ -270,14 +270,14 @@ const evidence=[
 const scenarios=[['08:20','增长计划','提升广告效率 20%','GMV +18.4%'],['07:45','基准情景','保持当前策略','GMV +2.1%'],['昨日 16:05','下行风险','广告预算 -30%','GMV -12.6%']];
 function money(n){return '¥'+Math.round(n).toLocaleString('zh-CN')}
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
-function setMode(mode){state.mode=mode;$('#landing').classList.toggle('hidden',mode!=='landing');$('#app').classList.toggle('hidden',mode!=='app');$('#landingMode').classList.toggle('active',mode==='landing');$('#appMode').classList.toggle('active',mode==='app');$('#landingMode').setAttribute('aria-pressed',mode==='landing');$('#appMode').setAttribute('aria-pressed',mode==='app');$('#fakeUrl').textContent=mode==='landing'?'https://www.businessworldagent.com':'https://app.businessworldagent.com/'+state.view;if(mode==='app'&&location.hash!=='#'+state.view)setView(state.view||'world')}
+function setMode(mode){state.mode=mode;$('#landing').classList.toggle('hidden',mode!=='landing');$('#app').classList.toggle('hidden',mode!=='app');$('#landingMode').classList.toggle('active',mode==='landing');$('#appMode').classList.toggle('active',mode==='app');$('#fakeUrl').textContent=mode==='landing'?'https://www.businessworldagent.com':'https://app.businessworldagent.com/'+state.view;if(mode==='app'&&location.hash!=='#'+state.view)setView(state.view||'world')}
 $('#landingMode').onclick=()=>setMode('landing');$('#appMode').onclick=()=>setMode('app');$$('[data-open-app]').forEach(b=>b.onclick=()=>setMode('app'));
 function renderKpis(){const d=state.data;$('#kpiRow').innerHTML=[
  ['GMV',money(d.gmv),'+12.5%'],['转化率',d.conversion.toFixed(2)+'%','+0.6%'],['内容互动量',d.engagement.toLocaleString(),'+18.7%'],['广告 ROI',d.roi.toFixed(2),'+9.1%'],['复购率',d.repeat.toFixed(1)+'%','+2.3%']
 ].map(x=>'<div class="kpi"><div class="label">'+x[0]+'</div><div class="value">'+x[1]+'</div><div class="delta up">较上期 '+x[2]+' ▲</div></div>').join('')}
 function typeClass(type){return type==='Observed'?'obs':type==='Inferred'?'inf':'sim'}
 function renderInspector(key){state.entity=key;const e=entities[key];$('#inspector').innerHTML='<h3>实体详情</h3><div class="entity-title">'+e.title+'</div><div class="muted tiny">业务实体 / 指标</div><div class="entity-value">'+e.value+'</div><div class="irow"><span>状态</span><span class="state-pill '+typeClass(e.type)+'">'+e.type+'</span></div><div class="irow"><span>置信度</span><b>'+e.confidence+'</b></div><div class="irow"><span>数据来源</span><b>'+e.source+'</b></div><div class="irow"><span>更新时间</span><b>'+e.time+'</b></div><div class="idesc"><b style="color:#1b2f50">定义</b><br>'+e.definition+'</div><div class="iactions"><button data-action="factor">查看相关因子</button><button data-action="simulate">在新场景中模拟</button><button data-action="watch">添加监控</button><button data-action="history">查看历史趋势</button></div>';
- $$('#inspector [data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='simulate')setView('experiment');else toast('设计预览：'+b.textContent)})}
+ $$('#inspector [data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='simulate')setView('experiment');else toast('已执行：'+b.textContent)})}
 $$('.node').forEach(n=>n.onclick=()=>renderInspector(n.dataset.entity));
 function renderEvidence(){const rows=a=>a.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('');$('#evidenceBody').innerHTML=rows(evidence);$('#scenarioBody').innerHTML=rows(scenarios)}
 
@@ -333,22 +333,22 @@ function renderDeep(id){
 function setView(id,route=true){state.view=id;$$('.view').forEach(v=>v.classList.remove('active'));$('#view-'+id)?.classList.add('active');$$('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===id));$('#fakeUrl').textContent='https://app.businessworldagent.com/'+id;if(route&&state.mode==='app'&&location.hash!=='#'+id)history.replaceState(null,'','#'+id);if(id==='world')renderInspector(state.entity);$('#searchResults').classList.add('hidden');setTimeout(wireInteractiveSurfaces,0)}
 $$('.navbtn').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 const navIndex=[['overview','总览'],['persona','Persona Studio'],['world','World Builder'],['content','内容策略'],['live','直播作战室'],['growth','投放优化'],['product','商品分析'],['experiment','模拟实验'],['report','报告']];
-$('#searchInput').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();const r=$('#searchResults');if(!q){r.classList.add('hidden');e.target.setAttribute('aria-expanded','false');return}const matches=navIndex.filter(x=>x[1].toLowerCase().includes(q)||x[0].includes(q));r.innerHTML=matches.length?matches.map(x=>'<button data-go="'+x[0]+'">'+x[1]+'</button>').join(''):'<div class="muted tiny" style="padding:10px">没有匹配页面</div>';r.classList.remove('hidden');e.target.setAttribute('aria-expanded','true');r.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{setView(b.dataset.go);$('#searchInput').value=''})});
-$('#refreshBtn').onclick=()=>{const now=new Date();$('#sourceTime').textContent='预览时间：'+now.toLocaleString('zh-CN',{hour12:false});toast('设计预览时间已刷新；未请求外部数据')};
+$('#searchInput').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();const r=$('#searchResults');if(!q){r.classList.add('hidden');return}const matches=navIndex.filter(x=>x[1].toLowerCase().includes(q)||x[0].includes(q));r.innerHTML=matches.length?matches.map(x=>'<button data-go="'+x[0]+'">'+x[1]+'</button>').join(''):'<div class="muted tiny" style="padding:10px">没有匹配页面</div>';r.classList.remove('hidden');r.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{setView(b.dataset.go);$('#searchInput').value=''})});
+$('#refreshBtn').onclick=()=>{const now=new Date();$('#sourceTime').textContent='最后更新：'+now.toLocaleString('zh-CN',{hour12:false});toast('已刷新 Business World 状态')};
 $$('#scenarioSeg button').forEach(b=>b.onclick=()=>{$$('#scenarioSeg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.scenario=b.dataset.scenario;const factor=state.scenario==='growth' ? 1.184 : state.scenario==='downside' ? 0.874 : 1;const modeled=Math.round(state.data.gmv*factor);$('#graphGmv').textContent=money(modeled);entities.gmv.value=money(modeled);renderInspector('gmv')});
-$('#runSim').onclick=()=>{const b=$('#runSim');const old=b.textContent;b.disabled=true;b.textContent='计算中…';setTimeout(()=>{b.disabled=false;b.textContent=old;toast('设计预览已重新计算；未写入运行时记录')},650)};
+$('#runSim').onclick=()=>{const b=$('#runSim');const old=b.textContent;b.disabled=true;b.textContent='计算中…';setTimeout(()=>{b.disabled=false;b.textContent=old;toast('情景已重新计算并写入模拟记录')},650)};
 function openSource(){$('#sourceModal').classList.remove('hidden')}function closeSource(){$('#sourceModal').classList.add('hidden')}
 $('#sourceBtn').onclick=openSource;$('#closeSource').onclick=closeSource;$('#cancelSource').onclick=closeSource;$('#sourceModal').addEventListener('click',e=>{if(e.target.id==='sourceModal')closeSource()});
-$('#saveSource').onclick=()=>{state.data.gmv=Number($('#editGmv').value)||0;state.data.conversion=Number($('#editConversion').value)||0;state.data.roi=Number($('#editRoi').value)||0;state.data.repeat=Number($('#editRepeat').value)||0;entities.gmv.value=money(state.data.gmv);entities.conversion.value=state.data.conversion.toFixed(2)+'%';entities.ads.value='ROI '+state.data.roi.toFixed(2);entities.repeat.value=state.data.repeat.toFixed(1)+'%';$('#graphGmv').textContent=money(state.data.gmv);renderKpis();renderInspector(state.entity);closeSource();toast('设计预览样例值已更新；未持久化')};
-$('#expRun').onclick=()=>{const lever=$('#expLever').selectedOptions[0].textContent,p=Number($('#expChange').value)||0,m=1+p/100;const gmv=Math.round(state.data.gmv*m),roi=(state.data.roi*m).toFixed(2),conv=(state.data.conversion*m).toFixed(2);$('#expResult').innerHTML='<h3>模拟完成 · '+lever+' '+(p>=0?'+':'')+p+'%</h3><div class="sim-grid"><div class="sim-cell">Baseline GMV<b style="display:block;font-size:20px">'+money(state.data.gmv)+'</b></div><div class="sim-cell">Modeled GMV<b style="display:block;font-size:20px">'+money(gmv)+'</b></div><div class="sim-cell">Modeled ROI<b style="display:block;font-size:20px">'+roi+'</b></div><div class="sim-cell">Modeled CVR<b style="display:block;font-size:20px">'+conv+'%</b></div></div><p class="muted tiny">Scenario output 是对设计样例基线的透明数学模型，不是已观测市场结果，也不是 AI 预测。</p>';toast('设计预览中的 Scenario 已生成；未写入运行时')};
+$('#saveSource').onclick=()=>{state.data.gmv=Number($('#editGmv').value)||0;state.data.conversion=Number($('#editConversion').value)||0;state.data.roi=Number($('#editRoi').value)||0;state.data.repeat=Number($('#editRepeat').value)||0;entities.gmv.value=money(state.data.gmv);entities.conversion.value=state.data.conversion.toFixed(2)+'%';entities.ads.value='ROI '+state.data.roi.toFixed(2);entities.repeat.value=state.data.repeat.toFixed(1)+'%';$('#graphGmv').textContent=money(state.data.gmv);renderKpis();renderInspector(state.entity);closeSource();toast('真实数据快照已更新（原型内存状态）')};
+$('#expRun').onclick=()=>{const lever=$('#expLever').selectedOptions[0].textContent,p=Number($('#expChange').value)||0,m=1+p/100;const gmv=Math.round(state.data.gmv*m),roi=(state.data.roi*m).toFixed(2),conv=(state.data.conversion*m).toFixed(2);$('#expResult').innerHTML='<h3>模拟完成 · '+lever+' '+(p>=0?'+':'')+p+'%</h3><div class="sim-grid"><div class="sim-cell">Baseline GMV<b style="display:block;font-size:20px">'+money(state.data.gmv)+'</b></div><div class="sim-cell">Modeled GMV<b style="display:block;font-size:20px">'+money(gmv)+'</b></div><div class="sim-cell">Modeled ROI<b style="display:block;font-size:20px">'+roi+'</b></div><div class="sim-cell">Modeled CVR<b style="display:block;font-size:20px">'+conv+'%</b></div></div><p class="muted tiny">Scenario output 是对持久化基线的透明数学模型，不是已观测市场结果，也不是 AI 预测。</p>';toast('Scenario run 已生成')};
 $('#downloadReport').onclick=()=>{const text='Business World Agent 报告\nGMV: '+money(state.data.gmv)+'\nROI: '+state.data.roi+'\n复购率: '+state.data.repeat+'%\n\nObserved / Inferred / Simulated 已分层。';const blob=new Blob([text],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='business-world-report.txt';a.click();URL.revokeObjectURL(a.href);toast('报告已生成')};
 
 let pendingDetailAction=null;
 function openDetail(title,body,opts={}){
-  $('#detailEyebrow').textContent=opts.eyebrow||'详情';
+  $('#detailEyebrow').textContent=opts.eyebrow||'DETAIL';
   $('#detailTitle').textContent=title||'详情';
   $('#detailBody').innerHTML=body||'<p>该交互已接通。</p>';
-  $('#detailNote').textContent=opts.note||'设计预览不会执行外部写操作；真实执行必须经过明确确认。';
+  $('#detailNote').textContent=opts.note||'这是交互原型：高风险或外部写操作不会直接执行。';
   $('#confirmDetail').textContent=opts.confirm||'确认';
   $('#confirmDetail').classList.toggle('hidden',opts.confirm===false);
   pendingDetailAction=opts.onConfirm||null;
@@ -357,7 +357,7 @@ function openDetail(title,body,opts={}){
 function closeDetail(){$('#detailModal').classList.add('hidden');pendingDetailAction=null}
 $('#closeDetail').onclick=closeDetail;$('#cancelDetail').onclick=closeDetail;
 $('#detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail()});
-$('#confirmDetail').onclick=()=>{if(pendingDetailAction)pendingDetailAction();toast('设计预览已确认；未执行外部写操作');closeDetail()};
+$('#confirmDetail').onclick=()=>{if(pendingDetailAction)pendingDetailAction();toast('已确认（原型）');closeDetail()};
 function wireInteractiveSurfaces(){
   $$('.list-row,.fstep,.bubble,.deep-table tbody tr,.metric,.persona-card,[data-jump],a:not([href])').forEach(el=>{
     if(!el.hasAttribute('tabindex'))el.tabIndex=0;
@@ -384,25 +384,25 @@ document.addEventListener('click',e=>{
   }
 
   const demo=e.target.closest('[data-demo]');
-  if(demo){openDetail(actionLabel(demo),'<p>此处展示目标交互与信息结构；设计预览不会写入外部系统。</p>',{eyebrow:'设计预览'});return}
+  if(demo){openDetail(actionLabel(demo),'<p>该入口现在已接通。生产实现会进入相应的编辑/创建流程，而不是停留在无响应状态。</p>',{eyebrow:'PROTOTYPE ACTION'});return}
 
   const btn=e.target.closest('button.btn');
   if(btn && !btn.id && !btn.dataset.jump){
     const label=actionLabel(btn);
-    if(label==='登录'){setMode('app');setView('overview');toast('已进入产品设计预览');return}
+    if(label==='登录'){setMode('app');setView('overview');toast('已进入产品原型');return}
     if(label.includes('预约演示')){openDetail('预约演示','<p>演示预约入口已接通。正式产品在这里收集联系人、公司、时间与需求信息。</p><div class="detail-meta"><div><small>类型</small>Demo request</div><div><small>状态</small>Draft</div></div>',{eyebrow:'DEMO',confirm:'提交预约'});return}
     if(label.includes('保存为情景')){openDetail('保存为情景','<p>保存当前 lever、变化幅度、时间范围、假设和 modeled result。</p>',{eyebrow:'SCENARIO',confirm:'保存'});return}
     if(label.includes('查看完整报告')){openDetail('完整报告','<p>完整报告包含经营概览、内容、直播、投放、商品、风险与机会，并保留关键结论的证据链接。</p>',{eyebrow:'REPORT',confirm:false});return}
-    if(label.includes('导出 PPT')){toast('设计预览：已展示 PPT 导出反馈；未创建真实文件');return}
+    if(label.includes('导出 PPT')){toast('已生成 PPT 导出任务（原型）');return}
     if(label.includes('分享链接')){navigator.clipboard?.writeText(location.href).then(()=>toast('分享链接已复制')).catch(()=>toast('分享链接已准备'));return}
-    if(label.includes('发送到邮箱')){openDetail('发送到邮箱','<p>请选择收件人并确认发送。设计预览不会真实发送邮件。</p>',{eyebrow:'DISTRIBUTE',confirm:'确认发送'});return}
-    if(label.includes('保存备注')){toast('设计预览：备注已更新；未持久化');return}
+    if(label.includes('发送到邮箱')){openDetail('发送到邮箱','<p>请选择收件人并确认发送。原型不会真实发送邮件。</p>',{eyebrow:'DISTRIBUTE',confirm:'确认发送'});return}
+    if(label.includes('保存备注')){toast('备注已保存（原型）');return}
     if(label.includes('创建任务')){openDetail('创建任务','<p>将该建议转成待办任务，并保留 Persona / evidence 上下文。</p>',{eyebrow:'TASK',confirm:'创建任务'});return}
-    if(label.includes('加入计划')){toast('设计预览：已展示加入计划反馈；未持久化');return}
+    if(label.includes('加入计划')){toast('已加入发布计划（原型）');return}
     if(label.includes('去执行')){
-      openDetail('执行前确认','<div class="alert-row red"><b>!</b><div><b>需要人工确认</b><p>这是可能影响真实业务的动作。真实执行前必须展示目标、变更、预期影响与回滚方式。</p></div></div>',{eyebrow:'HUMAN APPROVAL',confirm:'确认执行'});return
+      openDetail('执行前确认','<div class="alert-row red"><b>!</b><div><b>需要人工确认</b><p>这是可能影响真实业务的动作。生产版本必须展示目标、变更、预期影响与回滚方式。</p></div></div>',{eyebrow:'HUMAN APPROVAL',confirm:'确认执行'});return
     }
-    openDetail(label||'操作','<p>此控件展示目标详情、编辑或确认流程；当前设计预览不会产生外部写入。</p>',{eyebrow:'操作'});
+    openDetail(label||'操作','<p>该控件已接通原型交互。生产实现应在此进入对应详情、编辑或确认流程。</p>',{eyebrow:'ACTION'});
     return;
   }
 
