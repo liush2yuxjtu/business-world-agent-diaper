@@ -1,0 +1,97 @@
+{
+  "generator": "built-in image_gen",
+  "date": "2026-09-18",
+  "provenance": "AI-generated design concepts. All people, quotes, datasets, metrics and evidence sources inside images are fictional illustrative content, not observed business facts. Raster concept references, not functional UI.",
+  "screens": [
+    {
+      "screen": "Overview",
+      "slug": "overview",
+      "file": "01-overview.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Overview\". Active sidebar item \"Overview\". Screen-specific design: Executive decision dashboard: modeled GMV \u00a52.48M, modeled ROI 4.32, four personas. Elegant tiny sparklines, a central connected-business map linking people/content/live/ads/commerce, decision queue with night-use creator live opportunity and sensitive-skin trust hypothesis. Right dark eve recommendation card, action Plan experiment.",
+      "sha256": "b006709c1629df4df2e0d056127a8fdf1b68d3c7adf07635d629c3bd74a61567",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1476350
+    },
+    {
+      "screen": "Persona Studio",
+      "slug": "persona-studio",
+      "file": "02-persona-studio.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Persona Studio\". Active sidebar item \"Persona\". Screen-specific design: Consumer agent research workspace: left list of four personas New parents, Night-care families, Value buyers, Sensitive-skin families. Selected New parents detailed profile with tasteful editorial parent-and-baby portrait illustration; needs chips Overnight dryness, Skin comfort, Trusted reviews; evidence cards source Scenario synthesis and confidence Medium / Inferred, small connected topics section. Action View world links.",
+      "sha256": "1066da55b11fd844e177b0531b61e6824a83446fcf61d2624932d45c9395cd0a",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1452983
+    },
+    {
+      "screen": "World Builder",
+      "slug": "world-builder",
+      "file": "03-world-builder.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"World Builder\". Active sidebar item \"World\". Screen-specific design: Business ontology canvas: center Business World node connected by elegant curved lines to Persona (4 agents), Content (6 topics), Live (room + signals), Ads (4 campaigns), Commerce (3 products). Spacious intelligent graph with subtle diaper-pack thumbnail nodes, selected connection inspector on right, bottom Scenario assumptions/interventions/forecast and Evidence source/freshness/confidence cards. Action Explore scenario.",
+      "sha256": "ad90ad3c38e75d8623812cc17fd10b2e9ebaa3be8a45c14fb44b8f7b9a70bb2a",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1441254
+    },
+    {
+      "screen": "Content Strategy",
+      "slug": "content-strategy",
+      "file": "04-content-strategy.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Content Strategy\". Active sidebar item \"Content\". Screen-specific design: Content planning and script studio. Left topic backlog Overnight dryness, Skin comfort, New parent guide, Value bundles, Creator reviews. Main selected Overnight dryness / 30s Douyin script with four clear timeline segments 00\u201305 Hook, 05\u201315 Demonstration, 15\u201325 Parent review, 25\u201330 Live-room CTA; refined storyboard thumbnails of unbranded diaper product and parent lifestyle. Right slim persona/evidence panel, source Persona need / Inferred. Action Send to Live.",
+      "sha256": "4e6e8aa6e486024bdbd97de59685649dc6d2a4417b6199d97d781d9d191db4af",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1393842
+    },
+    {
+      "screen": "Live War Room",
+      "slug": "live-war-room",
+      "file": "05-live-war-room.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Live War Room\". Active sidebar item \"Live\". Screen-specific design: Simulated livestream operations workspace. Modeled KPI cards Viewers 8,412, Conversion 6.8%, GMV/min \u00a518,420, each marked Modeled. Main dark viewer-performance chart with readable axes from 20:00 to 21:00 and restrained mint line; small livestream concept preview of presenter with unbranded diaper packs labeled SIMULATED PREVIEW. Right eve signals panel Skin comfort questions rising, suggestion Show product evidence, reliability Medium. Action Create growth test.",
+      "sha256": "14e30aa5432284e39b57a568d9e12cbb61d4fb6b98eb8b2daa0b51ba5a67dc4d",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1392180
+    },
+    {
+      "screen": "Ad Optimization",
+      "slug": "ad-optimization",
+      "file": "06-ad-optimization.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Ad Optimization\". Active sidebar item \"Growth\". Screen-specific design: Qianchuan campaign planning dashboard. Top modeled spend \u00a5168.4k, ROI 4.32, CTR 3.9%. Main four-row campaign table Night-use creator live / \u00a568,400 / 5.1, Skin comfort content / \u00a542,100 / 4.5, New parent acquisition / \u00a532,900 / 3.7, Value bundle / \u00a525,000 / 2.9. All rows labeled MODELED. Below elegant budget allocation comparison chart; right recommendation Model +20% creator budget. Action Model budget, no live execution claims.",
+      "sha256": "5bcfc43b2b59cd5e3e6655b89095ad801428bb7c99f0aad0def68004c8964fe6",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1289930
+    },
+    {
+      "screen": "Commerce Analytics",
+      "slug": "commerce-analytics",
+      "file": "07-commerce-analytics.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Commerce Analytics\". Active sidebar item \"Product\". Screen-specific design: Commerce and repurchase analytics. Modeled GMV \u00a52.48M, Repurchase 31%, Aftersale 2.4% cards. Three product portfolio rows with exquisite small unbranded pack renders: AirSoft newborn NB / \u00a5812k, NightGuard overnight L / \u00a51.10M, Sensitive Care M / \u00a5566k. Lower cohort mini heatmap. Right mint experience loop Purchase \u2192 Use \u2192 Repurchase \u2192 Word of mouth and insight Night-use satisfaction is a modeled repurchase driver. Action Create scenario.",
+      "sha256": "16a7d466c97b8630b3506ceea1e822c71bf9eb34759ee3422a07818f84f1e9e1",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1422827
+    },
+    {
+      "screen": "Simulation Experiment",
+      "slug": "simulation-experiment",
+      "file": "08-simulation-experiment.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Simulation Experiment\". Active sidebar item \"Experiment\". Screen-specific design: Scenario planning workbench. Experiment Night-use positioning + creator live. Left hypothesis and intervention controls: Overnight-use script, Creator budget +20%, Absorbency demo. Center baseline versus scenario forecast chart with uncertainty band. Right lavender modeled results GMV delta +18%, ROI 4.8, Reliability Medium. Explicit text Modeled decision, no live platform action. Bottom human review checkpoint and action Run simulation.",
+      "sha256": "0153e9a1700a7b2cdf69846314c02d6a02ba6b5fcdec1ad6370621ec8ec9420b",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1335170
+    },
+    {
+      "screen": "Reports",
+      "slug": "reports",
+      "file": "09-reports.png",
+      "prompt": "Use case: ui-mockup. Generate ONE complete high-fidelity desktop screen concept image, landscape 16:10, edge-to-edge flat app UI, no device or perspective, no montage. Product Business World, subtitle DIAPER OPERATING SYSTEM. Cohesive premium restrained editorial SaaS design from the existing Penpot design: warm ivory #F4F1E9 background, dark forest-charcoal #202B29 left sidebar about 15% of width, white rounded cards, coral #ED7B51 primary action, muted mint, lavender evidence badges, airy spacing, beautiful crisp sans-serif typography and subtle hairline dividers. Sidebar in this exact order Overview, Persona, World, Content, Live, Growth, Product, Experiment, Reports. Bottom sidebar Simulation workspace. Top right readable SIMULATION DATASET badge. Render all eve mentions lowercase. All numbers are fictional modeled concept data. Keep primary title and navigation highly legible, balanced information density, polished sophisticated real product design with context-specific meaningful imagery/charts. Do not show browser chrome, watermarks, futuristic holograms or generic decorative blobs.  Screen title \"Reports\". Active sidebar item \"Reports\". Screen-specific design: Executive decision brief report workspace. Main report titled Night-use growth strategy, short executive summary prioritize night-use positioning and creator live sessions, validate before scale. Two differentiated evidence cards amber INFERRED / Persona trust need and lavender SIMULATED / GMV +18%, ROI 4.8. Refined miniature comparison visualization and evidence-source list. Next human action Approve a limited night-use live experiment; footer Connect platform data before scaling. Small Export brief button.",
+      "sha256": "c1e925e28bf4beb0b6df0158c80a269c0b09792957230faf63fcdcab6cd8f689",
+      "width": 1586,
+      "height": 992,
+      "bytes": 1381973
+    }
+  ]
+}
