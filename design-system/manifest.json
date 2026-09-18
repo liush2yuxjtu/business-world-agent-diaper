@@ -1,0 +1,12 @@
+{
+  "name": "business-world-screen-concepts",
+  "version": "2026-09-18-alignment",
+  "tokens": "tokens.css",
+  "components": "components.html",
+  "documentation": "DESIGN.md",
+  "preview": "preview/index.html",
+  "assets": "assets/README.md",
+  "references": "../docs/design/screen-concepts/2026-09-18/",
+  "consumers": ["../app/globals.css", "../app/_components/business-world-screens.tsx"],
+  "legacyDerived": ["tokens.json", "webflow-map.json", "penpot-map.json"]
+}

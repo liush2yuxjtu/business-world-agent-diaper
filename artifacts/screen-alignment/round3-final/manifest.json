@@ -1,0 +1,214 @@
+{
+  "base": "http://127.0.0.1:4328",
+  "dataMode": "intercepted deterministic simulated seed",
+  "checks": [
+    {
+      "width": 1586,
+      "worldSelection": true,
+      "worldContainment": true,
+      "persona": true,
+      "search": true,
+      "readOnlySource": true,
+      "reportTab": true,
+      "download": true,
+      "scenarioFixture": true,
+      "empty": true,
+      "errorRetry": true
+    },
+    {
+      "width": 390,
+      "worldSelection": true,
+      "worldContainment": true,
+      "persona": true,
+      "search": true,
+      "readOnlySource": true,
+      "reportTab": true,
+      "download": true,
+      "scenarioFixture": true,
+      "empty": true,
+      "errorRetry": true
+    }
+  ],
+  "results": [
+    {
+      "screen": "overview",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "01-overview-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "persona",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "02-persona-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "world",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "03-world-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "content",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "04-content-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "live",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "05-live-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "growth",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "06-growth-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "product",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "07-product-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "experiment",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "08-experiment-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "report",
+      "viewport": {
+        "width": 1586,
+        "height": 992
+      },
+      "file": "09-report-1586.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "overview",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "01-overview-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "persona",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "02-persona-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "world",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "03-world-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "content",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "04-content-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "live",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "05-live-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "growth",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "06-growth-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "product",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "07-product-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "experiment",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "08-experiment-390.png",
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "screen": "report",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "09-report-390.png",
+      "overflow": false,
+      "errors": []
+    }
+  ]
+}
