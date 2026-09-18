@@ -3,7 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   BarChart3, Box, ClipboardList, Database, FlaskConical, Home, Package, Play,
-  Radio, RefreshCw, Save, Search, ShieldCheck, Sparkles, Users, Video,
+  Radio, RefreshCw, Save, Search, ShieldCheck, Sparkles, Users,
 } from 'lucide-react';
 import {
   OverviewRestored, PersonaRestored, WorldRestored, ContentRestored, LiveRestored,
@@ -53,22 +53,6 @@ function numberValue(value: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function fmt(value: number | null | undefined, suffix = '') {
-  return value == null ? '—' : `${value.toLocaleString('zh-CN')}${suffix}`;
-}
-
-function Metric({ label, value, sub }: { label: string; value: string; sub: string }) {
-  return <div className="metric"><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-sub">{sub}</div></div>;
-}
-
-function EmptyState({ title, onConnect }: { title: string; onConnect: () => void }) {
-  return <section className="panel empty-panel">
-    <Database size={30}/><h3>{title}</h3>
-    <p>当前还没有可用的经营快照。连接数据源或录入经营数据后即可开始分析。</p>
-    <button className="primary" onClick={onConnect}><Database size={16}/>连接 / 录入真实数据</button>
-  </section>;
-}
-
 function SourceBanner({ snapshot, onEdit }: { snapshot: Snapshot | null; onEdit: () => void }) {
   const real = snapshot?.provenance.sourceMode === 'persisted-observation';
   return <div className={`source-banner ${real ? 'real' : 'missing'}`}>
@@ -79,55 +63,6 @@ function SourceBanner({ snapshot, onEdit }: { snapshot: Snapshot | null; onEdit:
 
 function Header({ title, subtitle, onExperiment }: { title: string; subtitle: string; onExperiment: () => void }) {
   return <header className="page-head"><div><h1>{title}</h1><p>{subtitle}</p></div><button className="primary" onClick={onExperiment}><Play size={16}/>开始模拟</button></header>;
-}
-
-function Overview({ data, onConnect }: { data: Payload | null; onConnect: () => void }) {
-  if (!data) return <EmptyState title="Business World 尚未连接真实经营快照" onConnect={onConnect}/>;
-  return <>
-    <section className="hero-panel"><div><div className="eyebrow">经营概览</div><h2>把关键经营数据汇总到同一个工作台</h2><p>数据来自已连接来源；暂未获得的指标会明确显示为空。</p></div><div className="hero-baby">经营快照<br/><small>来源清晰 · 指标可追溯</small></div></section>
-    <section className="metrics-row"><Metric label="内容互动率" value={fmt(data.content.engagementRate, '%')} sub="已持久化观测"/><Metric label="直播加购率" value={fmt(data.live.cartRate, '%')} sub="已持久化观测"/><Metric label="商品转化率" value={fmt(data.commerce.conversionRate, '%')} sub="已持久化观测"/><Metric label="ROI" value={fmt(data.ads.roi)} sub="已持久化观测"/></section>
-    <section className="panel truth-grid"><Truth title="内容" value={fmt(data.content.weeklyOpportunities)} detail="本周机会条目"/><Truth title="直播" value={fmt(data.live.roomEntryRate, '%')} detail="进房率"/><Truth title="交易" value={fmt(data.commerce.gmv, ' 元')} detail="GMV"/><Truth title="投放" value={fmt(data.ads.budget, ' 元')} detail="预算"/></section>
-  </>;
-}
-
-function Truth({ title, value, detail }: { title: string; value: string; detail: string }) {
-  return <div className="truth-card"><b>{title}</b><strong>{value}</strong><span>{detail}</span></div>;
-}
-
-function DataView({ title, description, metrics, data, onConnect }: { title: string; description: string; metrics: Array<[string, string]>; data: Payload | null; onConnect: () => void }) {
-  if (!data) return <EmptyState title={`${title}没有可验证数据`} onConnect={onConnect}/>;
-  return <section className="panel data-surface"><div className="section-title"><span>{title}</span><small>已记录数据</small></div><p>{description}</p><div className="data-grid">{metrics.map(([label, value]) => <div key={label}><span>{label}</span><b>{value}</b></div>)}</div></section>;
-}
-
-function PersonaView({ data, onConnect }: { data: Payload | null; onConnect: () => void }) {
-  return <><section className="panel data-surface"><div className="section-title"><span>Persona Studio</span><small>策略模板 ≠ 观测事实</small></div><p>此前四个“人群画像”是硬编码模板，不能冒充真实消费者分群。现在只有在接入可验证分群数据后才会展示人口规模、占比和行为结论。</p></section>{!data && <EmptyState title="尚未接入消费者分群数据" onConnect={onConnect}/>}<section className="panel template-note"><b>可保留的产品意图</b><p>新手家庭、复购家庭、长辈照护、内容分享者可作为研究假设，但必须由真实行为数据验证后才进入 Persona 指标。</p></section></>;
-}
-
-function WorldView({ data, onConnect }: { data: Payload | null; onConnect: () => void }) {
-  return <DataView title="World Builder 真实基线" description="World Builder 只使用当前持久化快照作为 observation layer；假设与观测分开。" data={data} onConnect={onConnect} metrics={data ? [['内容互动率', fmt(data.content.engagementRate, '%')], ['直播进房率', fmt(data.live.roomEntryRate, '%')], ['交易转化率', fmt(data.commerce.conversionRate, '%')], ['投放 ROI', fmt(data.ads.roi)]] : []}/>;
-}
-
-function ReportView({ snapshot, onConnect }: { snapshot: Snapshot | null; onConnect: () => void }) {
-  if (!snapshot?.data) return <EmptyState title="没有可生成证据报告的数据" onConnect={onConnect}/>;
-  return <section className="panel report"><div className="section-title"><span>经营报告</span><small>可追溯</small></div><dl><div><dt>数据来源</dt><dd>{snapshot.provenance.sourceLabel}</dd></div><div><dt>服务</dt><dd>{snapshot.provenance.provider}</dd></div><div><dt>观测时间</dt><dd>{snapshot.provenance.asOf}</dd></div><div><dt>存储位置</dt><dd>{snapshot.provenance.storage}</dd></div><div><dt>最后更新</dt><dd>{snapshot.provenance.updatedAt}</dd></div></dl><pre>{JSON.stringify(snapshot.data, null, 2)}</pre></section>;
-}
-
-function ExperimentView({ snapshot }: { snapshot: Snapshot | null }) {
-  const [prompt, setPrompt] = useState('评估当前投放效率提升 10% 的方向性影响');
-  const [changePercent, setChangePercent] = useState('10');
-  const [lever, setLever] = useState('ad_efficiency');
-  const [result, setResult] = useState<Record<string, unknown> | null>(null);
-  const [status, setStatus] = useState('');
-  async function run() {
-    setStatus('运行中…'); setResult(null);
-    try {
-      const response = await fetch('/api/business-world/scenario', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, lever, changePercent: Number(changePercent) }) });
-      const body = await response.json();
-      if (!response.ok) throw new Error(body.error || 'Scenario failed');
-      setResult(body); setStatus('已持久化本次 Scenario run');
-    } catch (error) { setStatus(error instanceof Error ? error.message : 'Scenario failed'); }
-  }
-  return <section className="panel experiment"><div className="section-title"><span>模拟实验</span><small>推演结果 · 非实际发生</small></div><p>以当前经营快照为基线进行情景推演。结果用于比较方案，不代表市场实际已经发生。</p><textarea value={prompt} onChange={e => setPrompt(e.target.value)}/><div className="experiment-controls"><select value={lever} onChange={e => setLever(e.target.value)}><option value="ad_efficiency">投放效率</option><option value="content_engagement">内容互动</option><option value="live_watch_time">直播观看</option><option value="checkout_conversion">交易转化</option><option value="repeat_purchase">复购</option></select><input type="number" value={changePercent} min={-80} max={200} onChange={e => setChangePercent(e.target.value)}/><button className="primary" onClick={run} disabled={!snapshot?.data}><Play size={16}/>运行并保存</button></div>{!snapshot?.data && <p className="warning">请先连接经营数据，再运行情景模拟。</p>}{status && <p className="status-line">{status}</p>}{result && <pre>{JSON.stringify(result, null, 2)}</pre>}</section>;
 }
 
 function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapshot | null; onSaved: () => void; onClose: () => void; readOnly: boolean }) {
@@ -185,8 +120,16 @@ export default function App() {
   }, []);
 
   const matches = useMemo(() => search.trim() ? nav.filter(([,label]) => label.toLowerCase().includes(search.trim().toLowerCase())) : [], [search]);
+  const goTo = useCallback((id: NavId) => {
+    setActive(id);
+    setSearch('');
+    const url = new URL(window.location.href);
+    if (id === 'overview') url.searchParams.delete('screen');
+    else url.searchParams.set('screen', id);
+    window.history.replaceState(null, '', url);
+  }, []);
+
   const data = snapshot?.data ?? null;
-  const common = { data, onConnect: () => setEditing(true) };
   const view =
     active === 'overview' ? <OverviewRestored data={data}/> :
     active === 'persona' ? <PersonaRestored/> :
@@ -198,5 +141,5 @@ export default function App() {
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
     <ReportRestored snapshot={snapshot}/>;
 
-  return <main className="app-shell"><aside className="sidebar"><div className="brand"><div className="brand-mark">↗</div><div><b>Business<br/>World Agent</b><small>经营决策台</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} onClick={() => { setActive(id); setSearch(''); }}><Icon size={18}/><span>{label}</span></button>)}</nav><div className="sidebar-promo">来源清晰<br/>指标可追溯<small>经营数据与模拟结果分层呈现</small><div className="diaper-box">BW</div></div></aside><section className="workspace"><div className="topbar"><div className="search real-search"><Search size={16}/><input aria-label="搜索功能" aria-expanded={matches.length>0} aria-controls="feature-search-results" placeholder="搜索功能..." value={search} onChange={e => setSearch(e.target.value)}/>{matches.length>0 && <div id="feature-search-results" role="listbox" className="search-results">{matches.map(([id,label]) => <button key={id} onClick={() => { setActive(id); setSearch(''); }}>{label}</button>)}</div>}</div><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle="经营数据、策略建议和模拟结果分层呈现。" onExperiment={() => setActive('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : view}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={() => setEditing(false)} readOnly={!snapshot?.provenance.writable}/>}</main>;
+  return <main className="app-shell"><aside className="sidebar"><div className="brand"><div className="brand-mark">↗</div><div><b>Business<br/>World Agent</b><small>经营决策台</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><div className="sidebar-promo">来源清晰<br/>指标可追溯<small>经营数据与模拟结果分层呈现</small><div className="diaper-box">BW</div></div></aside><section className="workspace"><div className="topbar"><div className="search real-search"><Search size={16}/><input aria-label="搜索功能" aria-expanded={matches.length>0} aria-controls="feature-search-results" placeholder="搜索功能..." value={search} onChange={e => setSearch(e.target.value)}/>{matches.length>0 && <div id="feature-search-results" role="listbox" className="search-results">{matches.map(([id,label]) => <button key={id} role="option" onClick={() => goTo(id)}>{label}</button>)}</div>}</div><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle="经营数据、策略建议和模拟结果分层呈现。" onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : view}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={() => setEditing(false)} readOnly={!snapshot?.provenance.writable}/>}</main>;
 }
