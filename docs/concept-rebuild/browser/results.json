@@ -1,0 +1,169 @@
+{
+  "status": "PASS",
+  "passed": 37,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Screen overview has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "overview examples are opt-in, never disguised as current data",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen persona has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "persona examples are opt-in, never disguised as current data",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen world has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen content has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "content examples are opt-in, never disguised as current data",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen live has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "live examples are opt-in, never disguised as current data",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen growth has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "growth examples are opt-in, never disguised as current data",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen product has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "product examples are opt-in, never disguised as current data",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen experiment has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "Screen report has one task hero, one journey, and an actionable primary",
+      "status": "PASS"
+    },
+    {
+      "name": "Empty-workspace work counters are zero, not invented accomplishments",
+      "status": "PASS"
+    },
+    {
+      "name": "New metric cards render only the saved manual source",
+      "status": "PASS"
+    },
+    {
+      "name": "Persona → Content carries the origin and source name",
+      "status": "PASS"
+    },
+    {
+      "name": "Handoff context survives an actual reload without a separate data store",
+      "status": "PASS"
+    },
+    {
+      "name": "Context flows into an editable domain-specific draft, not an empty toast",
+      "status": "PASS"
+    },
+    {
+      "name": "Content → Live continues the prior research context",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser Back restores screen and its own handoff context",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser Forward restores the subsequent screen and context",
+      "status": "PASS"
+    },
+    {
+      "name": "Clearing context persists across reload",
+      "status": "PASS"
+    },
+    {
+      "name": "persona task action opens a prefilled draft and does not save before confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "content task action opens a prefilled draft and does not save before confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "live task action opens a prefilled draft and does not save before confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "growth task action opens a prefilled draft and does not save before confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "product task action opens a prefilled draft and does not save before confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "Product → Growth → Experiment preselects the correct lever without running",
+      "status": "PASS"
+    },
+    {
+      "name": "Experiment → Report uses the selected result and returns to a complete report screen",
+      "status": "PASS"
+    },
+    {
+      "name": "Overview work counters reflect actual saved artifacts",
+      "status": "PASS"
+    },
+    {
+      "name": "1440px: nine real task screens, reachable primary actions, no page overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "768px: nine real task screens, reachable primary actions, no page overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "390px: nine real task screens, reachable primary actions, no page overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "320px: nine real task screens, reachable primary actions, no page overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "No browser exceptions in the new screen flows",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "mockedBusinessResponses": false,
+  "sourceHashes": {
+    "public/business-world/ui.html": "febc5dea815949e9c09b8561c78b8a2b2a3b1bf7f38765f7b455ed898be662c9",
+    "public/business-world/ui.md": "624f73de99737a48bf704c700955eb39d35bd7f9381d30cb90d59613458689a2",
+    "public/business-world/src/ui-client.mjs": "cd944f971755139f641a87ecb7326f1fbe258bd35e36e1971c4301b0332830f7",
+    "public/business-world/src/ui-report.mjs": "d14b9c1ed90015d0676a39af10e3d237e252ebe89d84b0d6c18a8a5dc58f804a",
+    "public/business-world/src/ui-runtime.mjs": "af8ccfe29b2bdf342744973269230d3827bf5af48ba87306e2096c7bfc701cc1",
+    "public/business-world/src/ui-state.mjs": "47ee961bd7e8199fdd853a00f11d5a334c3657b998d17af31656232422d14202",
+    "public/business-world/src/ui-surfaces.mjs": "c587f7ae4328ce10d591f1875e62739a9e5d70415336b6031d9bf928d00fd27a",
+    "public/business-world/src/ui-workbench.mjs": "3cf7e83c5b43216729f2b562565c92fd91501e1db656e746d4fd0b5817016874",
+    "public/business-world/src/workbench.css": "5f0532d8d740360349ab5fb41c061a1664ba46ba2e3054597b678ef3bedb0e79",
+    "tests/concept_flows_browser.py": "29ccc7b853e8776785c94932f67e1901fda1969a8043685d65b3413ef4d4a6cb"
+  }
+}

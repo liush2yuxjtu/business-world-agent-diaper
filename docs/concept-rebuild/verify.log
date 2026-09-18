@@ -1,0 +1,344 @@
+✔ source edits send only source fields, never client identity/provenance or histories (1.458262ms)
+✔ scenario command contains assumptions, never a client-supplied result (0.364939ms)
+✔ report command refers to the server scenario without copying historical facts (0.429394ms)
+✔ human notes are the only editable report field in a save-note command (0.203026ms)
+✔ draft commands cannot masquerade as a publish, send or budget action (0.194515ms)
+✔ report selection sends the selected identity only (0.257908ms)
+✔ unrecognized history replacement has no write command (0.51821ms)
+✔ workspace endpoint cannot come from an external URL or an arbitrary path (0.2805ms)
+✔ shared client cannot write before reading its authenticated workspace (0.334758ms)
+✔ same-ID but altered report evidence is rejected as a baseline mismatch (0.42532ms)
+✔ all UI modules parse; existing tests may not omit the new entry point (84.634035ms)
+✔ empty workspace never invents observed or scenario records (0.60852ms)
+✔ gmv rejects blank, negative, NaN, infinite and out-of-range input (0.285433ms)
+✔ conversion rejects blank, negative, NaN, infinite and out-of-range input (0.109526ms)
+✔ engagement rejects blank, negative, NaN, infinite and out-of-range input (0.101176ms)
+✔ roi rejects blank, negative, NaN, infinite and out-of-range input (0.138401ms)
+✔ repeat rejects blank, negative, NaN, infinite and out-of-range input (0.10631ms)
+✔ live rejects blank, negative, NaN, infinite and out-of-range input (0.078358ms)
+✔ revenue rejects blank, negative, NaN, infinite and out-of-range input (0.096094ms)
+✔ count metrics reject fractions (0.274883ms)
+✔ persistence round trip is exact and manual cannot claim verification (2.319696ms)
+✔ corrupt and blocked reads produce an empty error state, not example fallback (0.233172ms)
+✔ failed persistence throws and leaves the prior state unchanged (0.398341ms)
+✔ model requires baseline and validates real inputs (0.608982ms)
+✔ lever-specific model preserves baseline and unrelated metrics (0.421352ms)
+✔ model cannot output impossible percentages (0.106029ms)
+✔ stored scenario output tampering is rejected (0.165807ms)
+✔ report freezes the run baseline, separate note, and selected identity (0.204735ms)
+✔ renderer blocks developer artifacts (0.060303ms)
+✔ renderer blocks operator artifacts (0.03699ms)
+✔ renderer blocks agent_internal artifacts (0.028493ms)
+✔ renderer blocks undefined artifacts (0.032434ms)
+✔ renderer rejects implementation_constraint (0.041069ms)
+✔ renderer rejects eval_criterion (0.026176ms)
+✔ renderer rejects developer_note (0.026432ms)
+✔ renderer rejects reasoning (0.025544ms)
+✔ renderer rejects tool_envelope (0.025849ms)
+✔ renderer rejects debug_state (0.026548ms)
+✔ renderer rejects raw_protocol (0.030322ms)
+✔ renderer rejects internal_roadmap (0.026574ms)
+✔ renderer rejects undefined (0.026025ms)
+✔ unknown/hidden content cannot render and allowed text is escaped (0.149089ms)
+✔ report exports use a shared immutable source and escape human content (17.985768ms)
+✔ entry points include real modules, local export library and native accessible dialogs (0.49705ms)
+✔ portable report round-trip preserves exact content and immutable source (0.57337ms)
+✔ invalid portable report tokens fail closed (0.212056ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 174.424008
+
+> eve-chat-template@0.0.0 typecheck
+> next typegen && tsgo --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> eve-chat-template@0.0.0 test:workspace
+> node --import tsx --test tests/workspace.test.ts
+
+(node:4158996) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+▶ shared workspace persistence and authority contract
+  ✔ empty database returns empty state without remote/demo fallback (5.371159ms)
+  ✔ server stamps a real persisted manual snapshot (6.458443ms)
+  ✔ different authenticated owners never share records (0.195085ms)
+  ✔ missing baseline cannot create a scenario (0.913305ms)
+  ✔ manual input cannot forge official provenance or owner (1.170868ms)
+  ✔ numbers are bounded and empty/negative/infinite are rejected (0.601294ms)
+  ✔ scenario is lever-specific and never changes its baseline (1.911657ms)
+  ✔ a different lever cannot scale unrelated ROI or conversion (1.120008ms)
+  ✔ unsupported dimensions are not invented (0.633967ms)
+  ✔ reports and notes retain immutable source after later updates (3.879754ms)
+  ✔ stale writers cannot overwrite a newer revision (0.672899ms)
+  ✔ two concurrent writers yield exactly one committed update (1.806386ms)
+  ✔ clients cannot replace server scenario or report histories (0.75393ms)
+  ✔ ambiguous storage config and serverless local storage fail closed (0.225653ms)
+  ✔ missing storage does not silently return a different database (0.100245ms)
+  ✔ corrupt persisted state fails safely instead of becoming data (0.757293ms)
+  ✔ auth is derived from verified tool context, never model input (0.224677ms)
+  ✔ record-changing Agent tool is explicitly approval-gated (0.072549ms)
+✔ shared workspace persistence and authority contract (29.174962ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 380.272386
+
+> eve-chat-template@0.0.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+- Cache Components enabled
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.8s
+  Running TypeScript ...
+  Finished TypeScript in 5.0s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/13) ...
+  Generating static pages using 7 workers (3/13)
+  Generating static pages using 7 workers (6/13)
+  Generating static pages using 7 workers (9/13)
+✓ Generating static pages using 7 workers (13/13) in 535ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ◐ /
+├ ○ /_not-found
+├ ƒ /api/business-world/scenario
+├ ƒ /api/business-world/session
+├ ƒ /api/business-world/state
+├ ƒ /api/business-world/workspace
+├ ○ /api/health
+├ ƒ /apple-icon
+├ ◐ /auth/error
+├ ○ /business-world/sign-in
+├ ƒ /business-world/workspace
+└ ○ /icon.svg
+
+
+○  (Static)             prerendered as static content
+◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
+ƒ  (Dynamic)            server-rendered on demand
+
+
+> eve-chat-template@0.0.0 build:eve
+> eve build
+
+[nitro] ✔ Generated public .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/public
+[nitro] ℹ Building server (builder: rolldown, preset: node-server, compatibility date: 2026-09-18)
+ℹ Generated .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/nitro.json
+[nitro] ✔ Server built in 1458ms
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_chunks/client.mjs (4.97 kB) (1.46 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_chunks/workspace-postgres.mjs (1.53 kB) (725 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_.mjs (287 B) (184 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_10.mjs (266 B) (166 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_11.mjs (268 B) (169 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_12.mjs (268 B) (169 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_13.mjs (357 B) (201 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_14.mjs (237 B) (159 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_15.mjs (234 B) (157 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_16.mjs (234 B) (156 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_17.mjs (525 B) (307 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_18.mjs (273 B) (185 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_19.mjs (387 B) (245 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_2.mjs (267 B) (170 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_20.mjs (275 B) (169 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_21.mjs (285 B) (174 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_22.mjs (248 B) (170 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_23.mjs (283 B) (175 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_24.mjs (241 B) (163 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_25.mjs (264 B) (166 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_26.mjs (270 B) (169 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_27.mjs (264 B) (163 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_3.mjs (230 B) (154 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_4.mjs (228 B) (152 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_5.mjs (287 B) (183 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_6.mjs (227 B) (153 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_7.mjs (278 B) (181 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_8.mjs (276 B) (181 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/_9.mjs (280 B) (182 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@ai-sdk/gateway+[...].mjs (637 kB) (117 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@better-auth/core+[...].mjs (317 kB) (63.7 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@better-auth/drizzle-adapter+[...].mjs (49.1 kB) (11.2 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@better-auth/kysely-adapter+[...].mjs (470 kB) (75.7 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@better-auth/telemetry+[...].mjs (17.6 kB) (4.94 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@vercel/cli-config+[...].mjs (503 kB) (71.6 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@vercel/cli-exec+[...].mjs (94.1 kB) (19.4 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/@vercel/connect+[...].mjs (611 kB) (121 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/ai.mjs (284 kB) (51.5 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/better-auth__memory-adapter.mjs (8.61 kB) (2.42 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/better-auth__utils.mjs (3.16 kB) (1.06 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/better-auth+defu+jose.mjs (317 kB) (66.7 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/drizzle-orm.mjs (155 kB) (27.8 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/eve+zod.mjs (5.56 MB) (1.31 MB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/h3+rou3+srvx.mjs (43.7 kB) (11.7 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/hookable.mjs (1.37 kB) (602 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/neondatabase__serverless.mjs (183 kB) (50.7 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/next+react.mjs (191 kB) (34.5 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/noble__ciphers.mjs (47.4 kB) (13.9 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/noble__hashes.mjs (38 kB) (11.9 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/ufo.mjs (2.39 kB) (798 B gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/undici.mjs (979 kB) (221 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_libs/vercel__oidc.mjs (5.91 kB) (1.27 kB gzip)
+  ├─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/_runtime.mjs (1.71 kB) (789 B gzip)
+  └─ .eve/builds/mu6mr45a-93959ba1-9627-4b06-8586-9899b21ecb33/output/server/index.mjs (319 kB) (95 kB gzip)
+Σ Total size: 10.9 MB (2.39 MB gzip)
+[nitro] ✔ You can preview this build using npx nitro preview
+[BUILD] built output at /workspace/mcp-sandbox/work/business-world-concept-rebuild-20260918/.output
+PASS Served build has expected title and byte provenance
+PASS No baseline means empty business metrics, not demo facts
+PASS Existing upstream hash links remain compatible
+PASS Navigation overview
+PASS Navigation persona
+PASS Navigation world
+PASS Navigation content
+PASS Navigation live
+PASS Navigation growth
+PASS Navigation product
+PASS Navigation experiment
+PASS Navigation report
+PASS Scenario without a baseline is blocked
+PASS Source Escape closes and restores focus
+PASS Blank numeric fields cannot save as zero
+PASS Source saves all values, name and notes without claiming verification
+PASS Refresh does not invent source freshness
+PASS Snapshot survives a real reload
+PASS Overview uses same snapshot
+PASS Content uses same snapshot
+PASS Persona click updates selected inspector without the original exception
+PASS Persona filters apply to actual cards
+PASS Persona tab arrow keyboard support
+PASS Strategy templates cannot carry a measured audience claim
+PASS content selected example opens honest detail
+PASS live selected example opens honest detail
+PASS growth selected example opens honest detail
+PASS Product row updates product inspector
+PASS Product category filters actual SKU rows
+PASS Budget channel filters campaigns
+PASS Draft is not saved before confirmation
+PASS Editable brief persists only after confirmation
+PASS Edited brief continues to an explicitly confirmed publishing plan
+PASS Live audience navigates to Persona with selected context
+PASS Growth experiment creates a real editable experiment draft
+PASS Topic detail hands off to Product and closes the prior dialog
+PASS Invalid scenario is rejected with useful error
+PASS Scenario has genuine pending and duplicate-submit protection
+PASS Scenario result is lever-specific and baseline remains unchanged
+PASS Scenario creates a report with frozen baseline and assumptions
+PASS Human report note persists separately across reload
+PASS PDF path contains selected report and a real PDF can be rendered
+PASS PPT is a real OOXML presentation using the same report values
+PASS Report sharing requires consent and discloses embedded-data privacy
+PASS Shared report works in a separate browser and cannot edit the original
+PASS Email saves only an explicitly addressed unsent draft
+PASS Later source edits cannot rewrite historical report facts
+PASS User source strings are escaped, not executed as markup
+PASS Search finds metrics and keyboard Enter navigates inspector
+PASS Search finds source evidence, not only pages
+PASS 1440px layout across all nine expanded views
+PASS 768px layout across all nine expanded views
+PASS 390px layout across all nine expanded views
+PASS 320px layout across all nine expanded views
+PASS Graph has working zoom
+PASS Mobile can reach far-right graph nodes through native scrolling
+PASS Known developer-only leakage regressions absent across captured views
+PASS Corrupt storage is a safe empty/error state
+PASS Quota failure is visible, sanitized and cannot claim a successful save
+PASS No uncaught JavaScript or console errors
+PASS No external writes, email sends, or data mutation requests
+{"passed": 61, "failed": 0, "checks": 61}
+PASS Screen overview has one task hero, one journey, and an actionable primary
+PASS overview examples are opt-in, never disguised as current data
+PASS Screen persona has one task hero, one journey, and an actionable primary
+PASS persona examples are opt-in, never disguised as current data
+PASS Screen world has one task hero, one journey, and an actionable primary
+PASS Screen content has one task hero, one journey, and an actionable primary
+PASS content examples are opt-in, never disguised as current data
+PASS Screen live has one task hero, one journey, and an actionable primary
+PASS live examples are opt-in, never disguised as current data
+PASS Screen growth has one task hero, one journey, and an actionable primary
+PASS growth examples are opt-in, never disguised as current data
+PASS Screen product has one task hero, one journey, and an actionable primary
+PASS product examples are opt-in, never disguised as current data
+PASS Screen experiment has one task hero, one journey, and an actionable primary
+PASS Screen report has one task hero, one journey, and an actionable primary
+PASS Empty-workspace work counters are zero, not invented accomplishments
+PASS New metric cards render only the saved manual source
+PASS Persona → Content carries the origin and source name
+PASS Handoff context survives an actual reload without a separate data store
+PASS Context flows into an editable domain-specific draft, not an empty toast
+PASS Content → Live continues the prior research context
+PASS Browser Back restores screen and its own handoff context
+PASS Browser Forward restores the subsequent screen and context
+PASS Clearing context persists across reload
+PASS persona task action opens a prefilled draft and does not save before confirmation
+PASS content task action opens a prefilled draft and does not save before confirmation
+PASS live task action opens a prefilled draft and does not save before confirmation
+PASS growth task action opens a prefilled draft and does not save before confirmation
+PASS product task action opens a prefilled draft and does not save before confirmation
+PASS Product → Growth → Experiment preselects the correct lever without running
+PASS Experiment → Report uses the selected result and returns to a complete report screen
+PASS Overview work counters reflect actual saved artifacts
+PASS 1440px: nine real task screens, reachable primary actions, no page overflow
+PASS 768px: nine real task screens, reachable primary actions, no page overflow
+PASS 390px: nine real task screens, reachable primary actions, no page overflow
+PASS 320px: nine real task screens, reachable primary actions, no page overflow
+PASS No browser exceptions in the new screen flows
+{"status": "PASS", "passed": 37, "failed": 0}
+(node:4159739) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS Unauthenticated read denied: /api/business-world/workspace
+PASS Unauthenticated read denied: /api/business-world/state
+PASS Failed login shows only actionable product copy
+PASS Actual password login establishes the shared account session
+PASS The real application home preserves deep links and uses the audited shared UI
+PASS The former source-editor deep link opens the canonical accessible source form
+PASS Shared mode ignores browser-local records and never auto-imports them
+PASS Invalid Agent authentication cannot access the store
+PASS UI save is read verbatim by the actual registered Agent snapshot tool
+PASS Manual input cannot claim official or observed provenance
+PASS Registered content tool reads the same source and revision
+PASS Registered live tool reads the same source and revision
+PASS Registered ads tool reads the same source and revision
+PASS Registered commerce tool reads the same source and revision
+PASS Database inspection proves the exact API/Agent record exists on disk
+PASS UI scenario is persisted and visible to the actual Agent
+PASS Report and separate human note persist in the same store
+PASS Consented shared-workspace report copy opens in an unauthenticated browser
+PASS A portable report copy never grants access to the original workspace
+PASS Actual Agent scenario appears in the UI after a real refresh
+PASS Actual Agent record write appears in the UI without a local-storage bridge
+PASS A stale browser receives a useful conflict and cannot overwrite Agent changes
+PASS Cross-origin mutations are rejected
+PASS Malformed or provenance-forging writes return sanitized errors
+PASS Later Agent edits cannot rewrite report evidence
+PASS Offline refresh shows failure, preserves the record and never claims success
+PASS The complete shared state survives a real server-process restart
+PASS A separately authenticated browser reads the same durable workspace
+PASS Missing storage fails visibly without local or remote fallback
+PASS Unavailable workspace remains unknown after a real metric click
+PASS Unavailable source inspection never claims the store is empty
+PASS Source editing waits for a successful workspace read
+PASS Report creation preserves unknown rather than inventing missing baseline
+PASS Scenario action cannot turn unavailable state into a no-baseline claim
+PASS Draft creation waits for a successful workspace read
+PASS All nine shared views have readable layout and safe product copy at 1440px
+PASS All nine shared views have readable layout and safe product copy at 390px
+PASS Shared operations never silently rewrite or upload the separate local workspace
+PASS Database integrity is OK after UI, Agent, conflict and restart flows
+PASS No uncaught JavaScript errors or unexpected console errors
+{"status": "PASS", "passed": 40, "sourceDigest": "ca6c2bfc3b5fe0606d519c3ec33c3f602b49677491e0bcd310b355ea5e3c7bb9"}
+PASS: 40 real shared-workspace checks; current source hashes and paired files match.
+Profile: production-built self-hosted application, manual-unverified records, actual authenticated authored tools. Cloud deployment, provider ingestion and language-model turns are not certified.
+PASS: 61 original UI checks and 37 task-flow checks, current bytes and 18 per-screen screenshots.
+Independent ImageGen concepts: 1/9; this asset requirement is INCOMPLETE and is not represented as a UI test pass.

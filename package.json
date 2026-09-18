@@ -23,7 +23,9 @@
     "audit:reality": "node scripts/audit-business-world-reality.mjs",
     "test:workspace": "node --import tsx --test tests/workspace.test.ts",
     "audit:shared": "node scripts/check-shared-audit.mjs",
-    "verify:shared": "bash scripts/verify-shared.sh"
+    "verify:shared": "bash scripts/verify-shared.sh",
+    "verify:workbench": "bash scripts/verify-concept.sh",
+    "test:ui": "node --test tests/ui-state.test.mjs tests/ui-client.test.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.0.2",

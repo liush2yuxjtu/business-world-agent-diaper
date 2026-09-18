@@ -1,0 +1,290 @@
+[
+  {
+    "view": "overview",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "persona",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "world",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "content",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "live",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "growth",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "product",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "experiment",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "report",
+    "width": 1440,
+    "document": 1440,
+    "viewport": 1440,
+    "workspace": 1214,
+    "client": 1214
+  },
+  {
+    "view": "overview",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "persona",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "world",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "content",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "live",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "growth",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "product",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "experiment",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "report",
+    "width": 768,
+    "document": 768,
+    "viewport": 768,
+    "workspace": 698,
+    "client": 698
+  },
+  {
+    "view": "overview",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "persona",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "world",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "content",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "live",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "growth",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "product",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "experiment",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "report",
+    "width": 390,
+    "document": 390,
+    "viewport": 390,
+    "workspace": 334,
+    "client": 334
+  },
+  {
+    "view": "overview",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "persona",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "world",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "content",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "live",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "growth",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "product",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "experiment",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  },
+  {
+    "view": "report",
+    "width": 320,
+    "document": 320,
+    "viewport": 320,
+    "workspace": 264,
+    "client": 264
+  }
+]

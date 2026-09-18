@@ -1,5 +1,18 @@
 # Business World Agent — Full UI / Interaction Handoff
 
+## 九页工作台重建 — 2026-09-18
+
+本应用现在拥有本轮配对 UI 源文件；上游设计仓库作为历史来源保留，不再声称两个仓库未更新的文件逐字一致。
+
+当前视觉、任务与流程规范见 `docs/concept-rebuild/README.md`。九页都采用 `src/ui-workbench.mjs` 的任务配置与 `src/workbench.css` 的蓝白设计系统。原数据、权限、共享工作区、示例隔离与情景边界继续适用。
+
+新增：来源感知的跨页背景、分领域可编辑草稿、浏览器 Back / Forward / reload 恢复、每页主任务与五阶段经营流程导航。旧版通用记录表不再作为每页首屏。下方原章节的业务意图继续有效；新任务层覆盖旧布局草图，不改变其真实性要求。
+
+验证入口：`scripts/verify-concept.sh`；新增浏览器流程见 `tests/concept_flows_browser.py`。九页浏览器截图是运行证据，不冒充九张独立 ImageGen 概念图；该逐屏生成资产要求本轮尚未全部完成。
+
+---
+
+
 > Canonical UI handoff for the full SaaS surface.
 > Updated from the latest ImageGen visual exploration on 2026-09-18.
 > HTML implementation: `ui.html`

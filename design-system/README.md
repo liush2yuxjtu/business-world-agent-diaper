@@ -1,24 +1,9 @@
-# Business World Agent Design System
+# Business World Agent design system
 
-This folder codifies the visual language already present in the canonical Business World Agent runtime.
+The active nine-screen workbench uses `public/business-world/src/workbench.css` and `ui-workbench.mjs`. `ui.html` / `ui.md` remain the paired runtime entry and specification.
 
-## Source of truth
+The legacy React component and older tokens in this folder are historical sources, not a second active application. The new runtime reuses the existing authenticated service and reports.
 
-- `app/globals.css`
-- `app/_components/business-world-restored.tsx`
-- verified Business World runtime surfaces and flow screenshots
-- product truth rules from `docs/mock-to-real-contract.md`
+Current design / flow review: `docs/concept-rebuild/README.md`; live static gallery: `public/business-world/design-review/index.html`.
 
-## Files
-
-- `tokens.css` — CSS custom properties plus reusable primitives.
-- `tokens.json` — machine-readable token inventory.
-- `webflow-map.json` — explicit Webflow Variables / Styles / Components mapping.
-
-## Principle
-
-The design system standardizes presentation only. It must not turn unknown business data into fabricated metrics. Product truth and provenance remain separate from visual styling.
-
-## Webflow
-
-The mapping is ready, but the current Webflow connector exposes no sites. When a Webflow site becomes accessible, create the variable collections first, then global classes, then components/variants.
+Never promote generated reference numbers to product facts. Keep manually entered, unknown, example and scenario states visibly distinct. All icons, artwork, cards and controls are presentation; they do not change persistence or authority.

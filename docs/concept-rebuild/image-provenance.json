@@ -1,0 +1,27 @@
+{
+  "requestedIndependentConcepts": 9,
+  "adoptedIndependentConcepts": 1,
+  "independentConceptRequirement": "INCOMPLETE",
+  "penpotFileModified": false,
+  "browserScreensAreImageGen": false,
+  "adopted": [
+    {
+      "screen": "overview",
+      "generator": "image_gen",
+      "originalConversationFileId": "file_0000000030f08230993fa6fd43c290bb",
+      "originalConversationFile": "a_clean_modern_dashboard_ui_screenshot_wide_desk.png",
+      "originalSha256": "533a00be14322e817b2e5f6b1588be109fd7d9e4dc337319af0674831d6a59ea",
+      "originalDimensions": [
+        1536,
+        1024
+      ],
+      "trackedDerivative": "overview-reference-thumbnail.avif",
+      "derivativeDimensions": [
+        480,
+        320
+      ],
+      "derivativeSha256": "3cf87ad0f2cef82703059085e958986e29a80f2aa8a497e50fdb7cff79d0f8b3",
+      "scope": "visual direction only; generated metrics and provider connection statuses are not product data"
+    }
+  ]
+}
