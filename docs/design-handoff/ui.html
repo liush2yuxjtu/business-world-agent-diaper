@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Business World Agent — Design Reference</title>
 <meta name="description" content="Interactive design reference for Business World Agent. Sample data only; not runtime evidence.">
@@ -220,13 +219,13 @@ body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{p
 </div>
 
 <div class="modal-wrap hidden" id="sourceModal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle"><div class="modal-head"><div><h2 id="sourceTitle">设计样例数据源</h2><div class="muted">仅调整当前设计预览中的样例值；不会写入生产数据库或运行时状态。</div></div><button class="close" id="closeSource" aria-label="关闭设计样例数据源">×</button></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle"><div class="modal-head"><div><h2 id="sourceTitle">设计样例数据源</h2><div class="muted">仅调整当前设计预览中的样例值；不会写入外部系统或持久化状态。</div></div><button class="close" id="closeSource" aria-label="关闭设计样例数据源">×</button></div>
     <div class="editor-grid"><div class="field"><label>样例来源名称</label><input id="sourceName" value="设计参考数据集"></div><div class="field"><label>来源类型</label><select id="sourceProvider"><option>Design Reference</option><option>Manual Example</option><option>API Example</option></select></div></div>
     <div class="metric-form">
       <div class="field"><label>GMV</label><input id="editGmv" type="number" value="2483221"></div><div class="field"><label>转化率 %</label><input id="editConversion" type="number" step=".01" value="3.24"></div>
       <div class="field"><label>广告 ROI</label><input id="editRoi" type="number" step=".01" value="4.32"></div><div class="field"><label>复购率 %</label><input id="editRepeat" type="number" step=".1" value="28.6"></div>
     </div>
-    <div class="field" style="margin-top:12px"><label>来源备注</label><textarea id="sourceNotes">设计参考数据仅用于展示目标 UI。真实产品必须展示 source type、observedAt、updatedAt 与 persistence provenance，并由运行时证据验证。</textarea></div>
+    <div class="field" style="margin-top:12px"><label>来源备注</label><textarea id="sourceNotes">设计样例数据：用于展示来源类型、观测时间、更新时间与来源证明字段。</textarea></div>
     <div class="modal-actions"><button class="btn" id="cancelSource">取消</button><button class="btn primary" id="saveSource">应用到设计预览</button></div>
   </div>
 </div>
@@ -250,7 +249,7 @@ const state={
 const views={
   overview:{title:'总览',desc:'统一查看当前真实经营快照。',metrics:[['GMV','¥2,483,221'],['转化率','3.24%'],['内容互动量','1,204,331'],['广告 ROI','4.32']]},
   persona:{title:'Persona Studio',desc:'策略模板 ≠ 观测事实。仅在接入可验证分群数据后展示真实 Persona 指标。',empty:'当前消费者分群仍处于推断层。请连接真实分群或行为数据后再发布为经营事实。'},
-  content:{title:'内容策略',desc:'基于已持久化内容观测设计策略。',metrics:[['内容互动量','1,204,331'],['互动率','8.4%'],['内容机会','17 条']]},
+  content:{title:'内容策略',desc:'展示基于已验证内容观测的策略界面。',metrics:[['内容互动量','1,204,331'],['互动率','8.4%'],['内容机会','17 条']]},
   live:{title:'直播作战室',desc:'直播指标来自同一 Business World 事实层。',metrics:[['直播表现','342,120'],['进房率','18.6%'],['加购率','5.8%']]},
   growth:{title:'投放优化',desc:'仅显示核验后的聚合投放数据。',metrics:[['预算','¥420,000'],['ROI','4.32'],['CPA','¥82']]},
   product:{title:'商品分析',desc:'交易指标与商品表现保持可追溯来源。',metrics:[['GMV','¥2,483,221'],['转化率','3.24%'],['新客','8,126']]}
@@ -278,7 +277,7 @@ function renderKpis(){const d=state.data;$('#kpiRow').innerHTML=[
 ].map(x=>'<div class="kpi"><div class="label">'+x[0]+'</div><div class="value">'+x[1]+'</div><div class="delta up">较上期 '+x[2]+' ▲</div></div>').join('')}
 function typeClass(type){return type==='Observed'?'obs':type==='Inferred'?'inf':'sim'}
 function renderInspector(key){state.entity=key;const e=entities[key];$('#inspector').innerHTML='<h3>实体详情</h3><div class="entity-title">'+e.title+'</div><div class="muted tiny">业务实体 / 指标</div><div class="entity-value">'+e.value+'</div><div class="irow"><span>状态</span><span class="state-pill '+typeClass(e.type)+'">'+e.type+'</span></div><div class="irow"><span>置信度</span><b>'+e.confidence+'</b></div><div class="irow"><span>数据来源</span><b>'+e.source+'</b></div><div class="irow"><span>更新时间</span><b>'+e.time+'</b></div><div class="idesc"><b style="color:#1b2f50">定义</b><br>'+e.definition+'</div><div class="iactions"><button data-action="factor">查看相关因子</button><button data-action="simulate">在新场景中模拟</button><button data-action="watch">添加监控</button><button data-action="history">查看历史趋势</button></div>';
- $$('#inspector [data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='simulate')setView('experiment');else toast('已执行：'+b.textContent)})}
+ $$('#inspector [data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='simulate')setView('experiment');else toast('设计预览：'+b.textContent)})}
 $$('.node').forEach(n=>n.onclick=()=>renderInspector(n.dataset.entity));
 function renderEvidence(){const rows=a=>a.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('');$('#evidenceBody').innerHTML=rows(evidence);$('#scenarioBody').innerHTML=rows(scenarios)}
 
@@ -335,7 +334,7 @@ function setView(id,route=true){state.view=id;$$('.view').forEach(v=>v.classList
 $$('.navbtn').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 const navIndex=[['overview','总览'],['persona','Persona Studio'],['world','World Builder'],['content','内容策略'],['live','直播作战室'],['growth','投放优化'],['product','商品分析'],['experiment','模拟实验'],['report','报告']];
 $('#searchInput').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();const r=$('#searchResults');if(!q){r.classList.add('hidden');e.target.setAttribute('aria-expanded','false');return}const matches=navIndex.filter(x=>x[1].toLowerCase().includes(q)||x[0].includes(q));r.innerHTML=matches.length?matches.map(x=>'<button data-go="'+x[0]+'">'+x[1]+'</button>').join(''):'<div class="muted tiny" style="padding:10px">没有匹配页面</div>';r.classList.remove('hidden');e.target.setAttribute('aria-expanded','true');r.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{setView(b.dataset.go);$('#searchInput').value=''})});
-$('#refreshBtn').onclick=()=>{const now=new Date();$('#sourceTime').textContent='预览时间：'+now.toLocaleString('zh-CN',{hour12:false});toast('设计预览时间已刷新；未请求生产数据')};
+$('#refreshBtn').onclick=()=>{const now=new Date();$('#sourceTime').textContent='预览时间：'+now.toLocaleString('zh-CN',{hour12:false});toast('设计预览时间已刷新；未请求外部数据')};
 $$('#scenarioSeg button').forEach(b=>b.onclick=()=>{$$('#scenarioSeg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.scenario=b.dataset.scenario;const factor=state.scenario==='growth' ? 1.184 : state.scenario==='downside' ? 0.874 : 1;const modeled=Math.round(state.data.gmv*factor);$('#graphGmv').textContent=money(modeled);entities.gmv.value=money(modeled);renderInspector('gmv')});
 $('#runSim').onclick=()=>{const b=$('#runSim');const old=b.textContent;b.disabled=true;b.textContent='计算中…';setTimeout(()=>{b.disabled=false;b.textContent=old;toast('设计预览已重新计算；未写入运行时记录')},650)};
 function openSource(){$('#sourceModal').classList.remove('hidden')}function closeSource(){$('#sourceModal').classList.add('hidden')}
@@ -385,7 +384,7 @@ document.addEventListener('click',e=>{
   }
 
   const demo=e.target.closest('[data-demo]');
-  if(demo){openDetail(actionLabel(demo),'<p>此处展示目标交互与信息结构；设计预览不会写入生产系统。</p>',{eyebrow:'设计预览'});return}
+  if(demo){openDetail(actionLabel(demo),'<p>此处展示目标交互与信息结构；设计预览不会写入外部系统。</p>',{eyebrow:'设计预览'});return}
 
   const btn=e.target.closest('button.btn');
   if(btn && !btn.id && !btn.dataset.jump){
@@ -401,9 +400,9 @@ document.addEventListener('click',e=>{
     if(label.includes('创建任务')){openDetail('创建任务','<p>将该建议转成待办任务，并保留 Persona / evidence 上下文。</p>',{eyebrow:'TASK',confirm:'创建任务'});return}
     if(label.includes('加入计划')){toast('设计预览：已展示加入计划反馈；未持久化');return}
     if(label.includes('去执行')){
-      openDetail('执行前确认','<div class="alert-row red"><b>!</b><div><b>需要人工确认</b><p>这是可能影响真实业务的动作。生产版本必须展示目标、变更、预期影响与回滚方式。</p></div></div>',{eyebrow:'HUMAN APPROVAL',confirm:'确认执行'});return
+      openDetail('执行前确认','<div class="alert-row red"><b>!</b><div><b>需要人工确认</b><p>这是可能影响真实业务的动作。真实执行前必须展示目标、变更、预期影响与回滚方式。</p></div></div>',{eyebrow:'HUMAN APPROVAL',confirm:'确认执行'});return
     }
-    openDetail(label||'操作','<p>此控件展示目标详情、编辑或确认流程；当前设计预览不会产生生产写入。</p>',{eyebrow:'操作'});
+    openDetail(label||'操作','<p>此控件展示目标详情、编辑或确认流程；当前设计预览不会产生外部写入。</p>',{eyebrow:'操作'});
     return;
   }
 
