@@ -763,28 +763,3 @@ execute / cancel
 ```
 
 The HTML prototype stops at the confirmation surface.
-
-
----
-
-# 10. Canonical design-reference truth boundary
-
-This handoff is the **design + interaction intent**, not runtime evidence.
-
-- All numbers, timestamps, people, report rows, campaign rows, source names, and business outcomes rendered in `ui.html` are **design reference / sample data** unless a separate runtime evidence artifact proves them.
-- The handoff may demonstrate how `Observed / Inferred / Simulated` should look, but those labels do not turn static sample values into verified observations.
-- The handoff must never claim that an in-memory interaction persisted production data. Preview-only writes must say they are not persisted.
-- Production truth is verified separately through the real product runtime, real source boundary, browser evidence, and persistence evidence. Current evidence lives in:
-  - `docs/business-world-flows/index.html`
-  - `docs/runtime-reality-evidence.md`
-- High-risk or external writes require an explicit human approval surface. A design preview may demonstrate that approval flow but must not imply the external action executed.
-- User-visible design copy must not expose implementation instructions such as “production should…”, developer debugging notes, internal audit labels, or agent-building commentary.
-- Interactive controls must remain keyboard reachable, have visible focus, and dialogs/status feedback must expose usable accessibility semantics.
-
-## Acceptance rule
-
-A design-reference build passes only when a reviewer can answer all three questions without ambiguity:
-
-1. **What is intended product behavior?**
-2. **What on this page is only sample/design data?**
-3. **Where is the separate evidence that proves the runtime actually does it?**
