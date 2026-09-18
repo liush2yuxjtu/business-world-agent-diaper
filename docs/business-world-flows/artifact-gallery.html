@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Business World Agent — Visual Concept Gallery</title>
+<style>
+:root{
+  --bg:#f2efe8; --paper:#fffdf8; --ink:#151515; --muted:#6e6a62;
+  --line:#d8d1c3; --accent:#111; --soft:#e9e4da;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:inherit}
+header{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(242,239,232,.92);backdrop-filter:blur(16px)}
+.bar{max-width:1500px;margin:auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:38px;height:38px;border-radius:10px;background:#111;color:#fff;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em}
+.brand b{display:block;font-size:15px}.brand span{display:block;color:var(--muted);font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions a,.chip{border:1px solid var(--line);background:var(--paper);padding:8px 12px;border-radius:999px;text-decoration:none;font-size:12px;font-weight:700}
+main{max-width:1500px;margin:auto;padding:52px 24px 80px}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:28px;align-items:end;margin-bottom:36px}
+.kicker{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:12px}
+h1{font-size:clamp(42px,7vw,92px);line-height:.93;letter-spacing:-.065em;margin:0;max-width:980px}
+.intro{color:var(--muted);font-size:17px;max-width:620px;margin:0 0 8px}
+.scope{border:1px solid var(--line);background:var(--paper);border-radius:18px;padding:18px;margin-top:18px}
+.scope b{display:block;margin-bottom:5px}.scope p{margin:0;color:var(--muted);font-size:13px}
+.count{font-size:72px;line-height:1;font-weight:800;letter-spacing:-.08em}
+.countlabel{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.gallery{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}
+.card{grid-column:span 6;border:1px solid var(--line);background:var(--paper);border-radius:22px;overflow:hidden;min-width:0}
+.card.hero-card{grid-column:span 12}
+.visual{position:relative;background:#e5e0d6;overflow:hidden;cursor:zoom-in}
+.card:not(.hero-card) .visual{aspect-ratio:4/3}
+.hero-card .visual{aspect-ratio:16/9}
+.visual img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .35s ease}
+.visual:hover img{transform:scale(1.015)}
+.meta{padding:18px 18px 20px;display:grid;grid-template-columns:1fr auto;gap:10px}
+.meta h2{font-size:20px;letter-spacing:-.025em;margin:0 0 5px}
+.meta p{margin:0;color:var(--muted);font-size:13px}
+.tag{align-self:start;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#f4f0e8}
+footer{border-top:1px solid var(--line);margin-top:38px;padding-top:20px;display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px}
+dialog{width:min(96vw,1500px);max-height:94vh;border:0;border-radius:18px;padding:0;background:#121212;color:#fff;box-shadow:0 30px 100px #0008}
+dialog::backdrop{background:#000b;backdrop-filter:blur(6px)}
+.viewer{display:grid;grid-template-rows:auto 1fr;max-height:94vh}
+.viewer-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid #333}
+.viewer-head b{font-size:13px}.viewer-head button{border:1px solid #444;background:#222;color:#fff;border-radius:999px;padding:7px 11px;cursor:pointer}
+.viewer img{max-width:100%;max-height:calc(94vh - 52px);object-fit:contain;margin:auto;display:block}
+@media(max-width:850px){
+  .hero{grid-template-columns:1fr}.count{font-size:50px}.card,.card.hero-card{grid-column:span 12}
+  .bar{align-items:flex-start}.actions{justify-content:flex-end}main{padding:34px 14px 64px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">
+      <div class="mark">BW</div>
+      <div><b>Business World Agent</b><span>Visual Concept Artifact Gallery</span></div>
+    </div>
+    <div class="actions">
+      <a href="./">Runtime Flows</a>
+      <a href="https://github.com/liush2yuxjtu/business-world-agent-diaper/tree/main/public/business-world/images">Source Assets</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="kicker">Image-generated visual design · canonical concept collection</div>
+      <h1>Concept<br>Artifacts</h1>
+    </div>
+    <div>
+      <div class="count">04</div>
+      <div class="countlabel">visual concepts currently tracked</div>
+      <div class="scope">
+        <b>Gallery scope</b>
+        <p>仅展示视觉概念设计。明确排除 runtime screenshots、persona snapshots、PR Lens 架构图、Eve 模板品牌资产。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" aria-label="Visual concept artifacts">
+    <article class="card hero-card">
+      <div class="visual" data-title="Business World Overview">
+        <img loading="eager" src="https://raw.githubusercontent.com/liush2yuxjtu/business-world-agent-diaper/main/public/business-world/images/business-world-overview.png" alt="Business World Agent overview visual concept">
+      </div>
+      <div class="meta"><div><h2>Business World Overview</h2><p>整体产品世界观与视觉方向的总览概念图。</p></div><span class="tag">Overview</span></div>
+    </article>
+
+    <article class="card">
+      <div class="visual" data-title="Daily Diaper Concept">
+        <img loading="lazy" src="https://raw.githubusercontent.com/liush2yuxjtu/business-world-agent-diaper/main/public/business-world/images/diaper-daily-concept.png" alt="Daily diaper visual concept">
+      </div>
+      <div class="meta"><div><h2>Daily</h2><p>日常使用场景的产品视觉概念。</p></div><span class="tag">Product concept</span></div>
+    </article>
+
+    <article class="card">
+      <div class="visual" data-title="Newborn Diaper Concept">
+        <img loading="lazy" src="https://raw.githubusercontent.com/liush2yuxjtu/business-world-agent-diaper/main/public/business-world/images/diaper-newborn-concept.png" alt="Newborn diaper visual concept">
+      </div>
+      <div class="meta"><div><h2>Newborn</h2><p>新生儿场景与产品定位的视觉概念。</p></div><span class="tag">Product concept</span></div>
+    </article>
+
+    <article class="card">
+      <div class="visual" data-title="Night Diaper Concept">
+        <img loading="lazy" src="https://raw.githubusercontent.com/liush2yuxjtu/business-world-agent-diaper/main/public/business-world/images/diaper-night-concept.png" alt="Night diaper visual concept">
+      </div>
+      <div class="meta"><div><h2>Night</h2><p>夜间长时使用场景的产品视觉概念。</p></div><span class="tag">Product concept</span></div>
+    </article>
+  </section>
+
+  <footer>
+    <span>Canonical source: <code>public/business-world/images/</code></span>
+    <span>No snapshots included.</span>
+  </footer>
+</main>
+
+<dialog id="lightbox">
+  <div class="viewer">
+    <div class="viewer-head"><b id="viewer-title">Visual concept</b><button type="button" id="close-viewer">Close</button></div>
+    <img id="viewer-image" alt="">
+  </div>
+</dialog>
+
+<script>
+const dialog=document.getElementById('lightbox');
+const viewer=document.getElementById('viewer-image');
+const title=document.getElementById('viewer-title');
+document.querySelectorAll('.visual').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const img=el.querySelector('img');
+    viewer.src=img.src;
+    viewer.alt=img.alt;
+    title.textContent=el.dataset.title||img.alt;
+    dialog.showModal();
+  });
+});
+document.getElementById('close-viewer').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+</script>
+</body>
+</html>
