@@ -1,0 +1,414 @@
+{
+  "url": "http://127.0.0.1:60443/ui.html",
+  "commit": "cc49af3c8e4122755f53d283ccd65256076de0ad",
+  "workingTree": " M design-system/README.md\n M package.json\n M public/business-world/paired-source.json\n M public/business-world/src/ui-runtime.mjs\n M public/business-world/ui.html\n M public/business-world/ui.md\n?? docs/concept-rebuild/\n?? docs/ui-audit/\n?? docs/ui-shared-audit/runtime/\n?? public/business-world/design-review/\n?? public/business-world/src/ui-workbench.mjs\n?? public/business-world/src/workbench.css\n?? scripts/check-concept-audit.mjs\n?? scripts/finalize-concept-docs.py\n?? scripts/verify-concept.sh\n?? tests/concept_flows_browser.py\n?? tests/ui-client.test.mjs\n?? tests/ui-state.test.mjs\n?? tests/ui_browser.py\n",
+  "artifactHashes": {
+    "ui.html": "febc5dea815949e9c09b8561c78b8a2b2a3b1bf7f38765f7b455ed898be662c9",
+    "ui.md": "624f73de99737a48bf704c700955eb39d35bd7f9381d30cb90d59613458689a2",
+    "src/ui-client.mjs": "cd944f971755139f641a87ecb7326f1fbe258bd35e36e1971c4301b0332830f7",
+    "src/ui-report.mjs": "d14b9c1ed90015d0676a39af10e3d237e252ebe89d84b0d6c18a8a5dc58f804a",
+    "src/ui-runtime.mjs": "af8ccfe29b2bdf342744973269230d3827bf5af48ba87306e2096c7bfc701cc1",
+    "src/ui-state.mjs": "47ee961bd7e8199fdd853a00f11d5a334c3657b998d17af31656232422d14202",
+    "src/ui-surfaces.mjs": "c587f7ae4328ce10d591f1875e62739a9e5d70415336b6031d9bf928d00fd27a",
+    "src/ui-workbench.mjs": "3cf7e83c5b43216729f2b562565c92fd91501e1db656e746d4fd0b5817016874",
+    "tests/ui_browser.py": "3e32721fef2db35172819b3fc6bd8d4c3cade16005039e6fd9c7d3e55071a087",
+    "tests/ui-state.test.mjs": "1a5a4859633f405d85c68c86cd191032cf3de2012ee98393c3fcbfbf580b8e95",
+    "tests/ui-client.test.mjs": "ba3c0bf038862bf25333ec950ecf780e24641015d0e3ec968ac12d56a28374b4",
+    "public/business-world/src/workbench.css": "5f0532d8d740360349ab5fb41c061a1664ba46ba2e3054597b678ef3bedb0e79",
+    "public/business-world/src/vendor/pptxgen.bundle.js": "4fb9eac5cfefb213e2d8743c2b7151025f31bfb3f834c73c12062916daa0f3f8"
+  },
+  "checks": [
+    {
+      "name": "Served build has expected title and byte provenance",
+      "status": "PASS",
+      "evidence": "HTTP 200, exact built bytes"
+    },
+    {
+      "name": "No baseline means empty business metrics, not demo facts",
+      "status": "PASS",
+      "evidence": "No seeded facts"
+    },
+    {
+      "name": "Existing upstream hash links remain compatible",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation overview",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation persona",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation world",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation content",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation live",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation growth",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation product",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation experiment",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Navigation report",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Scenario without a baseline is blocked",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Source Escape closes and restores focus",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Blank numeric fields cannot save as zero",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Source saves all values, name and notes without claiming verification",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Refresh does not invent source freshness",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Snapshot survives a real reload",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Overview uses same snapshot",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Content uses same snapshot",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Persona click updates selected inspector without the original exception",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Persona filters apply to actual cards",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Persona tab arrow keyboard support",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Strategy templates cannot carry a measured audience claim",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "content selected example opens honest detail",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "live selected example opens honest detail",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "growth selected example opens honest detail",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Product row updates product inspector",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Product category filters actual SKU rows",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Budget channel filters campaigns",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Draft is not saved before confirmation",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Editable brief persists only after confirmation",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Edited brief continues to an explicitly confirmed publishing plan",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Live audience navigates to Persona with selected context",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Growth experiment creates a real editable experiment draft",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Topic detail hands off to Product and closes the prior dialog",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Invalid scenario is rejected with useful error",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Scenario has genuine pending and duplicate-submit protection",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Scenario result is lever-specific and baseline remains unchanged",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Scenario creates a report with frozen baseline and assumptions",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Human report note persists separately across reload",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "PDF path contains selected report and a real PDF can be rendered",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "PPT is a real OOXML presentation using the same report values",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Report sharing requires consent and discloses embedded-data privacy",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Shared report works in a separate browser and cannot edit the original",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Email saves only an explicitly addressed unsent draft",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Later source edits cannot rewrite historical report facts",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "User source strings are escaped, not executed as markup",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Search finds metrics and keyboard Enter navigates inspector",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Search finds source evidence, not only pages",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "1440px layout across all nine expanded views",
+      "status": "PASS",
+      "evidence": "No document/workspace overflow; tables and graph own their scroll"
+    },
+    {
+      "name": "768px layout across all nine expanded views",
+      "status": "PASS",
+      "evidence": "No document/workspace overflow; tables and graph own their scroll"
+    },
+    {
+      "name": "390px layout across all nine expanded views",
+      "status": "PASS",
+      "evidence": "No document/workspace overflow; tables and graph own their scroll"
+    },
+    {
+      "name": "320px layout across all nine expanded views",
+      "status": "PASS",
+      "evidence": "No document/workspace overflow; tables and graph own their scroll"
+    },
+    {
+      "name": "Graph has working zoom",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Mobile can reach far-right graph nodes through native scrolling",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "Known developer-only leakage regressions absent across captured views",
+      "status": "PASS",
+      "evidence": "18 user-visible surface captures scanned; semantic review is separate"
+    },
+    {
+      "name": "Corrupt storage is a safe empty/error state",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Quota failure is visible, sanitized and cannot claim a successful save",
+      "status": "PASS",
+      "evidence": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "No uncaught JavaScript or console errors",
+      "status": "PASS",
+      "evidence": null
+    },
+    {
+      "name": "No external writes, email sends, or data mutation requests",
+      "status": "PASS",
+      "evidence": null
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "unexpectedMutations": [],
+  "passed": 61,
+  "failed": 0
+}

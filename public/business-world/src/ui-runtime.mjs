@@ -1,3 +1,4 @@
+import {SCREENS,renderRecordSurface,syncWorkbench,draftSeed} from './ui-workbench.mjs';
 import {createWorkspaceClient} from './ui-client.mjs';
 import {renderDeep} from './ui-surfaces.mjs';
 import {STORAGE_KEY,shareReportToken,readSharedReport,METRICS,LEVERS,emptyState,loadState,saveState,createSnapshot,calculateScenario,createReport,parseMetricInput,makeId,userText as h,formatMetric as fmt} from './ui-state.mjs';
@@ -12,6 +13,7 @@ const client=createWorkspaceClient({storage,endpoint:document.querySelector('met
 const place=client.shared?'当前工作区':'此设备';let writePending=false;
 const loaded=(client.shared||location.hash.startsWith("#report="))?{state:emptyState(),error:null}:loadState(storage);let state=loaded.state,readError=loaded.error,view='overview',entity='gmv',scenarioPreset='baseline',lastRun=null,pending=false,zoom=1;
 let toastTimer;
+let flowContext=null;
 function toast(message){clearTimeout(toastTimer);$('#toast').textContent=message;$('#toast').classList.add('show');toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),5000);}
 // A failed initial read is unknown data, not a confirmed empty workspace.
 function workspaceReadPending(){return client.shared&&!client.ready;}
@@ -75,11 +77,12 @@ function renderWorld(){
 const summaries={overview:['gmv','conversion','roi','repeat'],persona:[],content:['engagement'],live:['live'],growth:['roi'],product:['gmv','conversion','repeat']};
 function renderBusinessPages(){
  for(const id of Object.keys(summaries)){
-  const section=$('#view-'+id),record=section.querySelector('.page-records'),s=state.snapshot;
-  record.innerHTML='<h2>'+h(NAV.find(n=>n[0]===id)[1])+'</h2><p class="muted">'+(id==='persona'?'人群需要独立的行为与订单证据。总量记录不会自动变成人群画像。':'查看自己的经营记录，再决定下一步行动。')+'</p>'+(s&&summaries[id].length?table(['指标','当前记录','来源状态'],summaries[id].map(key=>tr([h(METRICS[key].label),h(fmt(key,s.metrics[key])),'人工录入 · 尚未核验'],'data-metric="'+key+'" role="button" tabindex="0"'))):empty(id==='persona'?'尚无人群证据。下方演示案例可帮助你了解分群方法。':'尚未添加经营记录。'))+'<div class="toolbar"><button class="btn" data-open-source>'+(s?'查看 / 更新来源':'添加经营记录')+'</button><button class="btn" data-new-draft="task">创建行动草稿</button>'+(id==='overview'?'<button class="btn primary" data-view="experiment">比较经营情景</button><button class="btn" data-view="report">整理报告</button>':'')+'</div>';
+  const record=$('#view-'+id).querySelector('.page-records');
+  record.innerHTML=renderRecordSurface(id,state,{unknown:workspaceReadPending(),place});
  }
  renderDrafts();
 }
+
 function renderDrafts(){
  $$('.saved-drafts').forEach(el=>{el.innerHTML='<h3>已保存的行动草稿</h3>'+(state.drafts.length?table(['名称','类型','保存时间'],state.drafts.map(d=>tr([h(d.title),h({task:'任务',brief:'内容提纲',plan:'发布计划',email:'邮件草稿'}[d.kind]),h(new Date(d.createdAt).toLocaleString('zh-CN'))],'data-draft-id="'+h(d.id)+'" role="button" tabindex="0"'))):empty('暂无行动草稿。草稿不会自动发布或发送。'));});
 }
@@ -95,9 +98,16 @@ function selectPersona(card){
  const inspector=$('#view-persona .example-catalog .grid-3').children[2];
  inspector.innerHTML='<h3>人群详情：'+h(title)+'</h3><p class="example-notice">演示案例，不代表你的用户画像。</p><div class="dialog-content">'+h(card.innerText)+'</div><p>案例来源：产品演示材料。真实分群需要行为与订单证据，当前没有可核验的人群规模或置信度。</p><div class="toolbar"><button class="btn" data-example-evidence>查看证据说明</button><button class="btn" data-persona-task="'+h(title)+'">创建任务</button></div>';
 }
-function showFlowContext(context){
- $$('.flow-context').forEach(el=>el.remove());const note=document.createElement('p');note.className='flow-context';note.setAttribute('role','status');note.textContent='当前查看：'+context;$('#view-'+view).prepend(note);
+function showFlowContext(context,origin=null,persist=true){
+ $$('.flow-context').forEach(el=>el.remove());
+ if(!context){flowContext=null;return;}
+ flowContext={text:String(context).slice(0,500),origin:SCREENS[origin]?origin:null,view};
+ const note=document.createElement('div');note.className='flow-context';note.setAttribute('role','status');
+ note.innerHTML='<span>'+h('当前查看：'+flowContext.text)+'</span>'+(flowContext.origin?'<button class="btn" data-view="'+flowContext.origin+'">返回'+h(SCREENS[flowContext.origin].label)+'</button>':'')+'<button class="btn" data-clear-context>清除背景</button>';
+ $('#view-'+view).prepend(note);
+ if(persist)history.replaceState({...history.state,bwaFlow:flowContext},'',location.href);
 }
+
 function inspectExample(target){
  const origin=target.closest('.view')?.id.replace('view-','')??view;
  const card=target.closest('.card,.command-card');
@@ -168,6 +178,8 @@ function renderReports(){
 }
 function renderAll(){
  renderSource();renderBusinessPages();renderWorld();renderExperimentResult();renderReports();
+ syncWorkbench(view);
+ if(flowContext?.view===view)showFlowContext(flowContext.text,flowContext.origin,false);
  if(workspaceReadPending()){
   const message=workspaceReadMessage();
   $('#sourceBanner').innerHTML='<strong>'+h(message)+'</strong>'+(readError?'<p role="alert">'+h(errorMessage({code:readError}))+'</p>':'');
@@ -184,7 +196,8 @@ function setView(id,route=true){
  $$('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+id));
  $$('#appNav [data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===id);if(b.dataset.view===id)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
  setMode('app');$('#searchResults').classList.add('hidden');$('#searchInput').setAttribute('aria-expanded','false');$('.workspace').scrollTop=0;
- if(route&&location.hash!=='#app/'+id)history.replaceState(null,'','#app/'+id);
+ if(route&&location.hash!=='#app/'+id){history.pushState({},'','#app/'+id);flowContext=null;$$('.flow-context').forEach(el=>el.remove());}
+ syncWorkbench(id);
 }
 function renderSearch(){
  const q=$('#searchInput').value.trim().toLowerCase(),r=$('#searchResults');
@@ -216,6 +229,10 @@ document.addEventListener('click',async event=>{
  if(target.matches('[data-close-dialog]')){target.closest('dialog').close();return;}
  if(target.id==='landingMode'){history.replaceState(null,'','#landing');setMode('landing');return;}
  if(target.id==='appMode'||target.matches('[data-open-app]')){setView(view);return;}
+ if(target.matches('[data-clear-context]')){showFlowContext(null);history.replaceState({...history.state,bwaFlow:null},'',location.href);return;}
+ if(target.matches('[data-handoff]')){const origin=target.dataset.origin||view;const context=(flowContext?.text?flowContext.text+' → ':'')+SCREENS[origin].label+' · '+(state.snapshot?'来源：'+state.snapshot.name:'经营记录尚待添加');if($('#detailModal').open)$('#detailModal').close();setView(target.dataset.handoff);showFlowContext(context,origin);return;}
+ if(target.matches('[data-work-draft]')){const origin=target.dataset.origin||view;const seed=draftSeed(origin,target.dataset.workDraft,target.dataset.draftPurpose,flowContext?.text);openDraft(target.dataset.workDraft,seed.title,seed.body);return;}
+ if(target.matches('[data-open-examples]')){const id=target.dataset.openExamples;setView(id);const catalogue=$('#view-'+id+' .example-catalog');if(catalogue){catalogue.open=true;catalogue.scrollIntoView({block:'start'});catalogue.querySelector('summary')?.focus();}return;}
  if(target.matches('[data-view]')){const context=target.dataset.context;if($('#detailModal').open)$('#detailModal').close();setView(target.dataset.view);if(context)showFlowContext(context);return;}
  if(target.id==='sourceBtn'||target.matches('[data-open-source]')){openSource();return;}
  if(target.matches('[data-info]')){if(target.dataset.info==='share')openShare();else showInfo(target.dataset.info);return;}
@@ -223,7 +240,7 @@ document.addEventListener('click',async event=>{
  if(target.matches('[data-metric]')){setView('world');renderInspector(Object.keys(KEY_NAMES).find(k=>KEY_NAMES[k]===target.dataset.metric)??'gmv');return;}
  if(target.matches('.node')){renderInspector(target.dataset.entity);return;}
  if(target.matches('[data-factor]')){const related=({gmv:['conversion','ads','repeat','content'],conversion:['persona','content','live'],ads:['content','gmv'],content:['persona','conversion'],repeat:['persona','gmv']})[target.dataset.factor]??['gmv'];$$('.node').forEach(n=>n.classList.toggle('related',related.includes(n.dataset.entity)));openDetail('相关因子','<p>'+h(definitions[target.dataset.factor])+'</p><p>相关因子已在图中用虚线框标出。</p><p>关系线表示可探索的关联，不表示已经验证的因果关系。</p><button class="btn" data-close-dialog>返回</button>');return;}
- if(target.matches('[data-simulate]')){const key=target.dataset.simulate;$('#expLever').value=({ads:'ad_efficiency',conversion:'checkout_conversion',content:'content_engagement',repeat:'repeat_purchase'})[key]??'ad_efficiency';$('#expPrompt').value='比较'+(METRICS[KEY_NAMES[key]]?.label??'经营指标')+'相关情景';setView('experiment');return;}
+ if(target.matches('[data-simulate]')){const origin=view;const key=target.dataset.simulate;$('#expLever').value=({ads:'ad_efficiency',conversion:'checkout_conversion',content:'content_engagement',repeat:'repeat_purchase'})[key]??'ad_efficiency';$('#expPrompt').value='比较'+(METRICS[KEY_NAMES[key]]?.label??'经营指标')+'相关情景';setView('experiment');showFlowContext(SCREENS[origin].label+' · 已带入经营杠杆，尚未运行。',origin);return;}
  if(target.matches('[data-watch]')){openDraft('task','关注'+(METRICS[KEY_NAMES[target.dataset.watch]]?.label??'经营指标'),'请检查最新经营记录，并决定是否需要行动。');return;}
  if(target.matches('[data-history]')){setView('experiment');$('#experimentHistory').scrollIntoView({block:'center'});return;}
  if(target.matches('[data-source-evidence]')){inspectSource();return;}
@@ -281,6 +298,7 @@ document.addEventListener('keydown',event=>{
 });
 $('#searchInput').addEventListener('input',renderSearch);
 function routeFromHash(){const id=location.hash.startsWith('#app/')?location.hash.slice(5):location.hash.slice(1);return NAV.some(n=>n[0]===id)?id:null;}
+window.addEventListener('popstate',()=>{const route=routeFromHash();if(!$('#app')||!route)return;setView(route,false);const context=history.state?.bwaFlow;showFlowContext(context?.text,context?.origin,false);});
 window.addEventListener('hashchange',()=>{const route=routeFromHash();if(!$('#app')){if(route||location.hash==='#landing')location.reload();return;}if(route)setView(route,false);else if(location.hash==='#landing')setMode('landing');});
 // Initialize the nine real surfaces, then apply only typed persisted user records.
 setupExamples();setupExperiment();
@@ -294,7 +312,7 @@ if(client.shared){$('#sourceModal .modal-head p').textContent='保存到当前�
 renderAll();
 if(client.shared&&!location.hash.startsWith('#report=')){try{const result=await client.load();state=result.state;readError=result.error;}catch(error){readError=error.code??'connection-unavailable';}renderAll();}
 if(location.hash.startsWith('#report='))showSharedReport();else{
- if(routeFromHash())setView(routeFromHash(),false);else setMode('landing');
+ if(routeFromHash()){setView(routeFromHash(),false);const context=history.state?.bwaFlow;if(context?.view===view)showFlowContext(context.text,context.origin,false);}else setMode('landing');
  if(client.shared&&client.ready){const query=new URLSearchParams(location.search);if(query.get('search')){$('#searchInput').value=query.get('search').slice(0,200);renderSearch();}if(query.get('source')==='1')openSource();}
 }
 

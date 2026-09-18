@@ -103,6 +103,7 @@ body{overflow-x:hidden}.app{grid-template-columns:220px minmax(0,1fr)}.sidebar{m
 .bar-chart{overflow-x:auto;overflow-y:hidden;padding-bottom:28px;height:190px}.bar-group{flex:1 0 48px}.bar-label{bottom:-20px}.host-box>*,.list-row .grow{min-width:0}.panel-head{flex-wrap:wrap}
 .node.related{outline:3px dashed #7564c7;outline-offset:2px}.flow-context{background:#edf4ff;border:1px solid #cbdcf7;padding:10px;border-radius:6px;margin:8px 0;overflow-wrap:anywhere}.share-link{width:100%;min-height:100px;word-break:break-all}.shared-report{max-width:900px;margin:30px auto;padding:0 20px}.shared-report table{width:100%;border-collapse:collapse}.shared-report td,.shared-report th{padding:8px;border-bottom:1px solid #dfe6ef}.shared-report p{white-space:pre-wrap;overflow-wrap:anywhere}
 </style>
+<link rel="stylesheet" href="./src/workbench.css">
 </head>
 <body>
 <div class="browser">
@@ -165,7 +166,7 @@ body{overflow-x:hidden}.app{grid-template-columns:220px minmax(0,1fr)}.sidebar{m
 
   <section id="app" class="app hidden">
     <aside class="sidebar">
-      <div class="sb-brand">Business World Agent<small>从经营记录出发</small></div>
+      <div class="sb-brand">Business World Agent<small>让每一步行动，都有依据。</small></div>
       <nav id="appNav">
         <button class="navbtn" data-view="overview"><span class="navico">▦</span><span>总览</span></button>
         <button class="navbtn" data-view="persona"><span class="navico">♙</span><span>Persona Studio</span></button>
@@ -180,7 +181,7 @@ body{overflow-x:hidden}.app{grid-template-columns:220px minmax(0,1fr)}.sidebar{m
       <div class="sb-bottom"><strong>构建更真实的商业世界</strong><button class="navbtn" data-info="privacy">数据与隐私</button><button class="navbtn" data-info="help">使用帮助</button></div>
     </aside>
     <main class="workspace">
-      <header class="topbar">
+      <header class="topbar"><div class="workspace-name"><span>母婴经营工作台</span><small> / <span id="currentScreen">经营总览</span></small></div>
         <div class="searchbox"><input id="searchInput" type="search" aria-label="搜索页面、指标、来源或情景" placeholder="搜索页面、指标、来源或情景…" autocomplete="off" aria-controls="searchResults" aria-expanded="false"><div id="searchResults" class="search-results hidden"></div></div>
         <div class="push"></div>
         <button class="btn" id="refreshBtn">↻ 刷新数据</button>
