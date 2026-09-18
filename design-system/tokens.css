@@ -1,60 +1,61 @@
 :root {
-  /* Business World Agent — canonical design tokens */
-  --bw-color-brand-500:#1c6ff2;
-  --bw-color-brand-600:#1662e9;
-  --bw-color-brand-800:#0d3b9f;
-  --bw-color-ink-900:#0b1f55;
-  --bw-color-ink-700:#234273;
-  --bw-color-muted-600:#64748b;
-  --bw-color-muted-500:#7b8da8;
-  --bw-color-surface:#ffffff;
-  --bw-color-canvas:#f5f9ff;
-  --bw-color-soft:#edf5ff;
-  --bw-color-line:#dbeafe;
-  --bw-color-success:#16a34a;
-  --bw-color-warning:#9b6a0b;
-  --bw-color-danger:#f16069;
-
-  --bw-radius-xs:5px;
-  --bw-radius-sm:7px;
-  --bw-radius-md:9px;
-  --bw-radius-lg:11px;
-  --bw-radius-xl:13px;
-  --bw-radius-2xl:16px;
-  --bw-radius-pill:999px;
-
-  --bw-space-1:4px;
-  --bw-space-2:8px;
-  --bw-space-3:10px;
-  --bw-space-4:12px;
-  --bw-space-5:14px;
-  --bw-space-6:18px;
-  --bw-space-7:24px;
-  --bw-space-8:28px;
-
-  --bw-font-sans:Inter,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
-  --bw-text-xs:8px;
-  --bw-text-sm:10px;
-  --bw-text-body:12px;
-  --bw-text-ui:13px;
-  --bw-text-title:22px;
-  --bw-text-page:32px;
-
-  --bw-shadow-panel:0 8px 28px rgba(27,110,234,.043);
-  --bw-shadow-float:0 12px 32px rgba(17,59,117,.12);
-  --bw-shadow-modal:0 30px 80px rgba(8,28,75,.24);
-
-  --bw-gradient-brand:linear-gradient(135deg,#2c87ff,#1662e9);
-  --bw-gradient-shell:linear-gradient(180deg,#fff 0,#f7fbff 55%,#edf6ff 100%);
-  --bw-gradient-soft:linear-gradient(105deg,#eef7ff,#fff 53%,#e6f4ff);
+  /* Canonical numeric and color tokens, aligned with screen-concepts/2026-09-18. */
+  --bw-color-brand-500: #ef754f;
+  --bw-color-brand-600: #ef754f;
+  --bw-color-brand-800: #76321f;
+  --bw-color-ink-900: #102026;
+  --bw-color-ink-700: #35454b;
+  --bw-color-muted-600: #626c72;
+  --bw-color-muted-500: #737d82;
+  --bw-color-surface: #fffefd;
+  --bw-color-canvas: #f2f0e9;
+  --bw-color-soft: #e2eee7;
+  --bw-color-line: #e4e3dd;
+  --bw-color-success: #28765f;
+  --bw-color-warning: #8b5b13;
+  --bw-color-danger: #b53b3b;
+  --bw-color-sidebar: #1d302d;
+  --bw-color-sidebar-active: #344a44;
+  --bw-color-sidebar-text: #eaf0ed;
+  --bw-color-mint: #dcefe5;
+  --bw-color-lavender: #ece6f8;
+  --bw-color-lavender-ink: #5d4288;
+  --bw-color-coral-soft: #fce7de;
+  --bw-color-blue-soft: #dfebf3;
+  --bw-radius-sm: 7px;
+  --bw-radius-md: 8px;
+  --bw-radius-xl: 9px;
+  --bw-radius-pill: 999px;
+  --bw-space-1: 4px;
+  --bw-space-2: 8px;
+  --bw-space-3: 12px;
+  --bw-space-4: 16px;
+  --bw-space-5: 20px;
+  --bw-space-6: 24px;
+  --bw-space-7: 28px;
+  --bw-space-8: 32px;
+  --bw-font-sans: Inter, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+  --bw-text-xs: 11px;
+  --bw-text-sm: 12px;
+  --bw-text-body: 14px;
+  --bw-text-ui: 15px;
+  --bw-text-title: 20px;
+  --bw-text-page: 40px;
+  --bw-sidebar-width: 204px;
+  --bw-world-row: 390px;
+  --bw-world-hub: 172px;
+  --bw-world-aside: 285px;
+  --bw-world-wire-people: #4c9b96;
+  --bw-world-wire-content: #9275dc;
+  --bw-world-wire-commerce: #df7959;
+  --bw-world-thumb: 38px;
+  --bw-world-node-thumb: 32px;
+  --bw-chart-bar-max: 160px;
+  --bw-chart-bar-compact: 114px;
+  --bw-chart-grid-opacity: .45;
+  --bw-share-width: 58px;
+  --bw-share-height: 5px;
+  --bw-desktop-panel-height: 390px;
+  --bw-shadow-float: 0 12px 32px #1020261a;
+  --bw-shadow-modal: 0 24px 70px #10202640;
 }
-
-/* Reference primitives */
-.bw-panel{background:var(--bw-color-surface);border:1px solid var(--bw-color-line);border-radius:var(--bw-radius-xl);box-shadow:var(--bw-shadow-panel)}
-.bw-button-primary{border:0;color:#fff;background:var(--bw-gradient-brand);padding:11px 18px;border-radius:var(--bw-radius-md);font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
-.bw-button-secondary{border:1px solid #cfe1fb;background:#fff;color:#2d6fd4;border-radius:var(--bw-radius-sm);padding:6px 10px;font-size:var(--bw-text-sm);font-weight:700}
-.bw-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bw-color-soft);color:var(--bw-color-ink-700);border-radius:var(--bw-radius-sm);padding:5px 8px;font-size:var(--bw-text-sm)}
-.bw-metric{background:#fff;border:1px solid #e1ecfb;border-radius:var(--bw-radius-lg);padding:14px 18px;min-height:88px}
-.bw-metric-label{color:#6881a8;font-size:11px;font-weight:700}
-.bw-metric-value{color:#1465e7;font-size:27px;font-weight:850;letter-spacing:-1px;margin:2px 0}
-.bw-section-title{display:flex;align-items:center;justify-content:space-between;padding:13px 14px 10px;border-bottom:1px solid #eef4fc;font-weight:800;color:#18376d}

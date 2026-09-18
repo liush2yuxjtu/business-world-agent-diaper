@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "a_label": "A  IMPLEMENTATION",
+  "b_label": "B  REFERENCE",
+  "source_config": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-pairs.json",
+  "pages": [
+    {
+      "id": "01-overview",
+      "title": "overview",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/01-overview-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/01-overview.png",
+      "a_route": "/?screen=overview",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-01-overview.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "95a4defea7ee11b956ef0ebc32c014c102d89c06778bb07adeb4398db0b617a4"
+    },
+    {
+      "id": "02-persona",
+      "title": "persona",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/02-persona-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/02-persona-studio.png",
+      "a_route": "/?screen=persona",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-02-persona.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "6438ec1270ba28823f2f99c799076ef12267b691ce0cb5ed536abbb4d2d50e82"
+    },
+    {
+      "id": "03-world",
+      "title": "world",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/03-world-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/03-world-builder.png",
+      "a_route": "/?screen=world",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-03-world.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "e2febccfc4489aff3b2d2bb93180f1f315a24ebec23b8473c3dc747a70ba9c8a"
+    },
+    {
+      "id": "04-content",
+      "title": "content",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/04-content-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/04-content-strategy.png",
+      "a_route": "/?screen=content",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-04-content.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "ea3fd3d0864c45c9700ff501427f4e04f6f5d46feba03e8bc90253afaa62baa1"
+    },
+    {
+      "id": "05-live",
+      "title": "live",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/05-live-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/05-live-war-room.png",
+      "a_route": "/?screen=live",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-05-live.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "2e85bf35f1dc061bd29f88da499a0135b4a3a695387422a965de896ae89c2842"
+    },
+    {
+      "id": "06-growth",
+      "title": "growth",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/06-growth-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/06-ad-optimization.png",
+      "a_route": "/?screen=growth",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-06-growth.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "882b1969af544a1f974189ef772a81b6c3696f17dcd69cce633b729f16084be4"
+    },
+    {
+      "id": "07-product",
+      "title": "product",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/07-product-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/07-commerce-analytics.png",
+      "a_route": "/?screen=product",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-07-product.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "93f414d024fbc19f66b93ac7b7bd38aba0937267940307fb55b922155a715608"
+    },
+    {
+      "id": "08-experiment",
+      "title": "experiment",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/08-experiment-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/08-simulation-experiment.png",
+      "a_route": "/?screen=experiment",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-08-experiment.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "e22f8bd9c9ab3776408dc5eb4431334403f843df2d42e750ad414faaf95b1323"
+    },
+    {
+      "id": "09-report",
+      "title": "report",
+      "a_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final/09-report-1586.png",
+      "b_image": "/Users/liushiyuwin/projects/business-world-agent-diaper/docs/design/screen-concepts/2026-09-18/09-reports.png",
+      "a_route": "/?screen=report",
+      "b_route": null,
+      "output": "/Users/liushiyuwin/projects/business-world-agent-diaper/artifacts/screen-alignment/round3-final-comparisons/AB-09-report.png",
+      "width": 3172,
+      "height": 1056,
+      "sha256": "68e072533c2fef6a2a49ab0492bc35a82cfed2418de6d38e211d27204ce16885"
+    }
+  ]
+}

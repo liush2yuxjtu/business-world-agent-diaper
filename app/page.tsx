@@ -8,7 +8,7 @@ import {
 import {
   OverviewRestored, PersonaRestored, WorldRestored, ContentRestored, LiveRestored,
   GrowthRestored, ProductRestored, ExperimentRestored, ReportRestored,
-} from './_components/business-world-restored';
+} from './_components/business-world-screens';
 
 type Payload = {
   meta: { dataMode: 'simulated' | 'observed'; datasetVersion: string; designSource: string; warning: string };
@@ -73,6 +73,18 @@ const emptyPayload: Payload = {
   notes: '',
 };
 
+const screenDescriptions: Record<NavId, string> = {
+  overview: '从理解消费者，到发现经营的下一种可能。',
+  persona: '理解每一种需要，让研究更靠近真实生活。',
+  world: '连接消费者、内容与交易，探索经营世界如何协同。',
+  content: '规划内容结构，用证据验证每一个创意。',
+  live: '理解场次表现，让讲解与消费者需求相遇。',
+  growth: '比较投放计划，把预算用在经过验证的方向。',
+  product: '追踪商品表现、复购与长期价值。',
+  experiment: '比较情景，明确假设，再决定下一步行动。',
+  report: '可追溯的经营摘要，为下一次决策提供依据。',
+};
+
 function numberValue(value: string) {
   if (value.trim() === '') return null;
   const parsed = Number(value);
@@ -84,7 +96,7 @@ function SourceBanner({ snapshot, onEdit }: { snapshot: Snapshot | null; onEdit:
   const connected = mode === 'persisted-observation' || mode === 'simulated';
   const simulated = mode === 'simulated';
   return <div className={`source-banner ${connected ? 'real' : 'missing'}`}>
-    <div><ShieldCheck size={18}/><span><b>{simulated ? 'Supabase 模拟数据集' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
+    <div><ShieldCheck size={18}/><span><b>{simulated ? '模拟数据集 · 非真实经营结果' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
     <button onClick={onEdit}>{connected ? '来源详情' : '连接数据'}</button>
   </div>;
 }
@@ -172,5 +184,5 @@ export default function App() {
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
     <ReportRestored snapshot={snapshot}/>;
 
-  return <main className="app-shell"><aside className="sidebar"><div className="brand"><div className="brand-mark">↗</div><div><b>Business<br/>World Agent</b><small>经营决策台</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><div className="sidebar-promo">来源清晰<br/>指标可追溯<small>经营数据与模拟结果分层呈现</small><div className="diaper-box">BW</div></div></aside><section className="workspace"><div className="topbar"><div className="search real-search"><Search size={16}/><input aria-label="搜索功能" aria-expanded={matches.length>0} aria-controls="feature-search-results" placeholder="搜索功能..." value={search} onChange={e => setSearch(e.target.value)}/>{matches.length>0 && <div id="feature-search-results" role="listbox" className="search-results">{matches.map(([id,label]) => <button key={id} role="option" onClick={() => goTo(id)}>{label}</button>)}</div>}</div><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle="经营数据、策略建议和模拟结果分层呈现。" onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : view}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={() => setEditing(false)} readOnly={!snapshot?.provenance.writable}/>}</main>;
+  return <main className={`app-shell screen-${active}`}><aside className="sidebar"><div className="brand"><div><span className="brand-wordmark">eve</span><b>Business World</b><small>DIAPER OPERATING SYSTEM</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><a href="?screen=experiment" className="sidebar-promo"><Box size={25}/><div>模拟工作区<small>建模 · 验证 · 成长<br/>让每一次决策更可靠</small></div></a></aside><section className="workspace"><div className="topbar"><div className="search real-search"><Search size={16}/><input aria-label="搜索功能" aria-expanded={matches.length>0} aria-controls="feature-search-results" placeholder="搜索功能..." value={search} onChange={e => setSearch(e.target.value)}/>{matches.length>0 && <div id="feature-search-results" role="listbox" className="search-results">{matches.map(([id,label]) => <button key={id} role="option" onClick={() => goTo(id)}>{label}</button>)}</div>}</div><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle={screenDescriptions[active]} onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : view}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={() => setEditing(false)} readOnly={!snapshot?.provenance.writable}/>}</main>;
 }
