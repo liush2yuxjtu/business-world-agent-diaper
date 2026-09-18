@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   BarChart3, Bot, ChevronRight, Heart, Megaphone, Package, Play, Radio,
   ShoppingCart, Sparkles, Users, Video, WandSparkles
@@ -36,7 +37,11 @@ const personas = [
 
 const topics = ['宝宝整夜不漏尿挑战','夏季透气纸尿裤测评','新生儿囤货清单','红屁屁护理误区','纸尿裤尺码怎么选','夜用纸尿裤真实对比'];
 const campaignHypotheses = ['新手家庭拉新','复购家庭复购','直播间引流','核心商品转化'];
-const productHypotheses = ['新生儿系列','日常成长系列','夜间加强系列'];
+const productHypotheses = [
+  { name: '新生儿系列', image: 'diaper-newborn-concept', size: 'NB / S', alt: 'AI 生成的新生儿纸尿裤概念包装，浅蓝云朵图案' },
+  { name: '日常成长系列', image: 'diaper-daily-concept', size: 'M / L', alt: 'AI 生成的日常成长纸尿裤概念包装，蓝色叶片图案' },
+  { name: '夜间加强系列', image: 'diaper-night-concept', size: 'XL+', alt: 'AI 生成的夜间纸尿裤概念包装，深蓝月亮图案' },
+];
 
 function fmt(value: number | null | undefined, suffix = '') {
   return value == null ? '—' : `${value.toLocaleString('zh-CN')}${suffix}`;
@@ -57,10 +62,11 @@ function Unknown({ children = '—' }: { children?: React.ReactNode }) {
 export function OverviewRestored({ data }: { data: BusinessPayload | null }) {
   return <>
     <section className="world-hero panel restored-world">
-      <div className="world-core">
-        <div className="orbit"><Sparkles/><b>Business<br/>World Agent</b><small>真实 baseline · 未知值不造数</small></div>
-        {personas.map((p,i)=><div className={`orbit-person p${i+1}`} key={p.name}><span>{p.name}</span><small>{p.title}</small></div>)}
-      </div>
+      <figure className="world-core generated-world-art">
+        <Image src="/business-world/images/business-world-overview.png" width={1254} height={1254} sizes="(max-width: 1100px) 80vw, 36vw" loading="eager" alt="AI 生成的纸尿裤经营世界概念图：消费者研究、短视频、直播、广告、交易履约与家庭使用相互连接"/>
+        <figcaption><b>一个相互连接的经营世界</b><span>AI 生成概念插画 · 非实时经营数据</span></figcaption>
+        <div className="world-persona-labels">{personas.map(p=><span key={p.name}>{p.name} · {p.title}</span>)}</div>
+      </figure>
       <div className="worlds">
         <WorldCard n="1" title="抖音短视频世界" text="内容触达 · 互动 · 评论" icon={Video}/>
         <WorldCard n="2" title="抖音直播世界" text="进房 · 互动 · 加购" icon={Radio}/>
@@ -173,7 +179,7 @@ export function GrowthRestored({ data }: { data: BusinessPayload | null }) {
 export function ProductRestored({ data }: { data: BusinessPayload | null }) {
   return <>
     <section className="metrics-row"><Metric label="GMV" value={fmt(data?.commerce.gmv,' 元')} observed={data?.commerce.gmv != null}/><Metric label="商品转化率" value={fmt(data?.commerce.conversionRate,'%')} observed={data?.commerce.conversionRate != null}/><Metric label="新客" value={fmt(data?.commerce.newCustomers,' 人')} observed={data?.commerce.newCustomers != null}/><Metric label="库存风险" value="—" observed={false}/></section>
-    <div className="two-col product-restored-layout"><section className="panel"><div className="section-title"><span>商品组合</span><small>structure preserved</small></div><div className="restored-product-grid">{productHypotheses.map((name,i)=><article className="restored-product-card" key={name}><div className="restored-product-image"><Package size={30}/><span>{['NB / S','M / L','XL+'][i]}</span></div><div><b>{name}</b><small>GMV — · Conversion —</small><HypothesisTag/></div></article>)}</div></section>
+    <div className="two-col product-restored-layout"><section className="panel"><div className="section-title"><span>商品组合</span><small>AI 概念包装 · 非在售 SKU</small></div><div className="restored-product-grid">{productHypotheses.map(product=><article className="restored-product-card" key={product.name}><figure className="restored-product-image generated-product-art"><Image src={`/business-world/images/${product.image}.png`} width={1254} height={1254} sizes="(max-width: 700px) 75vw, (max-width: 1100px) 30vw, 22vw" alt={product.alt}/><figcaption>{product.size} · AI 概念图</figcaption></figure><div><b>{product.name}</b><small>GMV — · Conversion —</small><HypothesisTag/></div></article>)}</div></section>
     <aside className="panel insight"><div className="section-title"><span>交易洞察结构</span><BarChart3 size={18}/></div><ol><li><b>商品表现</b><p>真实抖店商品 / 订单数据接入后填充。</p></li><li><b>库存与售后</b><p>保持产品信息架构，但未观测值显示未知。</p></li><li><b>人群 × 商品</b><p>等真实 Persona 与交易数据同时存在后再归因。</p></li></ol></aside></div>
   </>;
 }
