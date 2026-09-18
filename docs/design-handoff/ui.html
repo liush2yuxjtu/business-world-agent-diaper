@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Business World Agent — UI Handoff</title>
+<meta name="description" content="High-fidelity interactive UI handoff for Business World Agent">
+<style>
+:root{
+  --navy:#0d1f3a;--navy-2:#142a4c;--ink:#0b1733;--text:#455577;--muted:#7887a3;
+  --brand:#2468e8;--brand-2:#1558d6;--soft:#f5f8fc;--panel:#fff;--line:#e3e9f3;
+  --green:#15965f;--green-soft:#eaf8f1;--purple:#7457db;--purple-soft:#f1edff;
+  --blue-soft:#edf5ff;--warn:#a66c00;--warn-soft:#fff7e3;--shadow:0 14px 40px rgba(16,35,68,.08);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font:14px/1.45 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f7f9fc;color:var(--ink)}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+.hidden{display:none!important}.muted{color:var(--muted)}.tiny{font-size:12px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.browser{min-height:100vh;background:#fff}.browserbar{height:38px;background:#f3f5f8;border-bottom:1px solid #d9dee8;display:flex;align-items:center;padding:0 14px;gap:12px;position:sticky;top:0;z-index:100}
+.dots{display:flex;gap:6px}.dot{width:10px;height:10px;border-radius:50%}.r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
+.url{margin:auto;max-width:680px;flex:1;height:26px;border:1px solid #d9dee8;border-radius:8px;background:#fff;display:flex;align-items:center;padding:0 10px;color:#56637e;font-size:12px}
+.mode-switch{display:flex;gap:5px;background:#e9edf4;padding:3px;border-radius:8px}.mode-switch button{border:0;background:transparent;padding:5px 9px;border-radius:6px;color:#4f607d}.mode-switch button.active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);color:#0e2445}
+.marketing{background:#fff}.mnav{height:68px;display:flex;align-items:center;gap:34px;max-width:1320px;margin:auto;padding:0 26px;border-bottom:1px solid #eef2f7}
+.brandline{display:flex;align-items:center;gap:10px;font-weight:750}.brandicon{width:30px;height:30px;border-radius:8px;background:var(--brand);color:white;display:grid;place-items:center;font-size:16px}
+.mlinks{display:flex;gap:30px;margin-left:30px;color:#243556;font-size:13px}.mnav .spacer{flex:1}.btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:10px 15px;color:#203352;font-weight:650}.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}.btn.primary:hover{background:var(--brand-2)}.btn.ghost{background:transparent}
+.hero{background:linear-gradient(180deg,#f7fbff 0,#fff 100%);padding:62px 0 44px}.hero-grid{max-width:1320px;margin:auto;padding:0 26px;display:grid;grid-template-columns:1fr 1.15fr;gap:54px;align-items:center}
+.eyebrow{display:inline-flex;background:#e7f1ff;color:var(--brand);padding:7px 11px;border-radius:999px;font-weight:700;font-size:12px}.hero h1{font-size:52px;line-height:1.08;letter-spacing:-1.8px;margin:18px 0 18px}.hero p{font-size:17px;color:#50617f;line-height:1.75;max-width:600px}.hero-actions{display:flex;gap:12px;margin:24px 0}.checks{display:flex;gap:18px;flex-wrap:wrap;color:#62718d;font-size:12px}.check:before{content:"✓";color:var(--brand);margin-right:6px}
+.preview{background:#fff;border:1px solid #dbe4ef;border-radius:12px;box-shadow:var(--shadow);overflow:hidden}.preview-head{height:34px;background:#f4f6f8;border-bottom:1px solid #e7ebf0;display:flex;align-items:center;padding:0 10px;gap:5px}.preview-body{display:grid;grid-template-columns:138px 1fr;height:360px}.preview-side{background:#102746;color:#d9e7ff;padding:18px 12px;font-size:11px}.preview-side b{display:block;color:#fff;margin-bottom:18px}.pnav{padding:8px;border-radius:5px;margin:4px 0}.pnav.active{background:#2468e8;color:#fff}.preview-main{padding:14px;background:#fafcff}.source{border:1px solid #bfe8d3;background:#edf9f3;color:#1a8054;padding:8px 10px;border-radius:6px;font-size:10px;font-weight:650;margin-bottom:9px}.mini-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.mini-kpi{background:#fff;border:1px solid #e6ebf2;border-radius:6px;padding:9px;font-size:9px}.mini-kpi b{display:block;font-size:15px;margin-top:3px}.mini-model{margin-top:9px;background:#fff;border:1px solid #e4e9f2;border-radius:7px;padding:10px;height:228px}.mini-title{font-weight:700}.mini-graph{position:relative;height:176px;margin-top:7px;background-image:radial-gradient(#dce4ee .8px,transparent .8px);background-size:12px 12px;border-radius:5px}.mnode{position:absolute;border:1px solid;padding:7px 9px;border-radius:5px;background:white;font-size:9px;min-width:88px}.mnode.obs{border-color:#7dd7aa;color:#176844}.mnode.inf{border-color:#a994ea;color:#5e43b7}.mnode.sim{border-color:#4f91f0;color:#175fbf;box-shadow:0 0 0 2px #dcebff}.features,.workflow,.teams{max-width:1320px;margin:auto;padding:28px 26px}.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.fcard{border:1px solid var(--line);border-radius:10px;padding:22px;background:#fff}.ficon{width:38px;height:38px;border-radius:9px;background:#eaf3ff;color:var(--brand);display:grid;place-items:center;font-weight:800}.fcard h3{font-size:17px;margin:14px 0 8px}.fcard p{color:#61708b;line-height:1.7}.teams{display:flex;align-items:center;gap:26px;border-top:1px solid #edf1f6;border-bottom:1px solid #edf1f6}.teams strong{max-width:250px}.teamitem{display:flex;gap:8px;align-items:center;color:#40506c}.teamitem span{font-size:18px}.workflow h2{text-align:left;margin:0 0 22px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.step{display:flex;gap:12px}.num{min-width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#e9f2ff;color:var(--brand);font-weight:800}.step b{display:block;margin-bottom:5px}.step p{margin:0;color:#697892;font-size:12px}.cta{background:#f3f7fc;padding:34px 26px;text-align:center}.cta h2{margin:0 0 7px}.cta-actions{display:flex;justify-content:center;gap:12px;margin-top:16px}.footer{max-width:1320px;margin:auto;padding:20px 26px;color:#7c899d;font-size:12px;display:flex;justify-content:space-between}
+
+.app{height:calc(100vh - 38px);display:grid;grid-template-columns:236px 1fr;background:#f6f8fb}.sidebar{background:linear-gradient(180deg,#10294b,#0d213d);color:#dce9fb;padding:20px 12px;display:flex;flex-direction:column}.sb-brand{font-size:18px;font-weight:780;padding:0 10px 18px}.sb-brand small{display:block;font-size:10px;font-weight:500;color:#a6bad6;letter-spacing:.7px;margin-top:2px}.navbtn{width:100%;border:0;background:transparent;color:#d8e6f7;text-align:left;padding:11px 12px;border-radius:6px;display:flex;align-items:center;gap:10px;margin:2px 0}.navbtn:hover{background:#16345e}.navbtn.active{background:#2468e8;color:#fff}.navico{width:20px;text-align:center}.sb-bottom{margin-top:auto;border-top:1px solid #29415f;padding:15px 10px 0;color:#b9cbe1;font-size:12px}.sb-bottom strong{display:block;color:#fff;margin-bottom:3px}
+.workspace{min-width:0;overflow:auto}.topbar{height:58px;background:white;border-bottom:1px solid #e5eaf2;display:flex;align-items:center;padding:0 18px;gap:10px;position:sticky;top:0;z-index:20}.searchbox{width:min(510px,48vw);position:relative}.searchbox input{width:100%;height:36px;border:1px solid #dfe5ef;border-radius:7px;padding:0 34px 0 34px;background:#fafbfc;color:#1b2e4f}.searchbox:before{content:"⌕";position:absolute;left:12px;top:7px;color:#687895;font-size:18px}.search-results{position:absolute;top:40px;left:0;right:0;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:8px;padding:6px;z-index:50}.search-results button{display:block;width:100%;text-align:left;border:0;background:#fff;padding:9px;border-radius:5px}.search-results button:hover{background:#f0f5fb}.topbar .push{flex:1}.user{display:flex;align-items:center;gap:8px}.avatar{width:30px;height:30px;border-radius:50%;background:#e7eef9;display:grid;place-items:center;font-weight:800;color:#25446c}
+.canvas{padding:14px 18px 28px}.app-source{border:1px solid #bfe8d3;background:var(--green-soft);border-radius:7px;padding:10px 13px;display:flex;gap:14px;align-items:center;color:#27674d;margin-bottom:12px}.app-source strong{color:#188458}.source-meta{display:flex;gap:12px;font-size:12px;color:#60756d}.kpis{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:12px;margin-bottom:12px}.kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;min-height:94px}.kpi .label{color:#5f6d86;font-size:12px}.kpi .value{font-size:24px;font-weight:780;margin:6px 0 1px}.delta.up{color:var(--green)}.delta.down{color:#c14755}
+.main-grid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:12px}.model-panel,.inspector,.evidence,.scenario-log,.generic-panel{background:#fff;border:1px solid var(--line);border-radius:8px}.model-panel{padding:12px}.model-head{display:flex;gap:12px;align-items:center}.model-title{font-size:18px;font-weight:780}.model-sub{color:#75829a;font-size:12px}.model-controls{margin-left:auto;display:flex;gap:7px;align-items:center}.seg{display:flex;border:1px solid #dce3ee;border-radius:7px;padding:2px;background:#fafbfc}.seg button{border:0;background:transparent;padding:7px 11px;border-radius:5px;color:#5a6880}.seg button.active{background:#eaf2ff;color:#2468e8;font-weight:700}.graph{height:370px;margin-top:12px;border:1px solid #e0e7f0;border-radius:7px;position:relative;background-color:#fbfcfe;background-image:radial-gradient(#dce5f1 .8px,transparent .8px);background-size:15px 15px;overflow:hidden}.node{position:absolute;min-width:145px;background:#fff;border:1px solid;padding:10px 12px;border-radius:7px;box-shadow:0 3px 10px rgba(32,55,90,.04);text-align:left}.node:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(32,55,90,.08)}.node .ntype{font-size:10px;font-weight:700;margin-top:4px}.node.obs{border-color:#83d9af}.node.obs .ntype{color:#178457}.node.inf{border-color:#b0a1ea}.node.inf .ntype{color:#7158ce}.node.sim{border-color:#4f91f0;box-shadow:0 0 0 2px #dfebff}.node.sim .ntype{color:#1c69ce}.edge{position:absolute;height:1px;background:#8da0ba;transform-origin:left center;z-index:0}.graph .node{z-index:2}.legend{display:flex;gap:18px;padding:10px 2px 0;font-size:12px;color:#65728a}.legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}.inspector{padding:14px;min-height:470px}.inspector h3{margin:0 0 14px}.entity-title{font-size:17px;font-weight:760}.entity-value{font-size:22px;font-weight:780;margin:7px 0}.irow{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid #edf1f6;font-size:12px}.state-pill{padding:3px 7px;border-radius:999px;font-weight:700}.state-pill.obs{background:var(--green-soft);color:var(--green)}.state-pill.inf{background:var(--purple-soft);color:var(--purple)}.state-pill.sim{background:var(--blue-soft);color:var(--brand)}.idesc{border-top:1px solid #edf1f6;padding-top:10px;margin-top:6px;color:#5c6a82;font-size:12px;line-height:1.65}.iactions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px}.iactions button{border:1px solid #dfe5ed;background:#fff;border-radius:6px;padding:8px;font-size:11px}.bottom-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:12px}.evidence,.scenario-log{padding:12px}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{text-align:left;padding:8px;border-top:1px solid #edf1f5;color:#596982}.table th{background:#f8fafc;color:#77849a;font-weight:650}.view{display:none}.view.active{display:block}.generic-panel{padding:20px;min-height:570px}.generic-panel h2{margin:0 0 8px}.empty{display:grid;place-items:center;text-align:center;min-height:420px;color:#60708d}.empty .big{font-size:44px}.empty h3{color:#172b4d;margin:12px 0 6px}.empty .btn{margin-top:10px}
+.editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.field label{display:block;color:#5b6980;font-size:12px;margin-bottom:5px}.field input,.field textarea,.field select{width:100%;border:1px solid #dce3ec;border-radius:7px;padding:9px;background:#fff}.field textarea{min-height:88px}.metric-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.metric-form .field{background:#f9fbfd;padding:10px;border-radius:7px;border:1px solid #edf1f6}
+.report-card{border:1px solid #dfe7f1;border-radius:8px;padding:18px;margin-top:14px}.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.report-stat{background:#f7f9fc;padding:12px;border-radius:7px}.report-stat b{font-size:20px;display:block}
+.scenario-form{display:grid;grid-template-columns:1.3fr .8fr .5fr auto;gap:10px;align-items:end;margin-top:14px}.scenario-result{margin-top:16px;padding:18px;border:1px solid #cfe2ff;background:#f5f9ff;border-radius:8px}.scenario-result h3{margin-top:0}.sim-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.sim-cell{background:white;border:1px solid #dce8f7;border-radius:7px;padding:12px}
+.toast{position:fixed;right:22px;bottom:22px;background:#11233f;color:#fff;border-radius:8px;padding:12px 16px;box-shadow:var(--shadow);z-index:200;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
+.modal-wrap{position:fixed;inset:0;background:rgba(4,14,30,.4);display:grid;place-items:center;z-index:150;padding:20px}.modal{width:min(760px,95vw);max-height:90vh;overflow:auto;background:#fff;border-radius:11px;box-shadow:0 30px 100px rgba(0,0,0,.25);padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0}.close{border:0;background:#eef2f6;width:30px;height:30px;border-radius:6px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.mobile-note{display:none}
+@media(max-width:1050px){.hero-grid{grid-template-columns:1fr}.preview{max-width:760px}.feature-grid{grid-template-columns:repeat(2,1fr)}.mnav .mlinks{display:none}.kpis{grid-template-columns:repeat(3,1fr)}.main-grid{grid-template-columns:1fr}.inspector{min-height:auto}.app{grid-template-columns:72px 1fr}.sb-brand{font-size:0}.sb-brand:before{content:"BW";font-size:15px}.navbtn span:last-child{display:none}.navbtn{justify-content:center}.sb-bottom{display:none}}
+@media(max-width:720px){.hero h1{font-size:38px}.feature-grid,.steps{grid-template-columns:1fr}.teams{overflow:auto}.mnav{gap:14px}.kpis{grid-template-columns:repeat(2,1fr)}.bottom-grid{grid-template-columns:1fr}.model-controls{flex-wrap:wrap}.graph{height:460px}.node{transform:scale(.88);transform-origin:top left}.scenario-form{grid-template-columns:1fr}.metric-form{grid-template-columns:repeat(2,1fr)}.editor-grid{grid-template-columns:1fr}.mobile-note{display:block;background:#fff7e3;border:1px solid #f2d38c;padding:8px;border-radius:6px;margin-bottom:10px}}
+
+/* === Deep product surfaces (ImageGen handoff 2026-09-18) === */
+.deep-page{display:grid;gap:12px}.deep-header{display:flex;align-items:flex-end;gap:14px;margin:4px 0 2px}.deep-header h2{margin:0;font-size:22px}.deep-header .sub{color:var(--muted);font-size:12px}.deep-header .push{margin-left:auto}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.span-2{grid-column:span 2}.span-3{grid-column:span 3}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}.card h3{margin:0 0 4px;font-size:15px}.card-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.metric-row{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:12px}.metric{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px}.metric label{font-size:11px;color:#61708b}.metric strong{display:block;font-size:22px;margin:5px 0}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:700}.chip.green{background:#e9f8f0;color:#15965f}.chip.blue{background:#edf5ff;color:#2468e8}.chip.purple{background:#f1edff;color:#7457db}.chip.red{background:#fff0f1;color:#c33f4d}.chip.orange{background:#fff4e5;color:#b76b00}
+.deep-table{width:100%;border-collapse:collapse;font-size:11px}.deep-table th{background:#f7f9fc;color:#728097;font-weight:650}.deep-table td,.deep-table th{padding:7px 8px;border-top:1px solid #edf1f6;text-align:left;vertical-align:middle}.deep-table tbody tr:hover{background:#f9fbfe}
+.stack{display:grid;gap:8px}.list-row{display:flex;gap:9px;align-items:flex-start;padding:9px;border:1px solid #edf1f5;border-radius:7px}.list-row .numx{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#eaf2ff;color:#2468e8;font-size:11px;font-weight:800;flex:0 0 auto}.list-row .grow{flex:1}.list-row b{display:block;font-size:12px}.list-row p{margin:2px 0 0;color:#718098;font-size:10px}
+.alert-row{padding:9px;border-radius:7px;display:flex;gap:9px;align-items:flex-start}.alert-row.red{background:#fff2f3}.alert-row.green{background:#eefaf4}.alert-row.blue{background:#f2f7ff}.alert-row .grow{flex:1}
+.toolbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.toolbar .btn{padding:7px 10px;font-size:11px}.selectish{border:1px solid #dfe6ef;background:#fff;border-radius:6px;padding:7px 10px;font-size:11px;color:#4d5e79}
+.donut{width:150px;height:150px;border-radius:50%;background:conic-gradient(#2468e8 0 25%,#36b57b 25% 47%,#7457db 47% 65%,#f2b84b 65% 79%,#79c9c2 79% 90%,#c5cfdd 90% 100%);position:relative;margin:auto}.donut:after{content:"";position:absolute;inset:32px;border-radius:50%;background:white}.donut-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:2;font-weight:800}.donut-center small{display:block;color:var(--muted);font-weight:500;font-size:10px}
+.legend-list{display:grid;gap:7px;font-size:11px}.legend-list span{display:flex;justify-content:space-between;gap:10px}.legend-list i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.mini-chart{height:160px;border-left:1px solid #dfe7f0;border-bottom:1px solid #dfe7f0;position:relative;background:repeating-linear-gradient(to top,transparent 0 31px,#eef2f7 32px)}.mini-chart svg{width:100%;height:100%;position:absolute;inset:0;overflow:visible}
+.bar-chart{height:160px;display:flex;align-items:flex-end;gap:18px;padding:8px 12px 0;border-bottom:1px solid #dfe7f0}.bar-group{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:5px;height:100%;position:relative}.bar{width:22px;border-radius:3px 3px 0 0}.bar.b{background:#4f91f0}.bar.g{background:#39b87a}.bar.p{background:#8568e8}.bar-label{position:absolute;bottom:-18px;font-size:10px;color:#697892;white-space:nowrap}
+.funnel{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;align-items:center}.fstep{border:1px solid #dce6f2;border-radius:8px;padding:14px 8px;text-align:center;position:relative}.fstep:not(:last-child):after{content:"→";position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:#3c7fe3;font-weight:800}.fstep b{display:block;font-size:18px;margin-top:5px}.fstep:nth-child(1),.fstep:nth-child(2){background:#eef5ff}.fstep:nth-child(3){background:#f3efff}.fstep:nth-child(4){background:#fff4e8}.fstep:nth-child(5),.fstep:nth-child(6){background:#effaf5}
+.persona-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.persona-card{border:1px solid var(--line);border-radius:8px;padding:12px;cursor:pointer;background:#fff}.persona-card.selected{border-color:#2468e8;box-shadow:0 0 0 1px #2468e8}.persona-top{display:flex;gap:9px;align-items:center}.persona-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#f5d9dc;font-size:22px}.persona-title{font-weight:800}.persona-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.persona-stats strong{display:block;font-size:18px}.tags{display:flex;gap:5px;flex-wrap:wrap}.tag{border:1px solid #e2e7ef;background:#fafbfc;border-radius:5px;padding:3px 6px;font-size:9px;color:#60708a}
+.signal-row{display:grid;grid-template-columns:1.4fr .5fr .5fr .8fr;gap:8px;padding:7px;border-top:1px solid #edf1f5;align-items:center;font-size:10px}.strength{height:6px;background:#edf1f5;border-radius:999px;overflow:hidden}.strength i{display:block;height:100%;background:#2468e8;border-radius:999px}
+.lifecycle{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.life{position:relative;border-radius:7px;padding:10px;color:#21334f;background:#edf5ff}.life:nth-child(2){background:#e8f4ff}.life:nth-child(3){background:#f0edff}.life:nth-child(4){background:#eaf9f2}.life:nth-child(5){background:#eef9f3}.life:not(:last-child):after{content:"›";position:absolute;right:-7px;top:42%;font-size:18px;color:#8ca0be}.life b{display:block;font-size:18px;margin-top:8px}
+.bubble-area{height:230px;position:relative;border-left:1px solid #dfe7f0;border-bottom:1px solid #dfe7f0;background:repeating-linear-gradient(to top,transparent 0 54px,#f0f3f7 55px)}.bubble{position:absolute;border-radius:50%;display:grid;place-items:center;text-align:center;color:white;font-size:9px;font-weight:700;box-shadow:0 4px 12px rgba(20,44,80,.12)}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{border:1px solid #e6ebf2;border-radius:6px;padding:7px;min-height:72px;font-size:9px}.day b{display:block;margin-bottom:5px}.eventdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
+.command-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}.live-badge{background:#e9f8f0;color:#15965f;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700}.host-box{display:flex;gap:10px;align-items:center;margin:10px 0}.host-visual{width:96px;height:64px;border-radius:7px;background:linear-gradient(135deg,#dbe7ff,#f6d9df);display:grid;place-items:center;font-size:26px}
+.budget-wrap{display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:center}.budget-donut{width:165px;height:165px;border-radius:50%;background:conic-gradient(#2468e8 0 40.2%,#7457db 40.2% 72.7%,#24ad71 72.7% 91%,#f0a333 91%);position:relative}.budget-donut:after{content:"";position:absolute;inset:38px;border-radius:50%;background:white}.budget-total{position:absolute;inset:0;display:grid;place-items:center;z-index:2;text-align:center;font-weight:800}.budget-total small{display:block;font-weight:500;color:#70809a}
+.product-hero{display:flex;gap:10px}.product-img{width:90px;height:90px;border-radius:8px;background:linear-gradient(145deg,#eef5ff,#fff);border:1px solid #e6ebf2;display:grid;place-items:center;font-size:34px}.sizebar{height:10px;border-radius:6px;overflow:hidden;display:flex;margin-top:5px}.sizebar i:nth-child(1){width:12%;background:#cfe0ff}.sizebar i:nth-child(2){width:46%;background:#4f91f0}.sizebar i:nth-child(3){width:28%;background:#80d6b0}.sizebar i:nth-child(4){width:14%;background:#9a7de7}
+.tornado{display:grid;gap:7px}.tor-row{display:grid;grid-template-columns:120px 1fr 38px;gap:8px;align-items:center;font-size:10px}.tor-track{height:10px;background:#f1f4f8;border-radius:2px;position:relative;overflow:hidden}.tor-track i{display:block;height:100%}.tor-pos{background:#4f91f0}.tor-neg{background:#ef7e7e;margin-left:auto}
+.flow-path{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.flow-node{border:1px solid #a9c9ef;border-radius:7px;padding:9px 11px;background:#f7fbff;font-size:10px}.flow-arrow{color:#6884a9}
+.report-layout{display:grid;grid-template-columns:minmax(0,1.5fr) .65fr .65fr;gap:12px}.report-cover{height:170px;border:1px solid #dfe7f0;border-radius:7px;background:linear-gradient(145deg,#fff 55%,#dbeaff);padding:18px;display:flex;flex-direction:column;justify-content:flex-end}.outline{counter-reset:sec}.outline div{display:flex;gap:8px;padding:7px 0;border-top:1px solid #edf1f5}.outline div:before{counter-increment:sec;content:counter(sec);width:20px;height:20px;border-radius:50%;background:#eaf2ff;color:#2468e8;display:grid;place-items:center;font-size:10px;font-weight:800}
+@media(max-width:1100px){.metric-row,.persona-grid{grid-template-columns:repeat(2,1fr)}.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3,.grid-2,.report-layout{grid-template-columns:1fr}.span-2,.span-3{grid-column:auto}.funnel{grid-template-columns:repeat(3,1fr)}.budget-wrap{grid-template-columns:1fr}}
+
+
+/* === Interaction + polish audit pass 2026-09-18 === */
+:root{--radius:10px;--radius-lg:14px;--shadow-sm:0 1px 2px rgba(17,34,68,.04),0 5px 16px rgba(17,34,68,.045);--shadow-md:0 10px 30px rgba(17,34,68,.09)}
+body{letter-spacing:-.005em}.canvas{max-width:1680px;margin:0 auto}.app-source{position:sticky;top:58px;z-index:14;box-shadow:0 6px 18px rgba(16,45,70,.035)}
+.card,.model-panel,.inspector,.evidence,.scenario-log,.kpi,.metric,.generic-panel,.command-card{border-color:#e4eaf2;border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.card{padding:16px}.card h3{letter-spacing:-.01em}.metric{min-height:88px;position:relative;overflow:hidden}.metric:after{content:"";position:absolute;right:-16px;top:-22px;width:72px;height:72px;border-radius:50%;background:#f4f8ff}.metric strong{position:relative;z-index:1}
+.btn,.navbtn,.seg button,.selectish,.persona-card,.fstep,.bubble,.deep-table tbody tr,.list-row,.metric,a{transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease,color .15s ease}
+.btn:hover{border-color:#bdcce0;box-shadow:0 3px 10px rgba(28,55,95,.08);transform:translateY(-1px)}.btn:active{transform:translateY(0)}
+.btn:focus-visible,.navbtn:focus-visible,.seg button:focus-visible,.persona-card:focus-visible,.fstep:focus-visible,.bubble:focus-visible,.deep-table tbody tr:focus-visible,.list-row:focus-visible,.metric:focus-visible,a:focus-visible{outline:2px solid #6ca4f3;outline-offset:2px}
+.deep-table tbody tr,.list-row,.fstep,.bubble,.metric,.persona-card,[data-jump],a:not([href]){cursor:pointer}
+.deep-table tbody tr:hover,.list-row:hover,.metric:hover,.persona-card:hover{background:#f9fbff;box-shadow:0 5px 16px rgba(23,50,90,.055)}
+.metric:hover,.persona-card:hover{transform:translateY(-2px)}.fstep:hover{border-color:#9abcf0;box-shadow:0 4px 12px rgba(35,86,150,.07)}
+.bubble:hover{transform:scale(1.06);box-shadow:0 8px 20px rgba(20,44,80,.16)}
+.panel-head a,a:not([href]){color:#2468e8;font-weight:650}.panel-head a:hover,a:not([href]):hover{text-decoration:underline}
+.deep-header{padding:4px 2px 2px}.deep-header h2{font-size:24px;letter-spacing:-.02em}.deep-header .sub{font-size:12px;margin-top:3px}
+.metric-row{gap:10px}.grid-2,.grid-3,.grid-4{gap:10px}.deep-page{gap:10px}.deep-table th{font-size:10px;letter-spacing:.01em}.deep-table td{color:#50617c}
+.sidebar{box-shadow:8px 0 24px rgba(10,32,63,.06)}.topbar{box-shadow:0 1px 0 rgba(20,45,80,.02)}.navbtn.active{box-shadow:inset 3px 0 0 #8cb7ff,0 5px 16px rgba(0,73,190,.18)}
+.detail-title{font-size:19px;margin:0}.detail-body{color:#5a6b86;line-height:1.7}.detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.detail-meta>div{background:#f7f9fc;border:1px solid #e8edf4;border-radius:8px;padding:10px}.detail-meta small{display:block;color:#7b899e;margin-bottom:3px}
+.prototype-note{font-size:11px;color:#6a7992;background:#f6f9fd;border:1px solid #e1e9f4;border-radius:7px;padding:8px 10px}
+@media(max-width:720px){.app-source{position:static}.card{padding:12px}.deep-header{align-items:flex-start;flex-direction:column}.deep-header .push{margin-left:0}.metric-row{gap:8px}}
+
+</style>
+</head>
+<body>
+<div class="browser">
+  <div class="browserbar">
+    <div class="dots"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i></div>
+    <div class="url" id="fakeUrl">https://www.businessworldagent.com</div>
+    <div class="mode-switch"><button id="landingMode" class="active">Landing</button><button id="appMode">App</button></div>
+  </div>
+
+  <section id="landing" class="marketing">
+    <nav class="mnav">
+      <div class="brandline"><div class="brandicon">◇</div>Business World Agent</div>
+      <div class="mlinks"><a href="#features">产品功能</a><a href="#workflow">解决方案</a><a href="#teams">客户案例</a><a href="#cta">价格</a><a href="#footer">关于我们</a></div>
+      <div class="spacer"></div><button class="btn">登录</button><button class="btn">预约演示</button><button class="btn primary" data-open-app>立即体验</button>
+    </nav>
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">用真实数据，推演更好的生意</div>
+          <h1>把真实经营世界<br>装进一个可推演的系统</h1>
+          <p>Business World Agent 融合内容、直播、电商、广告、商品与市场环境，基于可验证的真实数据构建统一商业世界模型，通过情景模拟与 Agent 智能分析，帮助团队做出更确定的经营决策。</p>
+          <div class="hero-actions"><button class="btn primary" data-open-app>立即体验 →</button><button class="btn">预约演示</button></div>
+          <div class="checks"><span class="check">真实数据来源与证明</span><span class="check">场景化模拟推演</span><span class="check">专业 Agent 分析能力</span><span class="check">企业级安全保障</span></div>
+        </div>
+        <div class="preview" aria-label="Product preview">
+          <div class="preview-head"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i></div>
+          <div class="preview-body">
+            <div class="preview-side"><b>Business World Agent</b><div class="pnav">总览</div><div class="pnav">Persona Studio</div><div class="pnav active">World Builder</div><div class="pnav">内容策略</div><div class="pnav">直播作战室</div><div class="pnav">投放优化</div><div class="pnav">商品分析</div><div class="pnav">模拟实验</div><div class="pnav">报告</div></div>
+            <div class="preview-main">
+              <div class="source">✓ VERIFIED PERSISTED SOURCE · 电商运营数据库</div>
+              <div class="mini-kpis"><div class="mini-kpi">GMV<b>¥2,483,221</b></div><div class="mini-kpi">转化率<b>3.24%</b></div><div class="mini-kpi">内容互动量<b>1,204,331</b></div><div class="mini-kpi">广告 ROI<b>4.32</b></div></div>
+              <div class="mini-model"><div class="mini-title">商业世界模型</div><div class="mini-graph">
+                <div class="mnode obs" style="left:6%;top:20%">内容互动量<br><b>1,204,331</b></div>
+                <div class="mnode inf" style="left:8%;top:61%">人群分群<br><b>8 核心人群</b></div>
+                <div class="mnode inf" style="left:38%;top:30%">转化率<br><b>3.24%</b></div>
+                <div class="mnode obs" style="left:38%;top:68%">广告效率<br><b>ROI 4.32</b></div>
+                <div class="mnode sim" style="left:65%;top:45%">GMV<br><b>¥2,483,221</b></div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="features" class="features"><div class="feature-grid">
+      <article class="fcard"><div class="ficon">◇</div><h3>统一商业世界模型</h3><p>打通内容、直播、电商、广告、商品与市场环境，把经营实体、指标与因果关系放进同一个可检查的模型。</p><a style="color:var(--brand)">了解更多 →</a></article>
+      <article class="fcard"><div class="ficon">▤</div><h3>真实数据与来源证明</h3><p>接入多平台真实数据，保留完整来源、时间戳与数据状态，让每一个结论都有据可查。</p><a style="color:var(--brand)">了解更多 →</a></article>
+      <article class="fcard"><div class="ficon">▥</div><h3>情景模拟与推演</h3><p>对市场变化、投放策略、商品组合进行透明建模，在行动前比较不同情景下的业务结果。</p><a style="color:var(--brand)">了解更多 →</a></article>
+      <article class="fcard"><div class="ficon">✦</div><h3>Agent 协作分析</h3><p>基于统一经营事实层回答问题、解释变化、生成报告，并把观察事实与模型输出明确区分。</p><a style="color:var(--brand)">了解更多 →</a></article>
+    </div></section>
+    <section id="teams" class="teams"><strong>他们用 Business World Agent<br>做出更确定的经营决策</strong><div class="teamitem"><span>🛒</span>电商运营</div><div class="teamitem"><span>▤</span>内容团队</div><div class="teamitem"><span>▣</span>直播团队</div><div class="teamitem"><span>◁</span>投放团队</div><div class="teamitem"><span>◇</span>商品团队</div><div class="teamitem"><span>◎</span>管理层</div></section>
+    <section id="workflow" class="workflow"><h2>4 步开启你的商业推演之旅</h2><div class="steps">
+      <div class="step"><div class="num">1</div><div><b>连接数据源</b><p>接入电商、内容、直播、广告等多平台数据。</p></div></div>
+      <div class="step"><div class="num">2</div><div><b>构建商业世界模型</b><p>识别关键变量、业务实体与关系。</p></div></div>
+      <div class="step"><div class="num">3</div><div><b>运行情景模拟</b><p>设置策略变化，得到可复现的模型结果。</p></div></div>
+      <div class="step"><div class="num">4</div><div><b>生成分析报告</b><p>把证据、假设、结果整理成决策材料。</p></div></div>
+    </div></section>
+    <section id="cta" class="cta"><h2>让数据成为更好的经营伙伴</h2><div class="muted">进入 Business World Agent，查看统一经营世界并运行你的第一个情景。</div><div class="cta-actions"><button class="btn primary" data-open-app>立即体验</button><button class="btn">预约演示</button></div></section>
+    <footer id="footer" class="footer"><div>◇ <b>Business World Agent</b> · 用真实世界的数据，创造更确定的商业未来。</div><div>产品功能　解决方案　客户案例　价格　隐私政策　服务条款</div></footer>
+  </section>
+
+  <section id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="sb-brand">Business World Agent<small>REALITY FIRST</small></div>
+      <nav id="appNav">
+        <button class="navbtn" data-view="overview"><span class="navico">▦</span><span>总览</span></button>
+        <button class="navbtn" data-view="persona"><span class="navico">♙</span><span>Persona Studio</span></button>
+        <button class="navbtn active" data-view="world"><span class="navico">◇</span><span>World Builder</span></button>
+        <button class="navbtn" data-view="content"><span class="navico">▤</span><span>内容策略</span></button>
+        <button class="navbtn" data-view="live"><span class="navico">▣</span><span>直播作战室</span></button>
+        <button class="navbtn" data-view="growth"><span class="navico">◉</span><span>投放优化</span></button>
+        <button class="navbtn" data-view="product"><span class="navico">▢</span><span>商品分析</span></button>
+        <button class="navbtn" data-view="experiment"><span class="navico">♜</span><span>模拟实验</span></button>
+        <button class="navbtn" data-view="report"><span class="navico">▧</span><span>报告</span></button>
+      </nav>
+      <div class="sb-bottom"><strong>构建更真实的商业世界</strong>从数据出发 · 让决策更确定<br><br>⚙ 设置<br><br>？ 帮助中心</div>
+    </aside>
+    <main class="workspace">
+      <header class="topbar">
+        <div class="searchbox"><input id="searchInput" placeholder="搜索节点、指标或业务问题…"><div id="searchResults" class="search-results hidden"></div></div>
+        <div class="push"></div>
+        <button class="btn" id="refreshBtn">↻ 刷新数据</button>
+        <button class="btn" id="sourceBtn">▤ 数据来源</button>
+        <div class="user"><div class="avatar">ZL</div><span>张立⌄</span></div>
+      </header>
+      <div class="canvas">
+        <div class="mobile-note">这是桌面工作台的响应式预览。产品主设计目标仍是数据密集型桌面工作区。</div>
+        <div class="app-source"><strong>✓ VERIFIED PERSISTED SOURCE</strong><div class="source-meta"><span>数据源：电商运营数据库（Production）</span><span>提供方：BWA Data Hub</span><span id="sourceTime">最后更新：2026-09-18 08:48</span></div></div>
+        <div class="kpis" id="kpiRow"></div>
+
+        <section class="view" id="view-overview"></section>
+        <section class="view" id="view-persona"></section>
+        <section class="view active" id="view-world">
+          <div class="main-grid">
+            <div class="model-panel">
+              <div class="model-head"><div><div class="model-title">商业世界模型</div><div class="model-sub">探索业务实体之间的关系，区分已观测、推断与模拟输出。</div></div>
+                <div class="model-controls"><span class="tiny muted">场景选择：</span><div class="seg" id="scenarioSeg"><button data-scenario="baseline" class="active">基准情景</button><button data-scenario="growth">增长计划</button><button data-scenario="downside">下行风险</button></div><button class="btn primary" id="runSim">▶ 运行模拟</button></div>
+              </div>
+              <div class="graph" id="graph">
+                <div class="edge" style="left:24%;top:28%;width:22%;transform:rotate(18deg)"></div>
+                <div class="edge" style="left:23%;top:69%;width:26%;transform:rotate(-19deg)"></div>
+                <div class="edge" style="left:47%;top:36%;width:23%;transform:rotate(20deg)"></div>
+                <div class="edge" style="left:47%;top:66%;width:24%;transform:rotate(-15deg)"></div>
+                <div class="edge" style="left:70%;top:50%;width:20%;transform:rotate(-18deg)"></div>
+                <div class="edge" style="left:70%;top:52%;width:21%;transform:rotate(19deg)"></div>
+                <button class="node obs" data-entity="content" style="left:7%;top:15%">内容互动量<br><b>1,204,331</b><div class="ntype">Observed</div></button>
+                <button class="node inf" data-entity="persona" style="left:8%;top:62%">人群分群<br><b>8 个核心人群</b><div class="ntype">Inferred</div></button>
+                <button class="node obs" data-entity="live" style="left:35%;top:8%">直播间表现<br><b>342,120</b><div class="ntype">Observed</div></button>
+                <button class="node inf" data-entity="conversion" style="left:35%;top:38%">转化率<br><b>3.24%</b><div class="ntype">Inferred</div></button>
+                <button class="node obs" data-entity="ads" style="left:35%;top:70%">广告效率<br><b>ROI 4.32</b><div class="ntype">Observed</div></button>
+                <button class="node sim" data-entity="gmv" style="left:66%;top:42%">GMV<br><b id="graphGmv">¥2,483,221</b><div class="ntype">Simulated</div></button>
+                <button class="node inf" data-entity="revenue" style="left:83%;top:19%">收入<br><b>¥2,317,892</b><div class="ntype">Inferred</div></button>
+                <button class="node obs" data-entity="repeat" style="left:83%;top:67%">复购率<br><b>28.6%</b><div class="ntype">Observed</div></button>
+              </div>
+              <div class="legend"><span><i style="background:#24a56b"></i>已观测 (Observed)</span><span><i style="background:#8066de"></i>推断 (Inferred)</span><span><i style="background:#2468e8"></i>模拟输出 (Simulated)</span></div>
+            </div>
+            <aside class="inspector" id="inspector"></aside>
+          </div>
+          <div class="bottom-grid"><div class="evidence"><div class="panel-head"><strong>证据与数据 <span class="muted">5</span></strong><a style="color:var(--brand)">查看更多 →</a></div><table class="table"><thead><tr><th>时间</th><th>来源</th><th>事件</th><th>详情</th></tr></thead><tbody id="evidenceBody"></tbody></table></div><div class="scenario-log"><div class="panel-head"><strong>模拟记录 <span class="muted">3</span></strong><a style="color:var(--brand)">查看更多 →</a></div><table class="table"><thead><tr><th>时间</th><th>场景</th><th>核心假设</th><th>预期结果</th></tr></thead><tbody id="scenarioBody"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-experiment"><div class="deep-page"><div class="deep-header"><div><h2>⚗ 模拟实验</h2><div class="sub">基于持久化真实数据构建可解释、可验证的情景模型。</div></div><div class="push toolbar"><button class="btn">保存为情景</button><button class="btn" data-jump="report">发送到报告</button><button class="btn" data-jump="world">在 World Builder 中查看</button></div></div><div class="card"><h3>1　情景设置</h3><div class="editor-grid"><div class="field span-2"><label>情景描述</label><input id="expPrompt" value="618大促期间加大广告投放，观察对 GMV 与 ROI 的综合影响。"></div><div class="field"><label>经营杠杆</label><select id="expLever"><option value="ad_efficiency">广告投入（站内SEM）</option><option value="checkout_conversion">结账转化率</option><option value="content_engagement">内容互动</option><option value="repeat_purchase">复购率</option></select></div><div class="field"><label>变化幅度 %</label><input id="expChange" type="number" value="30"></div></div><div class="tags" style="margin-top:10px"><span class="tag">大盘需求保持稳定 ×</span><span class="tag">供应链与库存充足 ×</span><span class="tag">商品价格不变 ×</span><span class="tag">内容策略不变 ×</span><button class="btn primary" id="expRun" style="margin-left:auto">▶ 运行实验</button></div></div><div class="grid-3"><div class="card"><h3>2　关键指标对比</h3><div class="scenario-result" id="expResult"><div class="sim-grid" style="grid-template-columns:1fr 1fr"><div class="sim-cell">Baseline GMV<b style="display:block;font-size:20px">¥2,483,221</b></div><div class="sim-cell">Modeled GMV<b style="display:block;font-size:20px">¥3,106,152</b></div><div class="sim-cell">Baseline ROI<b style="display:block;font-size:20px">4.32</b></div><div class="sim-cell">Modeled ROI<b style="display:block;font-size:20px">5.21</b></div></div></div></div><div class="card"><h3>3　敏感性分析</h3><div class="tornado"><div class="tor-row"><span>广告投入</span><div class="tor-track"><i class="tor-pos" style="width:92%"></i></div><b>+25.1%</b></div><div class="tor-row"><span>转化率提升</span><div class="tor-track"><i class="tor-pos" style="width:72%"></i></div><b>+18.3%</b></div><div class="tor-row"><span>客单价变化</span><div class="tor-track"><i class="tor-pos" style="width:55%"></i></div><b>+12.6%</b></div><div class="tor-row"><span>流量成本</span><div class="tor-track"><i class="tor-neg" style="width:38%"></i></div><b>-10.4%</b></div><div class="tor-row"><span>自然流量</span><div class="tor-track"><i class="tor-pos" style="width:44%"></i></div><b>+8.7%</b></div><div class="tor-row"><span>库存满足率</span><div class="tor-track"><i class="tor-pos" style="width:31%"></i></div><b>+6.1%</b></div></div></div><div class="card"><h3>实验说明</h3><p class="tiny muted">仅调整广告投入，其他经营策略保持不变。结果为对历史持久化基线的结构化情景推演。</p><div class="irow"><span>置信度</span><b>78% · 中高</b></div><div class="irow"><span>MAPE</span><b>12.3%</b></div><div class="alert-row blue"><div><b>Reality boundary</b><p>模拟输出不是已观测市场结果。</p></div></div></div></div><div class="grid-2"><div class="card"><div class="panel-head"><h3>4　已保存的模拟情景</h3><a>查看全部 →</a></div><table class="deep-table"><thead><tr><th>情景名称</th><th>经营杠杆</th><th>变化幅度</th><th>预期 GMV</th><th>创建人</th><th>状态</th></tr></thead><tbody><tr><td>618 广告加投</td><td>广告投入</td><td>+30%</td><td>+25.1%</td><td>张立</td><td><span class="chip green">已完成</span></td></tr><tr><td>夏季新品促销</td><td>商品价格</td><td>-10%</td><td>+18.7%</td><td>李娜</td><td><span class="chip green">已完成</span></td></tr><tr><td>内容种草加大</td><td>达人投放</td><td>+50%</td><td>+12.4%</td><td>王强</td><td><span class="chip green">已完成</span></td></tr><tr><td>站外投放测试</td><td>广告投入</td><td>+50%</td><td>+16.9%</td><td>张立</td><td><span class="chip blue">草稿</span></td></tr></tbody></table></div><div class="card"><h3>5　影响路径</h3><div class="flow-path"><div class="flow-node">广告投入<br><b>+30%</b></div><span class="flow-arrow">→</span><div class="flow-node">曝光量<br><b>+28%</b></div><span class="flow-arrow">→</span><div class="flow-node">访问量<br><b>+22%</b></div><span class="flow-arrow">→</span><div class="flow-node">转化率<br><b>+15%</b></div><span class="flow-arrow">→</span><div class="flow-node">GMV<br><b>+25.1%</b></div></div></div></div></div></section><section class="view" id="view-report"><div class="deep-page"><div class="deep-header"><div><h2>报告中心</h2><div class="sub">基于真实业务数据生成专业分析报告，支持导出与分发。</div></div><div class="push toolbar"><span class="selectish">09/11 ~ 09/18 ▾</span><span class="selectish">管理层 ▾</span><button class="btn primary" data-demo="newreport">▧ 新建报告</button></div></div><div class="report-layout"><div class="card"><div class="panel-head"><h3>最新周报 <span class="chip green">已生成</span></h3><button class="btn">查看完整报告</button></div><h2 style="font-size:22px">GMV 环比增长 12.5%，主要由直播场次提升与优质内容带动</h2><p class="muted">本周直播 GMV 创近8周新高；内容种草带动搜索量上升，新品 A 系列表现亮眼。</p><div class="report-grid"><div class="report-stat">GMV<b>¥2,483,221</b><span class="delta up">+12.5%</span></div><div class="report-stat">订单量<b>448,320</b><span class="delta up">+9.8%</span></div><div class="report-stat">广告 ROI<b>4.32</b><span class="delta up">+18.7%</span></div></div></div><div class="card"><div class="panel-head"><h3>报告大纲</h3><span class="muted tiny">6 章节</span></div><div class="outline"><div><span><b>经营概览</b><br><small class="muted">整体业务与核心指标</small></span></div><div><span><b>内容复盘</b><br><small class="muted">爆款与内容矩阵</small></span></div><div><span><b>直播复盘</b><br><small class="muted">场次、转化、货品</small></span></div><div><span><b>投放分析</b><br><small class="muted">ROI 与优化建议</small></span></div><div><span><b>商品建议</b><br><small class="muted">热销与备货</small></span></div><div><span><b>风险与机会</b></span></div></div></div><div class="card"><h3>导出与分发</h3><div class="grid-2" style="margin-top:10px"><button class="btn" id="downloadReport">导出 PDF</button><button class="btn">导出 PPT</button><button class="btn">分享链接</button><button class="btn">发送到邮箱</button></div><h3 style="margin-top:12px">发送给</h3><div class="tags"><span class="tag">张总 ×</span><span class="tag">李经理 ×</span><span class="tag">市场部 ×</span></div><textarea style="width:100%;margin-top:10px;border:1px solid #dfe6ef;border-radius:7px;padding:8px;min-height:68px">这是本周的业务分析报告，请查收。</textarea><button class="btn primary" style="width:100%;margin-top:8px" data-demo="sendreport">发送报告</button></div></div><div class="grid-3"><div class="card span-2"><div class="panel-head"><h3>历史报告 (12)</h3><a>查看全部报告 →</a></div><table class="deep-table"><thead><tr><th>报告时间</th><th>报告名称</th><th>报告类型</th><th>创建人</th><th>状态</th><th>浏览量</th><th>操作</th></tr></thead><tbody><tr><td>09-18</td><td>第38周业务周报</td><td>周报</td><td>张立</td><td><span class="chip green">已生成</span></td><td>38</td><td>查看</td></tr><tr><td>09-11</td><td>第37周业务周报</td><td>周报</td><td>王敏</td><td><span class="chip green">已生成</span></td><td>52</td><td>查看</td></tr><tr><td>09-04</td><td>第36周业务周报</td><td>周报</td><td>张立</td><td><span class="chip green">已生成</span></td><td>46</td><td>查看</td></tr><tr><td>08-31</td><td>8月经营月报</td><td>月报</td><td>李娜</td><td><span class="chip green">已生成</span></td><td>128</td><td>查看</td></tr></tbody></table></div><div class="card"><h3>报告预览</h3><div class="report-cover"><small>Business World Agent</small><h3>商业世界 · 业务周报</h3><div class="muted tiny">第38周 · 数据驱动增长</div></div></div></div><div class="grid-3"><div class="card"><h3>本周关键结论</h3><div class="stack"><div class="list-row"><div class="numx">1</div><div class="grow"><b>直播带动 GMV 增长 12.5%</b><p>场次 +3，场均 GMV +18%。</p></div><span class="chip green">正向</span></div><div class="list-row"><div class="numx">2</div><div class="grow"><b>内容种草效果显著</b><p>总曝光 +28%，搜索流量 +35%。</p></div><span class="chip green">正向</span></div><div class="list-row"><div class="numx">3</div><div class="grow"><b>新品 A 系列表现超预期</b><p>首周 GMV 46.8万。</p></div></div></div></div><div class="card"><h3>支持证据</h3><div class="mini-chart"><svg viewBox="0 0 600 160" preserveAspectRatio="none"><polyline fill="none" stroke="#8066de" stroke-width="3" points="0,105 85,98 170,92 255,77 340,88 425,65 510,48 600,42"/></svg></div></div><div class="card"><h3>Agent 自动生成摘要 <span class="chip blue">最新数据</span></h3><p class="muted">本周整体表现良好，建议继续保持直播节奏并加大新品 A 系列内容投放，同时关注部分商品库存压力。</p><label class="tiny">可编辑备注</label><textarea style="width:100%;min-height:80px;border:1px solid #dfe6ef;border-radius:7px;padding:8px">整体方向正确，下一步重点关注预热期投放节奏。</textarea><button class="btn primary" style="margin-top:8px">保存备注</button></div></div></div></section><section class="view" id="view-content"></section>
+        <section class="view" id="view-live"></section>
+        <section class="view" id="view-growth"></section>
+        <section class="view" id="view-product"></section>
+      </div>
+    </main>
+  </section>
+</div>
+
+<div class="modal-wrap hidden" id="sourceModal">
+  <div class="modal"><div class="modal-head"><div><h2>数据来源</h2><div class="muted">编辑持久化经营快照的来源信息与关键指标。</div></div><button class="close" id="closeSource">×</button></div>
+    <div class="editor-grid"><div class="field"><label>来源名称</label><input id="sourceName" value="电商运营数据库（Production）"></div><div class="field"><label>Provider</label><select id="sourceProvider"><option>BWA Data Hub</option><option>Manual Entry</option><option>Official API</option></select></div></div>
+    <div class="metric-form">
+      <div class="field"><label>GMV</label><input id="editGmv" type="number" value="2483221"></div><div class="field"><label>转化率 %</label><input id="editConversion" type="number" step=".01" value="3.24"></div>
+      <div class="field"><label>广告 ROI</label><input id="editRoi" type="number" step=".01" value="4.32"></div><div class="field"><label>复购率 %</label><input id="editRepeat" type="number" step=".1" value="28.6"></div>
+    </div>
+    <div class="field" style="margin-top:12px"><label>来源备注</label><textarea id="sourceNotes">已验证业务快照。生产实现应保留 source type、observedAt、updatedAt 和 persistence provenance。</textarea></div>
+    <div class="modal-actions"><button class="btn" id="cancelSource">取消</button><button class="btn primary" id="saveSource">保存快照</button></div>
+  </div>
+</div>
+<div class="modal-wrap hidden" id="detailModal">
+  <div class="modal" style="width:min(620px,95vw)">
+    <div class="modal-head"><div><div class="tiny muted" id="detailEyebrow">DETAIL</div><h2 class="detail-title" id="detailTitle">详情</h2></div><button class="close" id="closeDetail">×</button></div>
+    <div class="detail-body" id="detailBody" style="margin-top:12px"></div>
+    <div class="prototype-note" id="detailNote" style="margin-top:14px">这是交互原型：高风险或外部写操作不会直接执行。</div>
+    <div class="modal-actions"><button class="btn" id="cancelDetail">关闭</button><button class="btn primary" id="confirmDetail">确认</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const state={
+  mode:'landing',view:'world',scenario:'baseline',
+  data:{gmv:2483221,conversion:3.24,engagement:1204331,roi:4.32,repeat:28.6,live:342120,revenue:2317892},
+  entity:'gmv'
+};
+const views={
+  overview:{title:'总览',desc:'统一查看当前真实经营快照。',metrics:[['GMV','¥2,483,221'],['转化率','3.24%'],['内容互动量','1,204,331'],['广告 ROI','4.32']]},
+  persona:{title:'Persona Studio',desc:'策略模板 ≠ 观测事实。仅在接入可验证分群数据后展示真实 Persona 指标。',empty:'当前消费者分群仍处于推断层。请连接真实分群或行为数据后再发布为经营事实。'},
+  content:{title:'内容策略',desc:'基于已持久化内容观测设计策略。',metrics:[['内容互动量','1,204,331'],['互动率','8.4%'],['内容机会','17 条']]},
+  live:{title:'直播作战室',desc:'直播指标来自同一 Business World 事实层。',metrics:[['直播表现','342,120'],['进房率','18.6%'],['加购率','5.8%']]},
+  growth:{title:'投放优化',desc:'仅显示核验后的聚合投放数据。',metrics:[['预算','¥420,000'],['ROI','4.32'],['CPA','¥82']]},
+  product:{title:'商品分析',desc:'交易指标与商品表现保持可追溯来源。',metrics:[['GMV','¥2,483,221'],['转化率','3.24%'],['新客','8,126']]}
+};
+const entities={
+  content:{title:'内容互动量',value:'1,204,331',type:'Observed',confidence:'Source verified',source:'内容平台',time:'2026-09-18 08:42',definition:'所选时间范围内内容产生的可验证互动总量。'},
+  persona:{title:'人群分群',value:'8 个核心人群',type:'Inferred',confidence:'87%',source:'分群模型 · 11 signals',time:'2026-09-18 08:37',definition:'基于已观测行为信号形成的人群分组，属于推断状态。'},
+  live:{title:'直播间表现',value:'342,120',type:'Observed',confidence:'Source verified',source:'直播平台',time:'2026-09-18 08:39',definition:'直播曝光、看播与互动层面的聚合观测。'},
+  conversion:{title:'转化率',value:'3.24%',type:'Inferred',confidence:'92%',source:'Commerce model',time:'2026-09-18 08:41',definition:'从当前事实层计算得到的业务转化比例。'},
+  ads:{title:'广告效率',value:'ROI 4.32',type:'Observed',confidence:'Source verified',source:'广告平台',time:'2026-09-18 08:40',definition:'投放成本与收入之间的已验证效率指标。'},
+  gmv:{title:'GMV',value:'¥2,483,221',type:'Simulated',confidence:'92%',source:'电商运营数据库（Production）',time:'2026-09-18 08:48',definition:'在所选时间范围内，通过所有渠道产生的已支付订单商品总金额。当前 World Builder 节点可在情景中呈现模拟输出。'},
+  revenue:{title:'收入',value:'¥2,317,892',type:'Inferred',confidence:'89%',source:'Revenue model',time:'2026-09-18 08:44',definition:'由已观测交易与财务映射规则形成的收入推断。'},
+  repeat:{title:'复购率',value:'28.6%',type:'Observed',confidence:'Source verified',source:'Commerce DB',time:'2026-09-18 08:46',definition:'已购买用户在观察窗口内发生再次购买的比例。'}
+};
+const evidence=[
+ ['08:48','电商数据库','更新 GMV 数据','¥2,483,221 (+12.5%)'],['08:42','内容平台','更新内容互动量','1,204,331 (+18.7%)'],['08:40','广告平台','更新广告投放数据','ROI 4.32 (+9.1%)'],['08:37','系统推断','更新人群分群结果','8 核心人群 (87%)'],['08:39','直播平台','更新直播间表现','342,120 (+15.3%)']
+];
+const scenarios=[['08:20','增长计划','提升广告效率 20%','GMV +18.4%'],['07:45','基准情景','保持当前策略','GMV +2.1%'],['昨日 16:05','下行风险','广告预算 -30%','GMV -12.6%']];
+function money(n){return '¥'+Math.round(n).toLocaleString('zh-CN')}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function setMode(mode){state.mode=mode;$('#landing').classList.toggle('hidden',mode!=='landing');$('#app').classList.toggle('hidden',mode!=='app');$('#landingMode').classList.toggle('active',mode==='landing');$('#appMode').classList.toggle('active',mode==='app');$('#fakeUrl').textContent=mode==='landing'?'https://www.businessworldagent.com':'https://app.businessworldagent.com/'+state.view;if(mode==='app'&&location.hash!=='#'+state.view)setView(state.view||'world')}
+$('#landingMode').onclick=()=>setMode('landing');$('#appMode').onclick=()=>setMode('app');$$('[data-open-app]').forEach(b=>b.onclick=()=>setMode('app'));
+function renderKpis(){const d=state.data;$('#kpiRow').innerHTML=[
+ ['GMV',money(d.gmv),'+12.5%'],['转化率',d.conversion.toFixed(2)+'%','+0.6%'],['内容互动量',d.engagement.toLocaleString(),'+18.7%'],['广告 ROI',d.roi.toFixed(2),'+9.1%'],['复购率',d.repeat.toFixed(1)+'%','+2.3%']
+].map(x=>'<div class="kpi"><div class="label">'+x[0]+'</div><div class="value">'+x[1]+'</div><div class="delta up">较上期 '+x[2]+' ▲</div></div>').join('')}
+function typeClass(type){return type==='Observed'?'obs':type==='Inferred'?'inf':'sim'}
+function renderInspector(key){state.entity=key;const e=entities[key];$('#inspector').innerHTML='<h3>实体详情</h3><div class="entity-title">'+e.title+'</div><div class="muted tiny">业务实体 / 指标</div><div class="entity-value">'+e.value+'</div><div class="irow"><span>状态</span><span class="state-pill '+typeClass(e.type)+'">'+e.type+'</span></div><div class="irow"><span>置信度</span><b>'+e.confidence+'</b></div><div class="irow"><span>数据来源</span><b>'+e.source+'</b></div><div class="irow"><span>更新时间</span><b>'+e.time+'</b></div><div class="idesc"><b style="color:#1b2f50">定义</b><br>'+e.definition+'</div><div class="iactions"><button data-action="factor">查看相关因子</button><button data-action="simulate">在新场景中模拟</button><button data-action="watch">添加监控</button><button data-action="history">查看历史趋势</button></div>';
+ $$('#inspector [data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='simulate')setView('experiment');else toast('已执行：'+b.textContent)})}
+$$('.node').forEach(n=>n.onclick=()=>renderInspector(n.dataset.entity));
+function renderEvidence(){const rows=a=>a.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('');$('#evidenceBody').innerHTML=rows(evidence);$('#scenarioBody').innerHTML=rows(scenarios)}
+
+function deepTable(headers,rows){return '<table class="deep-table"><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+function metricCards(items){return '<div class="metric-row">'+items.map(x=>'<div class="metric"><label>'+x[0]+'</label><strong>'+x[1]+'</strong><span class="delta '+(String(x[2]).includes('-')?'down':'up')+'">较上期 '+x[2]+'</span></div>').join('')+'</div>'}
+function renderDeep(id){
+ const el=$('#view-'+id);if(!el)return;
+ if(id==='overview'){
+  el.innerHTML='<div class="deep-page">'+metricCards([['GMV','¥2,483,221','+12.5% ▲'],['转化率','3.24%','+0.6% ▲'],['内容互动量','1,204,331','+18.7% ▲'],['广告 ROI','4.32','+9.1% ▲'],['复购率','28.6%','+2.3% ▲']])+
+  '<div class="grid-4"><div class="card"><h3>经营总览</h3><div class="card-sub">数据更新：2026-09-18 09:32</div><div class="stack"><div class="alert-row green"><b>↑</b><div><b>今日最强信号</b><p>直播渠道 GMV 环比 +35%，占总 GMV 35.9%。</p></div></div><div class="alert-row red"><b>!</b><div><b>最大风险</b><p>信息流 CPC 上升 21%，可能影响后续 ROI。</p></div></div><div class="alert-row blue"><b>✦</b><div><b>建议行动</b><p>加大高互动内容投放，并与晚间直播联动。</p></div></div></div></div>'+
+  '<div class="card span-2"><div class="panel-head"><div><h3>近30天核心指标趋势</h3><div class="card-sub">GMV / 广告 ROI / 转化率</div></div><span class="selectish">近30天 ▾</span></div><div class="mini-chart"><svg viewBox="0 0 600 160" preserveAspectRatio="none"><polyline fill="none" stroke="#2468e8" stroke-width="3" points="0,120 60,112 120,118 180,102 240,109 300,90 360,86 420,62 480,74 540,50 600,56"/><polyline fill="none" stroke="#24a56b" stroke-width="2" points="0,75 60,70 120,82 180,68 240,73 300,92 360,80 420,86 480,78 540,82 600,76"/><polyline fill="none" stroke="#8066de" stroke-width="2" points="0,118 60,115 120,116 180,112 240,114 300,110 360,112 420,104 480,108 540,105 600,103"/></svg></div><div class="legend"><span><i style="background:#2468e8"></i>GMV</span><span><i style="background:#24a56b"></i>广告 ROI</span><span><i style="background:#8066de"></i>转化率</span></div></div>'+
+  '<div class="card"><div class="panel-head"><h3>告警与机会</h3><a>查看全部 →</a></div><b class="tiny" style="color:#c33f4d">告警 (3)</b><div class="stack" style="margin-top:6px"><div class="alert-row red"><div class="grow"><b>广告渠道 ROI 连续3天下降</b><p>较上周同期 -28%</p></div></div><div class="alert-row red"><div class="grow"><b>电商转化率低于预期</b><p>当前 2.1% / 类目均值 3.5%</p></div></div><div class="alert-row red"><div class="grow"><b>部分商品库存预警</b><p>3 个核心 SKU 低于安全线</p></div></div></div><b class="tiny" style="color:#15965f">机会 (3)</b><div class="stack" style="margin-top:6px"><div class="alert-row green"><div class="grow"><b>短视频互动快速上升</b><p>近3天 +42%</p></div></div><div class="alert-row green"><div class="grow"><b>直播预约持续增长</b><p>较上周 +65%</p></div></div></div></div></div>'+
+  '<div class="grid-4"><div class="card" data-jump="content"><h3>内容 ↗</h3><strong style="font-size:20px">¥620,811</strong><div class="muted tiny">贡献占比 25.0% · +18.3%</div></div><div class="card" data-jump="live"><h3>直播 ↗</h3><strong style="font-size:20px">¥892,441</strong><div class="muted tiny">贡献占比 35.9% · +35.0%</div></div><div class="card" data-jump="product"><h3>电商 ↗</h3><strong style="font-size:20px">¥721,334</strong><div class="muted tiny">贡献占比 29.0% · +6.8%</div></div><div class="card" data-jump="growth"><h3>投放 ↗</h3><strong style="font-size:20px">¥248,635</strong><div class="muted tiny">贡献占比 10.0% · +2.1%</div></div></div>'+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><h3>经营事件时间线</h3><div class="toolbar"><span class="selectish">全部事件 ▾</span><span class="selectish">全部状态 ▾</span></div></div>'+deepTable(['时间','来源','事件','状态','影响'],[['14:32','电商数据库','更新 GMV 数据','<span class="chip green">成功</span>','GMV +12.5%'],['13:41','直播平台','618 预热专场','<span class="chip green">成功</span>','直播 GMV +35%'],['11:22','广告平台','信息流 CPC 升至 1.45','<span class="chip red">告警</span>','预计 ROI -18%'],['10:15','内容平台','短视频播放破 100 万','<span class="chip green">成功</span>','互动量 +42%']])+'</div><div class="card"><h3>数据新鲜度</h3>'+deepTable(['数据源','最后更新','状态'],[['电商数据库','09:31','<span class="chip green">正常</span>'],['内容平台','09:28','<span class="chip green">正常</span>'],['直播平台','09:29','<span class="chip green">正常</span>'],['广告平台','09:25','<span class="chip green">正常</span>']])+'<hr style="border:0;border-top:1px solid #edf1f5"><h3>Agent 建议</h3><div class="stack"><div class="list-row"><div class="numx">1</div><div class="grow"><b>加大直播投放力度</b><p>未来7天 +20% 预算，优先晚间时段。</p></div><span class="chip green">高优</span></div><div class="list-row"><div class="numx">2</div><div class="grow"><b>优化广告素材与定向</b><p>聚焦高转化人群，预计 CAC -15~25%。</p></div></div></div><button class="btn primary" style="width:100%;margin-top:10px" data-demo="plan">✦ 一键生成执行方案</button></div></div></div>';
+ }
+ if(id==='persona'){
+  const cards=[['👩🏻','新手妈妈','1,204,331','24.8%','安全成分','育儿便捷','2.3 次/月','Observed'],['👨🏻','囤货型家庭','842,120','17.3%','大包装','囤货优惠','1.8 次/月','Observed'],['👩🏻‍🦱','敏感肌关注者','682,415','14.1%','温和成分','专业背书','2.1 次/月','Inferred'],['🧑🏻','高复购老客','1,026,778','21.2%','品质保证','会员权益','4.6 次/月','Observed']];
+  el.innerHTML='<div class="deep-page"><div class="deep-header"><div><h2>Persona Studio <span class="tiny muted">策略模板 ≠ 观测事实</span></h2><div class="sub">基于真实数据洞察消费者人群，连接行为、内容与生意。</div></div><div class="push seg"><button class="active">已观测 (Observed)</button><button>推断 (Inferred)</button><button>模板 (Template)</button></div></div>'+
+  '<div class="persona-grid">'+cards.map((p,i)=>'<div class="persona-card '+(i===0?'selected':'')+'"><div class="persona-top"><div class="persona-avatar">'+p[0]+'</div><div><div class="persona-title">'+p[1]+'</div><span class="chip '+(p[7]==='Observed'?'green':'purple')+'">'+p[7]+'</span></div></div><div class="persona-stats"><div><span class="tiny muted">人群规模</span><strong>'+p[2]+'</strong></div><div><span class="tiny muted">占总人群</span><strong>'+p[3]+'</strong></div></div><div class="tags"><span class="tag">'+p[4]+'</span><span class="tag">'+p[5]+'</span></div><div class="tiny" style="margin-top:8px">购买频次 <b>'+p[6]+'</b></div></div>').join('')+'</div>'+
+  '<div class="grid-3"><div class="card"><h3>人群分布</h3><div style="display:grid;grid-template-columns:160px 1fr;align-items:center"><div class="donut"><div class="donut-center">4,855,644<small>总人群规模</small></div></div><div class="legend-list"><span><b>新手妈妈</b>24.8%</span><span><b>高复购老客</b>21.2%</span><span><b>囤货型家庭</b>17.3%</span><span><b>敏感肌关注者</b>14.1%</span><span><b>精致白领</b>11.5%</span></div></div></div>'+
+  '<div class="card"><div class="panel-head"><h3>关键行为信号</h3><span class="selectish">新手妈妈 ▾</span></div><div class="signal-row muted"><b>行为信号</b><b>占比</b><b>强度</b><b>置信度</b></div>'+[['夜间下单（22-2点）','38.6%','82','92%'],['复购周期 ≤30天','62.4%','88','88%'],['直播停留 ≥3分钟','71.2%','75','85%'],['内容收藏（育儿类）','68.7%','90','90%'],['搜索“婴儿/成分”','54.1%','73','86%'],['加购后7天内下单','46.3%','58','78%']].map(s=>'<div class="signal-row"><span>'+s[0]+'</span><span>'+s[1]+'</span><div class="strength"><i style="width:'+s[2]+'%"></i></div><b>'+s[3]+'</b></div>').join('')+'</div>'+
+  '<div class="card"><h3>人群详情：新手妈妈 <span class="chip green">已观测</span></h3><p class="muted tiny">0-3岁宝宝的年轻妈妈 · “关注宝宝健康与安全，也希望育儿更轻松。”</p><div class="irow"><span>人群定义</span><b>22-35岁育儿女性</b></div><div class="irow"><span>证据来源</span><b>订单 / 内容 / CRM / 直播</b></div><div class="irow"><span>置信度</span><b>92%</b></div><h3 style="margin-top:12px">核心购买品类</h3><div class="tags"><span class="tag">婴儿洗护 32.1%</span><span class="tag">纸尿裤 28.4%</span><span class="tag">湿巾 18.7%</span></div><h3 style="margin-top:12px">建议动作</h3><div class="stack"><div class="list-row"><div class="grow"><b>加大夜间内容与直播排期</b></div><button class="btn">创建任务</button></div><div class="list-row"><div class="grow"><b>联合育儿 KOL 做成分科普</b></div><button class="btn">创建任务</button></div></div></div></div>'+
+  '<div class="grid-2"><div class="card"><div class="panel-head"><h3>生命周期 & 漏斗</h3><span class="selectish">近30天 ▾</span></div><div class="lifecycle">'+[['认知','100%','1,204,331'],['兴趣','68.2%','821,354'],['考虑','42.1%','507,024'],['购买','18.6%','224,005'],['复购','9.8%','117,654']].map(x=>'<div class="life">'+x[0]+'<b>'+x[1]+'</b><small>'+x[2]+'</small></div>').join('')+'</div></div><div class="card"><div class="panel-head"><h3>证据与来源</h3><a>查看全部 →</a></div>'+deepTable(['时间','来源','事件','关键数据'],[['14:28','CRM','新增用户画像','+12,431 人'],['13:42','订单系统','婴儿洗护品类购买','+8,231 单'],['11:21','内容平台','育儿类内容互动','+56,782 次'],['10:03','直播平台','母婴专场直播','+32,118 人次']])+'</div></div></div>';
+ }
+ if(id==='content'){
+  el.innerHTML='<div class="deep-page">'+metricCards([['内容互动量','1,204,331','+18.7% ▲'],['完播率','24.6%','+2.3% ▲'],['收藏率','8.9%','+1.6% ▲'],['私信转化','2.1%','+0.4% ▲'],['内容 ROI','4.32','+9.1% ▲']])+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><div><h3>内容策略工作台</h3><div class="card-sub">主题机会 · 表现复盘 · 发布计划</div></div><div class="toolbar"><span class="selectish">全部渠道 ▾</span><span class="selectish">近30天 ▾</span><button class="btn primary" data-demo="topic">+ 新建主题</button></div></div><h3>内容主题机会矩阵</h3><div class="bubble-area"><div class="bubble" style="left:12%;top:12%;width:48px;height:48px;background:#42b97b">夜间防漏<br>ROI 5.6</div><div class="bubble" style="left:60%;top:20%;width:44px;height:44px;background:#4f91f0">夏季透气<br>ROI 4.8</div><div class="bubble" style="left:46%;top:42%;width:38px;height:38px;background:#8066de">性价比<br>ROI 3.9</div><div class="bubble" style="left:75%;top:55%;width:40px;height:40px;background:#ee9844">敏感肌<br>ROI 3.4</div><div class="bubble" style="left:18%;top:62%;width:36px;height:36px;background:#ef7282">囤货攻略<br>ROI 3.1</div></div><div style="margin-top:16px"><h3>高表现内容 Top 10</h3>'+deepTable(['#','标题','渠道','曝光','互动','收藏率','关联 SKU','状态'],[['1','一整晚不漏！实测这款纸尿裤…','抖音','1,234,567','86,321','12.4%','BW-XL-001','<span class="chip green">已发布</span>'],['2','夏天纸尿裤会闷热吗？3个实测结论','抖音','982,341','64,210','10.8%','BW-L-002','<span class="chip green">已发布</span>'],['3','618囤货攻略！这样买省下一半','小红书','856,233','52,334','9.6%','BW-M-003','<span class="chip green">已发布</span>'],['4','敏感肌宝宝实测30天','小红书','743,221','48,921','8.1%','BW-S-001','<span class="chip green">已发布</span>']])+'</div></div>'+
+  '<div class="card"><div class="panel-head"><h3>内容机会队列</h3><a>查看全部 →</a></div><div class="stack">'+[['夏季透气裤尿不闷热？3个实测方法','高优','互动 +38%'],['夜间防漏实测：一整晚干爽的秘密','高优','完播率 +42%'],['618 性价比囤货攻略','中优','转化 +28%'],['敏感肌宝宝也能安心用吗？','中优','收藏 +31%'],['从出生到学步：不同阶段怎么选','低优','互动 +20%']].map((x,i)=>'<div class="list-row"><div class="numx">'+(i+1)+'</div><div class="grow"><b>'+x[0]+'</b><p>目标人群：核心育儿人群</p></div><span class="chip '+(x[1]==='高优'?'red':x[1]==='中优'?'orange':'blue')+'">'+x[1]+'</span><b class="tiny" style="color:#15965f">'+x[2]+'</b></div>').join('')+'</div></div></div>'+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><h3>本周内容日历</h3><span>2026年9月 第3周</span></div><div class="calendar">'+[['周一','短视频','夏季透气'],['周二','图文','敏感肌科普'],['周三','直播','囤货专场'],['周四','短视频','夜间防漏'],['周五','图文','新生儿选购'],['周六','短视频','宝妈测评'],['周日','直播','专家答疑']].map((d,i)=>'<div class="day"><b>'+d[0]+'</b><span><i class="eventdot" style="background:'+(i%3===0?'#36b57b':i%3===1?'#4f91f0':'#8066de')+'"></i>'+d[1]+'</span><div class="muted" style="margin-top:7px">'+d[2]+'</div></div>').join('')+'</div></div><div class="card"><h3>评论洞察</h3>'+deepTable(['关注点','占比'],[['防漏效果怎么样？','28.4%'],['夏天会不会闷热？','22.1%'],['会红屁屁吗？','18.6%'],['尺码怎么选？','15.2%']])+'<h3 style="margin-top:12px">Agent 建议 <span class="chip blue">Beta</span></h3><p class="muted tiny">优先围绕「夏季透气」和「夜间防漏」创作，预计互动 +38%。</p><div class="toolbar"><button class="btn primary" data-demo="brief">生成 brief</button><button class="btn">加入计划</button></div></div></div></div>';
+ }
+ if(id==='live'){
+  el.innerHTML='<div class="deep-page">'+metricCards([['直播间表现','¥2,483,221','+12.5% ▲'],['进房率','18.6%','+2.3% ▲'],['停留时长','2分36秒','+18.4% ▲'],['加购率','8.9%','+1.7% ▲'],['成交转化','4.32%','+0.8% ▲']])+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><div><h3>直播漏斗</h3><div class="card-sub">从曝光到支付的全链路转化</div></div><span class="selectish">近7天均值 ▾</span></div><div class="funnel">'+[['曝光','1,260,432','12.8%'],['进房','161,342','62.3%'],['停留','100,548','28.6%'],['点击商品','28,784','41.7%'],['加购','12,008','34.5%'],['支付','4,140','']].map(x=>'<div class="fstep">'+x[0]+'<b>'+x[1]+'</b><small>'+x[2]+'</small></div>').join('')+'</div></div>'+
+  '<div class="command-card"><div class="panel-head"><h3>直播指挥卡</h3><span class="live-badge">● 直播中</span></div><div class="host-box"><div class="host-visual">🎥</div><div><b>夏日焕新专场 · 母婴护理</b><p class="muted tiny">已直播 2小时32分 · 12.4万 在线</p><span class="chip orange">金牌主播 · 林小美</span></div></div><div class="alert-row red"><b>!</b><div><b>重点预警</b><p>近5分钟进房率下降 28%，建议增加流量投放。</p></div></div><h3 style="margin-top:10px">运营建议</h3><div class="stack"><div class="list-row"><div class="numx">1</div><div class="grow"><b>加大福袋投放频次</b></div><button class="btn">去执行</button></div><div class="list-row"><div class="numx">2</div><div class="grow"><b>强化爆款商品讲解</b></div><button class="btn">去执行</button></div></div></div></div>'+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><h3>场次表现</h3><div class="seg"><button class="active">近7天</button><button>近30天</button></div></div><div class="bar-chart">'+[65,72,61,78,96,125,118,140].map((h,i)=>'<div class="bar-group"><div class="bar b" style="height:'+h+'px"></div><div class="bar p" style="height:'+Math.round(h*.45)+'px"></div><span class="bar-label">09/'+(11+i)+'</span></div>').join('')+'</div></div><div class="card"><h3 data-jump="persona">观众画像 ↗</h3><div style="display:grid;grid-template-columns:150px 1fr"><div class="donut"><div class="donut-center">32.8万<small>累计观看</small></div></div><div class="legend-list"><span>18-24岁 <b>28.4%</b></span><span>25-34岁 <b>42.1%</b></span><span>35-44岁 <b>20.3%</b></span><span>45岁+ <b>9.2%</b></span></div></div><div class="tiny" style="margin-top:12px">女性 72.3%　████████████░░　男性 27.7%</div></div></div>'+
+  '<div class="grid-3"><div class="card span-2"><h3>场次明细</h3>'+deepTable(['开播时间','主播','直播时长','观看人次','加购人数','成交金额','ROI','状态'],[['09-18 14:00','林小美','2h32m','32.8万','1.6万','¥248.3万','4.32','<span class="chip green">直播中</span>'],['09-17 19:00','林小美','4h12m','48.1万','2.8万','¥421.6万','5.21','已结束'],['09-16 14:00','王大力','3h56m','41.2万','2.1万','¥356.8万','4.87','已结束']])+'</div><div class="card"><h3>实时问题</h3>'+deepTable(['时间','用户留言','类型'],[['14:31','这个纸尿裤适合敏感肌吗？','商品咨询'],['14:28','什么时候发货？','发货物流'],['14:26','有没有大尺码？','尺码问题'],['14:24','这是正品吗？','正品保障']])+'</div></div></div>';
+ }
+ if(id==='growth'){
+  el.innerHTML='<div class="deep-page">'+metricCards([['广告花费','¥428,320','-8.2% ▼'],['广告 ROI','4.32','+12.6% ▲'],['CPA','¥36.8','-14.2% ▼'],['CTR','2.36%','+0.8% ▲'],['新客成本','¥58.3','-17.1% ▼']])+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><div><h3>投放优化中心</h3><div class="card-sub">多渠道预算配置与 ROI 优化</div></div><div class="seg"><button class="active">预算分配</button><button>效果趋势</button><button>渠道对比</button></div></div><div class="budget-wrap"><div class="budget-donut"><div class="budget-total">¥428,320<small>今日消耗</small></div></div><div><div class="legend-list"><span><b>千川</b>40.2% · ¥172,260</span><span><b>抖音信息流</b>32.5% · ¥139,020</span><span><b>搜索</b>18.3% · ¥78,420</span><span><b>再营销</b>9.0% · ¥38,620</span></div><h3 style="margin-top:14px">花费与 ROI 趋势</h3><div class="mini-chart"><svg viewBox="0 0 600 160" preserveAspectRatio="none"><polyline fill="none" stroke="#24a56b" stroke-width="3" points="0,115 80,112 160,82 240,72 320,92 400,48 480,62 600,52"/></svg></div></div></div><div style="margin-top:14px">'+deepTable(['活动名称','渠道','预算','消耗','ROI','CPA','CTR','状态','建议'],[['夏季爆款-兴趣定向','千川','¥100k','¥96.3k','5.8','¥28.4','3.12%','<span class="chip green">投放中</span>','提升预算 +30%'],['达人种草-视频A','信息流','¥80k','¥76.4k','3.9','¥42.1','2.48%','<span class="chip green">投放中</span>','保持投放'],['品牌词-搜索','搜索','¥50k','¥48.2k','4.6','¥31.6','4.21%','<span class="chip green">投放中</span>','小幅加预算'],['泛人群-视频A','信息流','¥60k','¥52.4k','0.8','¥128.6','0.96%','<span class="chip red">已暂停</span>','建议暂停']])+'</div></div>'+
+  '<div class="card"><h3>优化建议</h3><div class="stack">'+[['提升千川优质计划预算','高优','ROI 5.8，高于账户均值'],['暂停低效计划','高优','近7天 ROI 0.8'],['扩量相似人群','中优','1% → 3% lookalike'],['更新创意素材','中优','CTR 连续下降'],['优化投放时段','低优','减少深夜预算']].map(x=>'<div class="list-row"><div class="grow"><b>'+x[0]+'</b><p>'+x[2]+'</p></div><span class="chip '+(x[1]==='高优'?'red':x[1]==='中优'?'orange':'blue')+'">'+x[1]+'</span></div>').join('')+'</div></div></div>'+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><h3>实验与假设</h3><button class="btn primary" data-demo="adexp">+ 新建实验</button></div>'+deepTable(['实验名称','类型','测试组 vs 对照组','核心指标','当前结果','状态'],[['创意素材对比测试','A/B','新视频 vs 现有','CTR','+42%','<span class="chip green">进行中</span>'],['出价策略实验','投放实验','自动出价 vs 目标 ROI','ROI','+28%','<span class="chip green">进行中</span>'],['人群圈层扩展','人群实验','1% vs 3% 相似人群','新客成本','-22%','<span class="chip blue">已完成</span>']])+'</div><div class="card"><h3>风险监控</h3><div class="stack"><div class="alert-row red"><div class="grow"><b>预算超支风险</b><p>2 个计划 >90%</p></div><span class="chip red">高</span></div><div class="alert-row" style="background:#fff7ec"><div class="grow"><b>创意疲劳风险</b><p>3 个计划 CTR 连降</p></div><span class="chip orange">中</span></div><div class="alert-row blue"><div class="grow"><b>归因延迟提醒</b><p>搜索渠道 1-3 天延迟</p></div></div></div></div></div></div>';
+ }
+ if(id==='product'){
+  el.innerHTML='<div class="deep-page">'+metricCards([['GMV','¥2,483,221','+12.5% ▲'],['单品转化率','3.24%','+0.6% ▲'],['新客占比','28.6%','+2.3% ▲'],['售罄率','32.1%','+5.7% ▲'],['退款率','1.9%','-0.4% ▼']])+
+  '<div class="grid-3"><div class="card span-2"><div class="panel-head"><div><h3>商品组合表现</h3><div class="card-sub">按品类查看销售与关键指标</div></div><div class="toolbar"><span class="selectish">按品类 ▾</span><span class="selectish">最近30天 ▾</span></div></div><div class="bar-chart">'+[[120,48],[98,37],[46,29],[33,12]].map((a,i)=>'<div class="bar-group"><div class="bar b" style="height:'+a[0]+'px"></div><div class="bar g" style="height:'+a[1]+'px"></div><span class="bar-label">'+['拉拉裤','纸尿裤','湿巾','夜用款'][i]+'</span></div>').join('')+'</div><div style="margin-top:18px"><h3>SKU 销售排行</h3>'+deepTable(['#','SKU','商品名称','销售额','转化率','客单价','库存周转','退款率','利润率','状态'],[['1','BWA-L-001','云柔透气拉拉裤 L码','¥682,331','4.8%','¥89','6.8','1.2%','32.5%','<span class="chip green">爆款</span>'],['2','BWA-M-001','云柔透气拉拉裤 M码','¥421,228','4.1%','¥89','5.2','1.6%','31.8%','<span class="chip orange">热销</span>'],['3','BWA-D-001','超薄纸尿裤 日用款','¥398,115','3.2%','¥76','4.1','2.1%','28.6%','正常'],['4','BWA-W-001','婴儿手口湿巾 80抽','¥241,662','2.7%','¥29.9','8.1','0.9%','35.2%','正常']])+'</div></div>'+
+  '<div class="card"><h3>商品详情</h3><div class="product-hero"><div class="product-img">🧷</div><div><span class="chip purple">明星单品</span><b style="display:block;margin:6px 0">BWA Baby 云柔透气拉拉裤 L码</b><strong style="font-size:20px">¥89.00</strong><div class="tiny muted">SKU BWA-L-001 · 拉拉裤</div></div></div><div class="irow" data-jump="persona"><span>核心人群 ↗</span><b>25-34岁女性 · 68.2%</b></div><div class="irow"><span>核心渠道</span><b>抖音 · 52.6%</b></div><h3 style="margin-top:10px">尺码分布</h3><div class="tiny">M 12%　L 46%　XL 28%　XXL 14%</div><div class="sizebar"><i></i><i></i><i></i><i></i></div><div class="alert-row red" style="margin-top:12px"><b>!</b><div><b>核心问题</b><p>L码预计3天内售罄；部分反馈尺码偏小。</p></div></div></div></div>'+
+  '<div class="grid-4"><div class="card"><h3>库存与风险</h3>'+deepTable(['商品','库存','预警'],[['夜用 XXL','320','≤3天'],['拉拉裤 L','650','≤5天'],['湿巾80抽','1,200','≤7天']])+'</div><div class="card"><h3>组合搭配 / 关联购买</h3>'+deepTable(['组合','关联率','客单提升'],[['拉拉裤 L + 湿巾','28.4%','+¥24.5'],['纸尿裤 + 湿巾','22.1%','+¥19.8'],['夜用 XL + 护臀膏','17.6%','+¥32.0']])+'</div><div class="card"><h3>退货与反馈</h3>'+deepTable(['原因','占比','较上期'],[['尺码不合适','38.2%','-6.1%'],['有红屁屁','21.6%','+2.3%'],['吸收效果不佳','15.8%','+1.1%'],['材质过敏','12.1%','+0.5%']])+'</div><div class="card"><h3>Agent 建议</h3><div class="stack"><div class="list-row"><div class="numx">1</div><div class="grow"><b>加大 L码备货</b><p>建议补货 3,000 件。</p></div></div><div class="list-row"><div class="numx">2</div><div class="grow"><b>优化纸尿裤定价</b><p>尝试下调 5-8%。</p></div></div><div class="list-row"><div class="numx">3</div><div class="grow"><b>打造组合套装</b><p>预计客单价 +20%。</p></div></div></div></div></div></div>';
+ }
+}
+['overview','persona','content','live','growth','product'].forEach(renderDeep);
+
+function setView(id,route=true){state.view=id;$$('.view').forEach(v=>v.classList.remove('active'));$('#view-'+id)?.classList.add('active');$$('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===id));$('#fakeUrl').textContent='https://app.businessworldagent.com/'+id;if(route&&state.mode==='app'&&location.hash!=='#'+id)history.replaceState(null,'','#'+id);if(id==='world')renderInspector(state.entity);$('#searchResults').classList.add('hidden');setTimeout(wireInteractiveSurfaces,0)}
+$$('.navbtn').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+const navIndex=[['overview','总览'],['persona','Persona Studio'],['world','World Builder'],['content','内容策略'],['live','直播作战室'],['growth','投放优化'],['product','商品分析'],['experiment','模拟实验'],['report','报告']];
+$('#searchInput').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();const r=$('#searchResults');if(!q){r.classList.add('hidden');return}const matches=navIndex.filter(x=>x[1].toLowerCase().includes(q)||x[0].includes(q));r.innerHTML=matches.length?matches.map(x=>'<button data-go="'+x[0]+'">'+x[1]+'</button>').join(''):'<div class="muted tiny" style="padding:10px">没有匹配页面</div>';r.classList.remove('hidden');r.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{setView(b.dataset.go);$('#searchInput').value=''})});
+$('#refreshBtn').onclick=()=>{const now=new Date();$('#sourceTime').textContent='最后更新：'+now.toLocaleString('zh-CN',{hour12:false});toast('已刷新 Business World 状态')};
+$$('#scenarioSeg button').forEach(b=>b.onclick=()=>{$$('#scenarioSeg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.scenario=b.dataset.scenario;const factor=state.scenario==='growth' ? 1.184 : state.scenario==='downside' ? 0.874 : 1;const modeled=Math.round(state.data.gmv*factor);$('#graphGmv').textContent=money(modeled);entities.gmv.value=money(modeled);renderInspector('gmv')});
+$('#runSim').onclick=()=>{const b=$('#runSim');const old=b.textContent;b.disabled=true;b.textContent='计算中…';setTimeout(()=>{b.disabled=false;b.textContent=old;toast('情景已重新计算并写入模拟记录')},650)};
+function openSource(){$('#sourceModal').classList.remove('hidden')}function closeSource(){$('#sourceModal').classList.add('hidden')}
+$('#sourceBtn').onclick=openSource;$('#closeSource').onclick=closeSource;$('#cancelSource').onclick=closeSource;$('#sourceModal').addEventListener('click',e=>{if(e.target.id==='sourceModal')closeSource()});
+$('#saveSource').onclick=()=>{state.data.gmv=Number($('#editGmv').value)||0;state.data.conversion=Number($('#editConversion').value)||0;state.data.roi=Number($('#editRoi').value)||0;state.data.repeat=Number($('#editRepeat').value)||0;entities.gmv.value=money(state.data.gmv);entities.conversion.value=state.data.conversion.toFixed(2)+'%';entities.ads.value='ROI '+state.data.roi.toFixed(2);entities.repeat.value=state.data.repeat.toFixed(1)+'%';$('#graphGmv').textContent=money(state.data.gmv);renderKpis();renderInspector(state.entity);closeSource();toast('真实数据快照已更新（原型内存状态）')};
+$('#expRun').onclick=()=>{const lever=$('#expLever').selectedOptions[0].textContent,p=Number($('#expChange').value)||0,m=1+p/100;const gmv=Math.round(state.data.gmv*m),roi=(state.data.roi*m).toFixed(2),conv=(state.data.conversion*m).toFixed(2);$('#expResult').innerHTML='<h3>模拟完成 · '+lever+' '+(p>=0?'+':'')+p+'%</h3><div class="sim-grid"><div class="sim-cell">Baseline GMV<b style="display:block;font-size:20px">'+money(state.data.gmv)+'</b></div><div class="sim-cell">Modeled GMV<b style="display:block;font-size:20px">'+money(gmv)+'</b></div><div class="sim-cell">Modeled ROI<b style="display:block;font-size:20px">'+roi+'</b></div><div class="sim-cell">Modeled CVR<b style="display:block;font-size:20px">'+conv+'%</b></div></div><p class="muted tiny">Scenario output 是对持久化基线的透明数学模型，不是已观测市场结果，也不是 AI 预测。</p>';toast('Scenario run 已生成')};
+$('#downloadReport').onclick=()=>{const text='Business World Agent 报告\nGMV: '+money(state.data.gmv)+'\nROI: '+state.data.roi+'\n复购率: '+state.data.repeat+'%\n\nObserved / Inferred / Simulated 已分层。';const blob=new Blob([text],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='business-world-report.txt';a.click();URL.revokeObjectURL(a.href);toast('报告已生成')};
+
+let pendingDetailAction=null;
+function openDetail(title,body,opts={}){
+  $('#detailEyebrow').textContent=opts.eyebrow||'DETAIL';
+  $('#detailTitle').textContent=title||'详情';
+  $('#detailBody').innerHTML=body||'<p>该交互已接通。</p>';
+  $('#detailNote').textContent=opts.note||'这是交互原型：高风险或外部写操作不会直接执行。';
+  $('#confirmDetail').textContent=opts.confirm||'确认';
+  $('#confirmDetail').classList.toggle('hidden',opts.confirm===false);
+  pendingDetailAction=opts.onConfirm||null;
+  $('#detailModal').classList.remove('hidden');
+}
+function closeDetail(){$('#detailModal').classList.add('hidden');pendingDetailAction=null}
+$('#closeDetail').onclick=closeDetail;$('#cancelDetail').onclick=closeDetail;
+$('#detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail()});
+$('#confirmDetail').onclick=()=>{if(pendingDetailAction)pendingDetailAction();toast('已确认（原型）');closeDetail()};
+function wireInteractiveSurfaces(){
+  $$('.list-row,.fstep,.bubble,.deep-table tbody tr,.metric,.persona-card,[data-jump],a:not([href])').forEach(el=>{
+    if(!el.hasAttribute('tabindex'))el.tabIndex=0;
+    if(!el.hasAttribute('role'))el.setAttribute('role','button');
+  });
+}
+function actionLabel(el){return (el?.textContent||'').replace(/\s+/g,' ').trim()}
+document.addEventListener('click',e=>{
+  const jump=e.target.closest('[data-jump]');
+  if(jump){e.preventDefault();setMode('app');setView(jump.dataset.jump);toast('已打开：'+($('.navbtn[data-view="'+jump.dataset.jump+'"] span:last-child')?.textContent||jump.dataset.jump));return}
+
+  const pc=e.target.closest('.persona-card');
+  if(pc){
+    $$('.persona-card').forEach(x=>x.classList.remove('selected'));
+    pc.classList.add('selected');
+    openDetail(pc.querySelector('.persona-title')?.textContent||'Persona','<div class="detail-meta"><div><small>状态</small>Observed / Inferred</div><div><small>证据</small>订单、内容、CRM、直播</div></div><p>已切换当前 Persona。行为信号、生命周期和证据区域应同步刷新。</p>',{eyebrow:'PERSONA',confirm:false});
+    return;
+  }
+
+  const seg=e.target.closest('.seg button');
+  if(seg && !seg.closest('#scenarioSeg')){
+    [...seg.parentElement.querySelectorAll('button')].forEach(x=>x.classList.remove('active'));
+    seg.classList.add('active');toast('视图已切换：'+actionLabel(seg));return;
+  }
+
+  const demo=e.target.closest('[data-demo]');
+  if(demo){openDetail(actionLabel(demo),'<p>该入口现在已接通。生产实现会进入相应的编辑/创建流程，而不是停留在无响应状态。</p>',{eyebrow:'PROTOTYPE ACTION'});return}
+
+  const btn=e.target.closest('button.btn');
+  if(btn && !btn.id && !btn.dataset.jump){
+    const label=actionLabel(btn);
+    if(label==='登录'){setMode('app');setView('overview');toast('已进入产品原型');return}
+    if(label.includes('预约演示')){openDetail('预约演示','<p>演示预约入口已接通。正式产品在这里收集联系人、公司、时间与需求信息。</p><div class="detail-meta"><div><small>类型</small>Demo request</div><div><small>状态</small>Draft</div></div>',{eyebrow:'DEMO',confirm:'提交预约'});return}
+    if(label.includes('保存为情景')){openDetail('保存为情景','<p>保存当前 lever、变化幅度、时间范围、假设和 modeled result。</p>',{eyebrow:'SCENARIO',confirm:'保存'});return}
+    if(label.includes('查看完整报告')){openDetail('完整报告','<p>完整报告包含经营概览、内容、直播、投放、商品、风险与机会，并保留关键结论的证据链接。</p>',{eyebrow:'REPORT',confirm:false});return}
+    if(label.includes('导出 PPT')){toast('已生成 PPT 导出任务（原型）');return}
+    if(label.includes('分享链接')){navigator.clipboard?.writeText(location.href).then(()=>toast('分享链接已复制')).catch(()=>toast('分享链接已准备'));return}
+    if(label.includes('发送到邮箱')){openDetail('发送到邮箱','<p>请选择收件人并确认发送。原型不会真实发送邮件。</p>',{eyebrow:'DISTRIBUTE',confirm:'确认发送'});return}
+    if(label.includes('保存备注')){toast('备注已保存（原型）');return}
+    if(label.includes('创建任务')){openDetail('创建任务','<p>将该建议转成待办任务，并保留 Persona / evidence 上下文。</p>',{eyebrow:'TASK',confirm:'创建任务'});return}
+    if(label.includes('加入计划')){toast('已加入发布计划（原型）');return}
+    if(label.includes('去执行')){
+      openDetail('执行前确认','<div class="alert-row red"><b>!</b><div><b>需要人工确认</b><p>这是可能影响真实业务的动作。生产版本必须展示目标、变更、预期影响与回滚方式。</p></div></div>',{eyebrow:'HUMAN APPROVAL',confirm:'确认执行'});return
+    }
+    openDetail(label||'操作','<p>该控件已接通原型交互。生产实现应在此进入对应详情、编辑或确认流程。</p>',{eyebrow:'ACTION'});
+    return;
+  }
+
+  const anchor=e.target.closest('a:not([href])');
+  if(anchor){e.preventDefault();openDetail(actionLabel(anchor)||'查看更多','<p>详情入口已接通。这里会展开完整列表或对应详情视图。</p>',{eyebrow:'DETAIL',confirm:false});return}
+
+  const bubble=e.target.closest('.bubble');
+  if(bubble){openDetail(actionLabel(bubble),'<p>内容主题详情：展示目标 Persona、竞争热度、机会强度、关联内容、相关 SKU 与证据。</p>',{eyebrow:'CONTENT OPPORTUNITY',confirm:'创建 Brief'});return}
+
+  const stage=e.target.closest('.fstep');
+  if(stage){openDetail(actionLabel(stage),'<p>漏斗阶段详情：趋势、流失率、证据、影响因素与建议动作。</p>',{eyebrow:'FUNNEL STAGE',confirm:false});return}
+
+  const row=e.target.closest('.deep-table tbody tr');
+  if(row){openDetail('记录详情','<div class="detail-meta"><div><small>记录</small>'+actionLabel(row).slice(0,90)+'</div><div><small>状态</small>可追溯</div></div><p>该行现在可打开详情；正式产品应带上 source / timestamp / entity / provenance。</p>',{eyebrow:'ROW DETAIL',confirm:false});return}
+
+  const item=e.target.closest('.list-row');
+  if(item){openDetail(item.querySelector('b')?.textContent||'建议详情','<p>'+actionLabel(item)+'</p><p>建议项现在可点击进入依据、预期影响和下一步。</p>',{eyebrow:'RECOMMENDATION',confirm:false});return}
+
+  const metric=e.target.closest('.metric');
+  if(metric){openDetail(metric.querySelector('label')?.textContent||'指标详情','<p>查看趋势、来源、更新时间、证据和相关 Business World 节点。</p>',{eyebrow:'METRIC',confirm:false});return}
+
+  const sel=e.target.closest('.selectish');
+  if(sel){toast('筛选器已激活：'+actionLabel(sel));return}
+});
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#searchInput').focus();setMode('app')}
+  if(e.key==='Escape'){closeDetail();closeSource()}
+  if((e.key==='Enter'||e.key===' ')&&document.activeElement?.matches('.list-row,.fstep,.bubble,.deep-table tbody tr,.metric,.persona-card,[data-jump],a:not([href])')){e.preventDefault();document.activeElement.click()}
+});
+window.addEventListener('hashchange',()=>{const id=location.hash.replace('#','');if(navIndex.some(x=>x[0]===id)){setMode('app');setView(id)}});
+renderKpis();renderInspector('gmv');renderEvidence();const initialView=location.hash.replace('#','');if(navIndex.some(x=>x[0]===initialView)){setMode('app');setView(initialView)}else setView('world',false);wireInteractiveSurfaces();
+</script>
+</body>
+</html>
