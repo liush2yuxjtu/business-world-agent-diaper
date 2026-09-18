@@ -3,6 +3,11 @@ import { sql } from "drizzle-orm";
 import { z } from "zod";
 import { db, isDatabaseConfigured } from "@/lib/db/client";
 
+const SUPABASE_URL = "https://mezthyaerhhohywcxmqi.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__DV3WdzjR4_az6k_g5DrTQ_yAlNuQyn";
+const SUPABASE_STATE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state?id=eq.primary&select=id,source_label,source_type,observed_at,updated_at,payload`;
+const SUPABASE_SCENARIO_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_scenario_run`;
+
 export const businessWorldPayloadSchema = z.object({
   content: z.object({
     engagementRate: z.number().min(0).max(100).nullable(),
@@ -29,7 +34,7 @@ export type BusinessWorldPayload = z.infer<typeof businessWorldPayloadSchema>;
 
 export const businessWorldWriteSchema = z.object({
   sourceLabel: z.string().trim().min(2).max(120),
-  sourceType: z.enum(["manual-entry", "csv-import", "official-api"]),
+  sourceType: z.enum(["system-record", "manual-entry", "csv-import", "official-api"]),
   observedAt: z.string().datetime(),
   payload: businessWorldPayloadSchema,
 });
@@ -37,7 +42,7 @@ export const businessWorldWriteSchema = z.object({
 export type BusinessWorldState = {
   id: string;
   sourceLabel: string;
-  sourceType: "manual-entry" | "csv-import" | "official-api";
+  sourceType: "system-record" | "manual-entry" | "csv-import" | "official-api";
   observedAt: string;
   updatedAt: string;
   payload: BusinessWorldPayload;
@@ -77,8 +82,30 @@ async function ensureSchema() {
   schemaReady = true;
 }
 
+async function getSupabaseFallbackState(): Promise<BusinessWorldState | null> {
+  const response = await fetch(SUPABASE_STATE_ENDPOINT, {
+    headers: {
+      apikey: SUPABASE_PUBLISHABLE_KEY,
+      Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`Supabase Business World read failed: ${response.status}`);
+  const rows = (await response.json()) as Array<Record<string, unknown>>;
+  const row = rows[0];
+  if (!row) return null;
+  return {
+    id: String(row.id),
+    sourceLabel: String(row.source_label),
+    sourceType: row.source_type as BusinessWorldState["sourceType"],
+    observedAt: new Date(String(row.observed_at)).toISOString(),
+    updatedAt: new Date(String(row.updated_at)).toISOString(),
+    payload: businessWorldPayloadSchema.parse(row.payload),
+  };
+}
+
 export async function getBusinessWorldState(): Promise<BusinessWorldState | null> {
-  if (!isDatabaseConfigured()) return null;
+  if (!isDatabaseConfigured()) return getSupabaseFallbackState();
   await ensureSchema();
   const result = await db.execute(sql`
     select id, source_label, source_type, observed_at, updated_at, payload
@@ -87,7 +114,7 @@ export async function getBusinessWorldState(): Promise<BusinessWorldState | null
     limit 1
   `);
   const row = result.rows[0] as Record<string, unknown> | undefined;
-  if (!row) return null;
+  if (!row) return getSupabaseFallbackState();
   return {
     id: String(row.id),
     sourceLabel: String(row.source_label),
@@ -124,15 +151,17 @@ function provenance(state: BusinessWorldState | null) {
         sourceLabel: state.sourceLabel,
         asOf: state.observedAt,
         updatedAt: state.updatedAt,
-        storage: "Neon Postgres",
+        storage: isDatabaseConfigured() && state.sourceType !== "system-record" ? "Primary Postgres" : "Supabase Postgres",
+        writable: isDatabaseConfigured(),
       }
     : {
         sourceMode: "unavailable" as const,
         provider: "none",
-        sourceLabel: "No verified business source connected",
+        sourceLabel: "Verified source unavailable",
         asOf: null,
         updatedAt: null,
-        storage: isDatabaseConfigured() ? "Neon Postgres" : "not-configured",
+        storage: "unavailable",
+        writable: false,
       };
 }
 
@@ -191,11 +220,33 @@ export async function runScenarioExperiment(input: unknown) {
     warning: "Scenario output is a transparent mathematical model over the persisted baseline, not an observed market outcome or AI prediction.",
   };
   const id = randomUUID();
-  await db.execute(sql`
-    insert into business_world_scenario_run
-      (id, prompt, lever, change_percent, baseline, result, source_state_id)
-    values
-      (${id}, ${parsed.prompt}, ${parsed.lever}, ${parsed.changePercent}, ${JSON.stringify(state?.payload ?? null)}::jsonb, ${JSON.stringify(result)}::jsonb, ${state?.id ?? null})
-  `);
+  if (isDatabaseConfigured()) {
+    await db.execute(sql`
+      insert into business_world_scenario_run
+        (id, prompt, lever, change_percent, baseline, result, source_state_id)
+      values
+        (${id}, ${parsed.prompt}, ${parsed.lever}, ${parsed.changePercent}, ${JSON.stringify(state?.payload ?? null)}::jsonb, ${JSON.stringify(result)}::jsonb, ${state?.id ?? null})
+    `);
+  } else {
+    const response = await fetch(SUPABASE_SCENARIO_ENDPOINT, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        id,
+        prompt: parsed.prompt,
+        lever: parsed.lever,
+        change_percent: parsed.changePercent,
+        baseline: state?.payload ?? null,
+        result,
+        source_state_id: state?.id ?? null,
+      }),
+    });
+    if (!response.ok) throw new Error(`Supabase Scenario persistence failed: ${response.status}`);
+  }
   return { id, provenance: provenance(state), result };
 }
