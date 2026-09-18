@@ -1,9 +1,8 @@
 {
-  "sourceRepository": "liush2yuxjtu/business-world-agent-diaper",
-  "sourcePath": "public/business-world",
-  "historicalDesignRepository": "liush2yuxjtu/world-agent-interactive",
-  "upstreamCommit": "cc49af3c8e4122755f53d283ccd65256076de0ad",
-  "files": {
+  "baseCommit": "cc49af3c8e4122755f53d283ccd65256076de0ad",
+  "imageGenerationUsed": false,
+  "integration": "presentation module plus bounded navigation hooks; state/auth/store/calculation modules unchanged",
+  "sourceHashes": {
     "ui.html": "49231aed3cf380f58e11df4854f81924f0b9eebf4ba82a305d7565bb783771cd",
     "ui.md": "8548e99eb69515d8bd7011a02bb71076ecd909078c8b3a43fe805b67252e06b8",
     "src/ui-client.mjs": "cd944f971755139f641a87ecb7326f1fbe258bd35e36e1971c4301b0332830f7",
