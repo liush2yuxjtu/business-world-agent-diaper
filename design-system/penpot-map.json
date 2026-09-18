@@ -1,0 +1,150 @@
+{
+  "name": "Business World Agent — Penpot Design System & UX Flows",
+  "version": "1.0.0",
+  "canonicalProductRepo": "liush2yuxjtu/business-world-agent-diaper",
+  "sources": [
+    "design-system/tokens.json",
+    "design-system/tokens.css",
+    "docs/design-handoff/ui.md",
+    "docs/design-handoff/ui.html",
+    "app/globals.css",
+    "app/_components/business-world-restored.tsx",
+    "docs/mock-to-real-contract.md"
+  ],
+  "penpotStructure": {
+    "pages": [
+      "00 Cover",
+      "01 Foundations",
+      "02 Components",
+      "03 Patterns",
+      "04 Screens",
+      "05 UX Flows",
+      "06 Runtime Truth"
+    ],
+    "tokenSets": [
+      "BW / Color",
+      "BW / Typography",
+      "BW / Spacing",
+      "BW / Radius",
+      "BW / Elevation"
+    ],
+    "components": [
+      "AppShell",
+      "SidebarNavItem",
+      "TopBar",
+      "SourceBanner",
+      "Panel",
+      "Button",
+      "Chip",
+      "StateBadge",
+      "MetricCard",
+      "SectionTitle",
+      "PersonaCard",
+      "WorldNode",
+      "EntityInspector",
+      "EvidenceRow",
+      "RecommendationRow",
+      "DataEditor",
+      "ApprovalDialog",
+      "Toast"
+    ],
+    "variants": {
+      "Button": ["Primary", "Secondary", "Ghost", "Destructive", "Disabled"],
+      "StateBadge": ["Observed", "Inferred", "Simulated", "Verified", "Needs review", "Stale", "Blocked", "Draft"],
+      "SidebarNavItem": ["Default", "Hover", "Active"],
+      "SourceBanner": ["Verified", "Missing", "Stale"],
+      "Panel": ["Default", "Soft", "Modal"]
+    },
+    "patterns": [
+      "Analytical Workspace",
+      "Evidence Detail",
+      "Entity Inspector",
+      "Scenario / Experiment",
+      "Human Approval",
+      "Report / Distribution"
+    ]
+  },
+  "screens": [
+    "Overview",
+    "Persona Studio",
+    "World Builder",
+    "Content Strategy",
+    "Live Operations",
+    "Ad Optimization",
+    "Product Analytics",
+    "Scenario Experiment",
+    "Reports",
+    "Source / Data Editor",
+    "Evidence Detail",
+    "Human Approval"
+  ],
+  "uxFlows": [
+    {
+      "name": "01 — Overview → Evidence → Domain",
+      "goal": "Investigate a business signal from the executive overview.",
+      "screens": ["Overview", "Evidence Detail", "Relevant Domain Screen"],
+      "transitions": ["Select KPI / alert / opportunity", "Inspect provenance", "Open domain context"]
+    },
+    {
+      "name": "02 — Persona → Evidence → Task",
+      "goal": "Understand a persona and turn an evidence-backed recommendation into work.",
+      "screens": ["Persona Studio", "Persona Detail State", "Evidence Detail", "Task Confirmation"],
+      "transitions": ["Select persona", "Inspect signals and confidence", "Open source evidence", "Create task"]
+    },
+    {
+      "name": "03 — World Model → Scenario → Result",
+      "goal": "Explore a modeled business change without overwriting observed truth.",
+      "screens": ["World Builder", "Selected Entity Inspector", "Scenario Experiment", "Modeled Result", "Scenario History"],
+      "transitions": ["Select node", "Start scenario", "Configure lever", "Run simulation", "Save scenario"]
+    },
+    {
+      "name": "04 — Content Opportunity → Brief → Plan",
+      "goal": "Turn a content opportunity into an editable plan.",
+      "screens": ["Content Strategy", "Opportunity Detail", "Brief Draft", "Publishing Plan"],
+      "transitions": ["Select opportunity", "Inspect persona / evidence", "Generate editable brief", "Confirm add to plan"]
+    },
+    {
+      "name": "05 — Live Signal → Recommendation → Approval",
+      "goal": "Respond to a live-session issue while preserving human control over external writes.",
+      "screens": ["Live Operations", "Funnel Stage Detail", "Recommendation Detail", "Human Approval"],
+      "transitions": ["Select leakage stage", "Inspect evidence", "Choose action", "Explicit approval"]
+    },
+    {
+      "name": "06 — Ad Optimization → Recommendation → Approval",
+      "goal": "Review campaign optimization before any external change.",
+      "screens": ["Ad Optimization", "Campaign Detail", "Recommendation Detail", "Human Approval"],
+      "transitions": ["Select campaign", "Inspect performance and source", "Choose recommendation", "Explicit approval"]
+    },
+    {
+      "name": "07 — Product Analysis → Opportunity",
+      "goal": "Move from product performance to an evidence-backed action.",
+      "screens": ["Product Analytics", "Product Detail", "Evidence Detail", "Recommendation Detail"],
+      "transitions": ["Select product / SKU", "Inspect performance", "Inspect provenance", "Review recommendation"]
+    },
+    {
+      "name": "08 — Experiment → Compare → Save",
+      "goal": "Configure, run, compare, and save a modeled scenario.",
+      "screens": ["Scenario Experiment", "Running State", "Modeled Result", "Scenario History"],
+      "transitions": ["Configure lever", "Run", "Compare baseline vs modeled", "Save"]
+    },
+    {
+      "name": "09 — Report → Share / Export",
+      "goal": "Review a report and choose an explicit distribution action.",
+      "screens": ["Reports", "Report Detail", "Distribution Confirmation"],
+      "transitions": ["Open report", "Inspect evidence-backed sections", "Choose share / export / email", "Confirm"]
+    }
+  ],
+  "truthRules": [
+    "Observed, Inferred, Simulated and Unavailable must remain visually distinct.",
+    "Mock or simulated business data must never be presented as verified market truth.",
+    "Scenario output never overwrites the observed baseline.",
+    "External writes require explicit human approval.",
+    "No verified source means no fabricated KPI.",
+    "Every UX flow is represented as a chronological Screen → Screen sequence, not a text-only flowchart."
+  ],
+  "status": {
+    "mapping": "ready",
+    "gitTracked": true,
+    "penpotCanvas": "blocked-until-penpot-instance-connected"
+  }
+}
