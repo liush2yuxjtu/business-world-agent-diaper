@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "environment": "production Next.js server; explicit self-hosted SQLite file",
+  "agentInvocation": "actual authored eve tool executors authenticated by the existing passwordEveAuth; no language-model turn",
+  "mockedBrowserResponses": false,
+  "manualTestInputs": true,
+  "checks": [
+    {
+      "name": "Unauthenticated read denied: /api/business-world/workspace",
+      "status": "PASS"
+    },
+    {
+      "name": "Unauthenticated read denied: /api/business-world/state",
+      "status": "PASS"
+    },
+    {
+      "name": "Failed login shows only actionable product copy",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual password login establishes the shared account session",
+      "status": "PASS"
+    },
+    {
+      "name": "The real application home preserves deep links and uses the audited shared UI",
+      "status": "PASS"
+    },
+    {
+      "name": "The former source-editor deep link opens the canonical accessible source form",
+      "status": "PASS"
+    },
+    {
+      "name": "Shared mode ignores browser-local records and never auto-imports them",
+      "status": "PASS"
+    },
+    {
+      "name": "Invalid Agent authentication cannot access the store",
+      "status": "PASS"
+    },
+    {
+      "name": "UI save is read verbatim by the actual registered Agent snapshot tool",
+      "status": "PASS"
+    },
+    {
+      "name": "Manual input cannot claim official or observed provenance",
+      "status": "PASS"
+    },
+    {
+      "name": "Registered content tool reads the same source and revision",
+      "status": "PASS"
+    },
+    {
+      "name": "Registered live tool reads the same source and revision",
+      "status": "PASS"
+    },
+    {
+      "name": "Registered ads tool reads the same source and revision",
+      "status": "PASS"
+    },
+    {
+      "name": "Registered commerce tool reads the same source and revision",
+      "status": "PASS"
+    },
+    {
+      "name": "Database inspection proves the exact API/Agent record exists on disk",
+      "status": "PASS"
+    },
+    {
+      "name": "UI scenario is persisted and visible to the actual Agent",
+      "status": "PASS"
+    },
+    {
+      "name": "Report and separate human note persist in the same store",
+      "status": "PASS"
+    },
+    {
+      "name": "Consented shared-workspace report copy opens in an unauthenticated browser",
+      "status": "PASS"
+    },
+    {
+      "name": "A portable report copy never grants access to the original workspace",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Agent scenario appears in the UI after a real refresh",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Agent record write appears in the UI without a local-storage bridge",
+      "status": "PASS"
+    },
+    {
+      "name": "A stale browser receives a useful conflict and cannot overwrite Agent changes",
+      "status": "PASS"
+    },
+    {
+      "name": "Cross-origin mutations are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Malformed or provenance-forging writes return sanitized errors",
+      "status": "PASS"
+    },
+    {
+      "name": "Later Agent edits cannot rewrite report evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "Offline refresh shows failure, preserves the record and never claims success",
+      "status": "PASS"
+    },
+    {
+      "name": "The complete shared state survives a real server-process restart",
+      "status": "PASS"
+    },
+    {
+      "name": "A separately authenticated browser reads the same durable workspace",
+      "status": "PASS"
+    },
+    {
+      "name": "Missing storage fails visibly without local or remote fallback",
+      "status": "PASS"
+    },
+    {
+      "name": "Unavailable workspace remains unknown after a real metric click",
+      "status": "PASS"
+    },
+    {
+      "name": "Unavailable source inspection never claims the store is empty",
+      "status": "PASS"
+    },
+    {
+      "name": "Source editing waits for a successful workspace read",
+      "status": "PASS"
+    },
+    {
+      "name": "Report creation preserves unknown rather than inventing missing baseline",
+      "status": "PASS"
+    },
+    {
+      "name": "Scenario action cannot turn unavailable state into a no-baseline claim",
+      "status": "PASS"
+    },
+    {
+      "name": "Draft creation waits for a successful workspace read",
+      "status": "PASS"
+    },
+    {
+      "name": "All nine shared views have readable layout and safe product copy at 1440px",
+      "status": "PASS"
+    },
+    {
+      "name": "All nine shared views have readable layout and safe product copy at 390px",
+      "status": "PASS"
+    },
+    {
+      "name": "Shared operations never silently rewrite or upload the separate local workspace",
+      "status": "PASS"
+    },
+    {
+      "name": "Database integrity is OK after UI, Agent, conflict and restart flows",
+      "status": "PASS"
+    },
+    {
+      "name": "No uncaught JavaScript errors or unexpected console errors",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "unexpectedConsoleErrors": [],
+  "expectedNetworkErrors": [
+    {
+      "phase": "bad-login",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "location": {
+        "url": "http://127.0.0.1:47427/api/business-world/session",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "phase": "conflict",
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "location": {
+        "url": "http://127.0.0.1:47427/api/business-world/workspace",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "phase": "offline",
+      "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+      "location": {
+        "url": "http://127.0.0.1:47427/api/business-world/workspace",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "phase": "unavailable",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "location": {
+        "url": "http://127.0.0.1:47427/api/business-world/workspace",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ],
+  "unavailableInteractionEvidence": {
+    "metric": "实体详情\n\n暂时无法读取工作区记录，请恢复连接后刷新。",
+    "banner": "暂时无法读取工作区记录，请恢复连接后刷新。\n\n暂时无法连接工作区，未将更改保存为成功。请恢复连接后重试。",
+    "source": "暂时无法读取工作区记录，请恢复连接后刷新。\n\n关闭"
+  },
+  "databaseEvidence": {
+    "integrity": "ok",
+    "rows": 1,
+    "revision": 6
+  },
+  "status": "PASS",
+  "sourceHashes": {
+    "agent/tools/agent.ts": "eaae69827db6f3e6532fc8353e8d485c31cd09260fa48655c3096306d8c4326b",
+    "agent/tools/bash.ts": "eaae69827db6f3e6532fc8353e8d485c31cd09260fa48655c3096306d8c4326b",
+    "agent/tools/business_ad_insights.ts": "7240434f8422199d23c6769d24f26e975837538c9d26e982a9da25f08ea477b8",
+    "agent/tools/business_commerce_insights.ts": "ab89911b58672ce1e180cb7bad71f3741d904698bac163b216a51017ad9d0597",
+    "agent/tools/business_content_insights.ts": "df9848c95d294872a21363cce6e787423d51b7439520e80e88ede962eda5f911",
+    "agent/tools/business_live_insights.ts": "4eb4ba8b212b03775dccb59f68287cdc78068c2481403ab5734fd98fbdb7c4a1",
+    "agent/tools/business_scenario_experiment.ts": "06064aca7959418fa8a6a27ed0950fc4529caaa2395c188642a29adbf5f53421",
+    "agent/tools/business_world_save_record.ts": "c740543bb92bbbe444cefdce4fce802c6152b19db69458f7933741a13db6d247",
+    "agent/tools/business_world_snapshot.ts": "579c045c9ba9f8340aed1344c3311851bb0925d9744b823ce69e8e03ed066076",
+    "agent/tools/get_weather.ts": "2fa38a94ded85a7c35394fc13bd685b7d79105a418f14c453a0f7597b1b8e79f",
+    "agent/tools/glob.ts": "eaae69827db6f3e6532fc8353e8d485c31cd09260fa48655c3096306d8c4326b",
+    "agent/tools/grep.ts": "eaae69827db6f3e6532fc8353e8d485c31cd09260fa48655c3096306d8c4326b",
+    "agent/tools/read_file.ts": "eaae69827db6f3e6532fc8353e8d485c31cd09260fa48655c3096306d8c4326b",
+    "agent/tools/todo.ts": "eaae69827db6f3e6532fc8353e8d485c31cd09260fa48655c3096306d8c4326b",
+    "agent/tools/write_file.ts": "eaae69827db6f3e6532fc8353e8d485c31cd09260fa48655c3096306d8c4326b",
+    "app/api/business-world/scenario/route.ts": "6a3e99fc13fdbce3f0c2a13693b5e20b09943f85381be720da3ea60de9f47c27",
+    "app/api/business-world/session/route.ts": "c16813a36b3cd2c5b677873d49c446c00eac4e383798c81594d4ae3e463d3747",
+    "app/api/business-world/state/route.ts": "27b52a0e1f5652ca7c5aa6926abc19f27eefa4ae0e435bb772d6035d098b117c",
+    "app/api/business-world/workspace/route.ts": "a1ef9289f8978eb5221ef99bd2352f8cc32155aa9e145354e18f851b246896ef",
+    "app/business-world/sign-in/route.ts": "7e93b89211eda3d6e5aa9b9b10c919eceedba3195d599d4180484e741f021a09",
+    "app/business-world/workspace/route.ts": "515df984d04125d6858d9b95c21e106efad8581d9020975d39cb91d4a80d75ee",
+    "app/layout.tsx": "372da787bede838a89444af98a4a5d1ad7420a27dfa6aa9ec4219231f1c0a4b4",
+    "app/page.tsx": "e77c81e314f2b40db2356c0ca8e6c571dda14fa6df47ce5fca0603bc9b3f85f5",
+    "lib/business-world/http.ts": "f9731a8b3f0b4a4f064f94528832ffddd58405cc00fb92196240f15ae553e115",
+    "lib/business-world/real-service.ts": "33adaf61a8842d520b4e224554222b5071a2d51b43b3044a0f2bbeb6cd3ca1ab",
+    "lib/business-world/tool-auth.ts": "f79ce6ce6f6f55a852292c17589c40a202ad7e7975239311f8be21f170b089c6",
+    "lib/business-world/workspace-postgres.ts": "2fe3aead6fd787c027f1e2850cec49f118a63302343eff5b5406a8f059b2f0d0",
+    "lib/business-world/workspace-service.ts": "830600ae03cfe52181092f1b5a27e196f1693848f817a72f2992ab6326f79503",
+    "lib/eve-auth.ts": "3aad65c772f696986a6ba6216eeffff6d2031d5915f9b296fb06c1787640cd54",
+    "lib/password-auth.ts": "1cc2fba5de6dbc917cdc7134ddedc4f7e1ce3d7f57aeb173269d4d0f0254deec",
+    "lib/session.ts": "b10a55054d2abe76ef48378bd28252e39e0e67b4a1aae7f75eeec122978c81df",
+    "lib/setup.ts": "40560057217264e5d826ea63fc8ab19871862406563048b9451b8bbda5527021",
+    "next.config.ts": "bebecbf77cf17e53a33dee811f5f6904ec86ace5968157facbb179cd3c7f0af8",
+    "package.json": "c998326ea1409aa2cdc6d280b908b67076ed6bc5ed6a1a520f5bb23bf5665c05",
+    "pnpm-lock.yaml": "7209dd0d34ba9680059f6995f96d80c9ac0dfb1ea5a14386253706b317c31457",
+    "public/business-world/paired-source.json": "c71d29b709128a7f5a41f59abd0c8cc7e2a8876317a5cc41bd333a076c7d6fac",
+    "public/business-world/src/ui-client.mjs": "cd944f971755139f641a87ecb7326f1fbe258bd35e36e1971c4301b0332830f7",
+    "public/business-world/src/ui-report.mjs": "d14b9c1ed90015d0676a39af10e3d237e252ebe89d84b0d6c18a8a5dc58f804a",
+    "public/business-world/src/ui-runtime.mjs": "ce25717995ebd2cf34700d5f2eee39a981ad3adb50584a32661ae1b7bb091e6b",
+    "public/business-world/src/ui-state.mjs": "47ee961bd7e8199fdd853a00f11d5a334c3657b998d17af31656232422d14202",
+    "public/business-world/src/ui-surfaces.mjs": "c587f7ae4328ce10d591f1875e62739a9e5d70415336b6031d9bf928d00fd27a",
+    "public/business-world/src/ui-workbench.css": "44205ff4addcf1b8a5076492a0806b3ffbeeaf3df952f39cd3613c9333201839",
+    "public/business-world/src/ui-workbench.mjs": "4895c5b5057d6ce58522684e547f0b92ef5f72e6d51dbd5eada35aa767f81052",
+    "public/business-world/src/vendor/README.md": "bc9f98b182164a34aab07be51647fd9e2210f7fcb38a9d4b09d121d14f902e25",
+    "public/business-world/src/vendor/pptxgen.bundle.js": "4fb9eac5cfefb213e2d8743c2b7151025f31bfb3f834c73c12062916daa0f3f8",
+    "public/business-world/src/vendor/pptxgenjs.LICENSE": "7a2bfe96150786ed1908b8e63f98ebab88875c1e79e28faff6649e0f11f77e52",
+    "public/business-world/ui.html": "49231aed3cf380f58e11df4854f81924f0b9eebf4ba82a305d7565bb783771cd",
+    "public/business-world/ui.md": "8548e99eb69515d8bd7011a02bb71076ecd909078c8b3a43fe805b67252e06b8",
+    "scripts/check-shared-audit.mjs": "a0cd1531d4233110f406db77d2dfc0fc5534bc65ea51439cfa5bbb3fb09f8377",
+    "scripts/sync-paired-ui.mjs": "a962e5d9e0658c5df5ffb9a5e840b1abeadd163aea0643cd90f41d8221a1ad59",
+    "scripts/verify-shared.sh": "eb0be37b17677d29e09bbecdb5acb4d2e9f9d388d6a4a14845b5a1aeffe86abc",
+    "scripts/workspace-tool-probe.ts": "61614a68d61c76bc053d1c1b40e109153701f20fcebafa3753146d70fa551630",
+    "tests/shared_workspace_browser.py": "76868e34403201bcf1c1325e70644637615bcd4b7b9b42319c6ccc389dfa962b",
+    "tests/workspace.test.ts": "b96d18c4eb56ccbb35d8c36610190be133942a86754e78caf28881260d85c04b"
+  },
+  "sourceDigest": "a4a0d2e6b75eb75fe896b52c4c3213cb2e5e9de309623a4dfe17ed70c305c5f9",
+  "passed": 40
+}

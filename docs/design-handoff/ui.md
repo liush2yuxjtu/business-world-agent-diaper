@@ -1,9 +1,71 @@
 # Business World Agent — Full UI / Interaction Handoff
 
-> Canonical UI handoff for the full SaaS surface.  
-> Updated from the latest ImageGen visual exploration on 2026-09-18.  
-> HTML implementation: `ui.html`  
+> Canonical UI handoff for the full SaaS surface.
+> Updated from browser-rendered visual exploration on 2026-09-18.
+> HTML implementation: `ui.html`
 > Principle: **every major page must feel like a real product surface, not a placeholder card.**
+
+
+## Browser-rendered workbench redesign — 2026-09-18
+
+This branch changes the visual layout and contextual navigation of the nine existing business screens. No image-gen is used. Earlier execution-status sections describe the inherited candidate; they are not evidence that this redesign has passed. Current evidence is `docs/concept-rebuild/results.json` plus the independently rerun `docs/ui-shared-audit/runtime/results.json`. Missing or failing results are not PASS.
+
+- Each screen has one browser-rendered PNG in `public/business-world/concepts/`, a clear primary action and accessible navigation.
+- Persona → content carries the source and research context; confirmed content briefs can become separately confirmed plans.
+- Product → growth → experiment carries context and preselects the appropriate lever. Browser Back/Forward preserves actual route navigation.
+- Experiments retain immutable baselines; reports retain selected evidence; notes remain separate. Publishing, budget changes and email delivery are not executed.
+- Empty, manual/unverified, illustrative, simulated and unavailable states remain distinct. No platform is shown as connected without evidence.
+- Original §17 and §19 contracts remain mandatory. The existing 40-check authenticated shared-runtime suite is not removed or weakened.
+- The runtime pair is maintained here alongside `docs/design-handoff/ui.html` and `ui.md`. `world-agent-interactive` is the historical design-source repository, not silently modified by this branch.
+- Penpot receives an import manifest and PNG assets only. No claim is made that a remote Penpot file was edited.
+- Production, cloud-provider availability and a live language-model turn remain outside these browser checks. The inherited standalone `eve build` blocker is not treated as passed by the Next production build.
+
+
+## Execution status — 2026-09-18
+
+The current result is recorded in `docs/ui-audit/audit.json` and enforced by `scripts/check-ui-audit.mjs`. **ALL PASS requires both the full UI regression and the actual shared UI/Agent runtime evidence to pass and match the current source bytes.** The original requirements in §17 are retained, not waived.
+
+There is one paired UI source (`ui.html` / `ui.md`) and two explicit hosting profiles. The standalone design preview remains browser-local and says so. The actual Business World application serves the same hashed source at `/business-world/workspace`, requires an authenticated user, and injects the same-origin workspace API. Its root route leads to that workspace rather than a second, divergent dashboard. The shared profile never imports local browser records implicitly or falls back to them when the server is unavailable.
+
+| Capability | Implemented behavior | Required evidence |
+| --- | --- | --- |
+| All nine routes | Selectable views, entity details, evidence, contextual handoffs, keyboard controls and mobile layouts | Full UI browser suite; shared desktop/mobile traversal |
+| Record entry | Seven bounded fields, name and notes; server-stamped identity/time in shared mode; always manually entered and unverified | UI save → actual Agent snapshot → direct database equality |
+| Examples and Persona | Opt-in labelled examples and templates; no measured population, platform data or confidence is fabricated | Selection, filters, inspector and task-flow regressions |
+| Content / Live / Growth / Product | Entity details, domain navigation, editable confirmed drafts, brief-to-plan, category/channel filters and experiment handoff | Existing full-depth interaction regressions |
+| Experiment | Lever-specific uncalibrated sensitivity calculation, bounded inputs, pending state, immutable baseline and persisted history | UI → Agent and actual Agent → UI scenario round trips |
+| Reports / notes | Immutable selected report; human notes stored separately; later source edits cannot rewrite report evidence | Local and shared report regressions; same-ID altered-source rejection |
+| PDF / PPT | Real browser-print PDF and OOXML PowerPoint using the same selected report | Actual exported files inspected by browser tests |
+| Share | Explicit consent creates a portable, read-only report copy containing the disclosed report data | A fresh unauthenticated browser can read the copy, but cannot access the protected workspace |
+| Email / plans | Explicitly addressed unsent email drafts and confirmed proposals; no silent external platform execution | Draft persistence and no-external-write checks |
+| UI + Agent boundary | The actual registered business tools and authenticated UI routes use the same owner-scoped store, IDs, revisions and source labels | Real server, authored tools, disk database, separate browser and process-restart verification |
+| Failure / conflict | Unknown is not empty; authentication errors, unavailable storage, offline operation and revision conflicts fail visibly without false success or fallback | Real error-path browser checks and database concurrency tests |
+
+### Failure-state interaction invariant
+
+An unavailable first workspace read must remain **unknown**, including after a user clicks a metric, inspects its source, or attempts to edit a source, create a report, run a scenario, or create a draft. These six paths must not replace the unavailable state with “no records,” offer a blank replacement form, or claim a missing baseline. Source and history actions wait for a successful read; users retain navigation, explanations, and refresh/retry. The shared browser suite exercises each path against a real server with missing storage, without mocked responses.
+
+### Hosting and verification boundary
+
+The verified shared-runtime profile is a production-built Next.js server with an explicitly configured durable SQLite file under Node 24 and the application's existing authenticated starter identity. This is an actual persistent store, not an API mock. SQLite is **not** enabled on Vercel. The alternative Neon/Postgres adapter is typechecked and built but requires separate live-provider deployment verification. Existing legacy database tables are not deleted or automatically assigned to users; migration needs explicit ownership mapping before an existing deployment switches storage.
+
+The integration suite invokes the actual registered Eve tool executors using the application's authenticated identity adapter. It does not claim a live language-model conversation, model-provider availability, OAuth deployment verification, or an exercised approval-stream UI. The record-changing tool is approval-gated in its definition; external publishing, budget changes and email delivery are not executed by this workbench. Manual inputs remain unverified, and sensitivity estimates are not calibrated forecasts.
+
+### Current module map
+
+- `ui.html`: complete product shell, source forms and accessible dialogs.
+- `src/ui-state.mjs`: typed records, fixed scenario/report evidence, public-render allowlist and portable-copy validation.
+- `src/ui-client.mjs`: narrow commands, authenticated same-origin transport, revision checks and explicit local/shared separation.
+- `src/ui-runtime.mjs`: real interactions; a successful UI save follows actual persistence acknowledgement.
+- `src/ui-surfaces.mjs`: clearly separated illustrative domain catalogues.
+- `src/ui-report.mjs`: PDF-print document and real PPT from the selected immutable report.
+- `src/vendor/`: pinned MIT-licensed PowerPoint exporter, served locally.
+- `tests/ui-state.test.mjs`, `tests/ui-client.test.mjs`, `tests/ui_browser.py`: executable contracts and real HTTP-served UI regressions.
+- Actual application: `lib/business-world/workspace-service.ts`, its same-origin routes, registered tools, and `tests/shared_workspace_browser.py`.
+
+### User-facing copy boundary
+
+Developer notes, rubric identifiers, implementation plans and raw tool/error envelopes belong in this handoff and audit artifacts, never in the product UI. The UI distinguishes unavailable reads, confirmed empty state, unverified manual entries, labelled examples and scenario estimates. Storage mode is stated as a user outcome, and report-copy privacy is disclosed before consent. No current audit result certifies other unrelated prototypes, production credentials, legacy-data migration, or model-provider behavior.
 
 ---
 
@@ -13,7 +75,7 @@
 ┌──────────────────────┬───────────────────────────────────────────────────────────────────────────────┐
 │ Business World Agent │ ⌕ Search                                             ↻ Refresh  ▤ Sources  ZL │
 │ REALITY FIRST        ├───────────────────────────────────────────────────────────────────────────────┤
-│                      │ ✓ VERIFIED PERSISTED SOURCE · source · provider · last updated               │
+│                      │ SOURCE STATUS · source · provider · source time (only verified by evidence)               │
 │ ▦ 总览               ├───────────────────────────────────────────────────────────────────────────────┤
 │ ♙ Persona Studio     │                                                                               │
 │ ◇ World Builder      │                                 ACTIVE VIEW                                   │
@@ -39,7 +101,7 @@
 - Data Source opens the persistent state editor.
 - Observed / Inferred / Simulated remain visually distinct everywhere.
 - Page switches preserve the shared business state.
-- Buttons that appear actionable must work in the prototype or show a clear prototype toast.
+- Buttons that appear actionable must perform a real action or state a clear product limitation. Developer-only “prototype implementation” commentary must not be shown to end users.
 
 ---
 
@@ -392,8 +454,8 @@ Error rules:
 - New Report → report composer.
 - PDF export uses current selected report.
 - PPT export uses same report source.
-- Share Link creates view-only link.
-- Send Email requires explicit recipients.
+- Share Link creates a view-only report-copy link after explicit consent. The implemented portable copy is not a revocable, access-controlled server share; that distinction must remain visible.
+- Send Email requires explicit recipients. The implemented action is labelled “准备邮件” and saves an unsent draft; a delivery integration must not be claimed until independently verified.
 - Save Note persists human-authored note separately from generated summary.
 - Report sections link back to source evidence and product pages.
 
@@ -428,6 +490,11 @@ Save:
 # 11. Global state hierarchy
 
 ```text
+Manual (unverified)
+  = entered by the user
+  = source name / notes / save time preserved
+  = never automatically classified as Observed
+
 Observed
   = directly supported by source evidence
 
@@ -654,15 +721,15 @@ AppShell
 ui.html
 ├─ Landing
 └─ App
-   ├─ Overview        ← deep implementation
-   ├─ Persona Studio  ← deep implementation
-   ├─ World Builder   ← deep implementation
-   ├─ Content         ← deep implementation
-   ├─ Live            ← deep implementation
-   ├─ Growth          ← deep implementation
-   ├─ Product         ← deep implementation
-   ├─ Experiment      ← deep implementation
-   └─ Report          ← deep implementation
+   ├─ Overview        ← interaction implementation; live data scope qualified above
+   ├─ Persona Studio  ← interaction implementation; live data scope qualified above
+   ├─ World Builder   ← interaction implementation; live data scope qualified above
+   ├─ Content         ← interaction implementation; live data scope qualified above
+   ├─ Live            ← interaction implementation; live data scope qualified above
+   ├─ Growth          ← interaction implementation; live data scope qualified above
+   ├─ Product         ← interaction implementation; live data scope qualified above
+   ├─ Experiment      ← interaction implementation; live data scope qualified above
+   └─ Report          ← interaction implementation; live data scope qualified above
 
 ui.md
 └─ Canonical interaction / state / ASCII handoff
@@ -691,21 +758,21 @@ NEVER:
 
 ## Fixed click contracts
 
-- Landing 登录 → enters app overview.
-- 预约演示 → opens demo-request interaction surface.
+- Landing 进入工作区 → enters app overview; it does not claim an authenticated login.
+- 了解使用方式 → opens product-use guidance; no fabricated demo booking is claimed.
 - Sidebar items → route to each product page and update URL hash.
 - Cmd/Ctrl+K → focuses global search.
 - Persona cards → select + open Persona detail interaction.
 - Non-World-Builder segmented controls → toggle active state.
 - Overview channel cards → navigate to Content / Live / Product / Growth.
 - World Builder nodes → entity inspector.
-- Scenario selector → changes modeled state.
+- Scenario selector → selects inputs; 运行模拟 computes and persists an explicitly modelled result.
 - 发送到报告 → Reports.
 - 在 World Builder 中查看 → World Builder.
 - 内容机会 / 漏斗阶段 / metrics / recommendation rows / table rows → detail surface.
-- 创建任务 / 生成 brief / 新建实验 / 新建报告 → prototype action surface.
-- 直播“去执行” → HUMAN APPROVAL modal; never silent external write.
-- 导出 / 分享 / 邮件 / 保存备注 → explicit feedback/action.
+- 创建任务 / 生成 brief / 新建实验 / 新建报告 → editable draft / scenario / report composers.
+- 直播“去执行” → editable action proposal and explicit confirmation; never a silent external write.
+- 导出 / 分享 / 邮件 / 保存备注 → the implemented and explicitly limited flows listed in the execution-status table above.
 - 查看更多 / 查看全部 → detail surface instead of dead anchor.
 - Esc closes modal; Enter/Space activates keyboard-focused interactive surfaces.
 
@@ -722,7 +789,7 @@ role=button + tabindex for non-native interactive cards/rows
 
 ## Route contract
 
-The prototype uses URL hash routing for stable deep links:
+Canonical routes use `#app/<page>`. The previous `#<page>` links below remain accepted for compatibility:
 
 ```text
 #overview
@@ -741,7 +808,7 @@ A route change updates:
 ```text
 active sidebar
 visible view
-fake product URL
+product navigation label
 browser hash
 interactive wiring
 ```
@@ -762,4 +829,4 @@ HUMAN APPROVAL
 execute / cancel
 ```
 
-The HTML prototype stops at the confirmation surface.
+The current UI stops at a confirmed, persisted proposal or unsent draft. It does not claim an external platform action occurred. The original production approval/execution requirement is retained.

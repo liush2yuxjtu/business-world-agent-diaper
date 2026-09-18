@@ -1,9 +1,25 @@
 # Business World Agent — Full UI / Interaction Handoff
 
 > Canonical UI handoff for the full SaaS surface.
-> Updated from the latest ImageGen visual exploration on 2026-09-18.
+> Updated from browser-rendered visual exploration on 2026-09-18.
 > HTML implementation: `ui.html`
 > Principle: **every major page must feel like a real product surface, not a placeholder card.**
+
+
+## Browser-rendered workbench redesign — 2026-09-18
+
+This branch changes the visual layout and contextual navigation of the nine existing business screens. No image-gen is used. Earlier execution-status sections describe the inherited candidate; they are not evidence that this redesign has passed. Current evidence is `docs/concept-rebuild/results.json` plus the independently rerun `docs/ui-shared-audit/runtime/results.json`. Missing or failing results are not PASS.
+
+- Each screen has one browser-rendered PNG in `public/business-world/concepts/`, a clear primary action and accessible navigation.
+- Persona → content carries the source and research context; confirmed content briefs can become separately confirmed plans.
+- Product → growth → experiment carries context and preselects the appropriate lever. Browser Back/Forward preserves actual route navigation.
+- Experiments retain immutable baselines; reports retain selected evidence; notes remain separate. Publishing, budget changes and email delivery are not executed.
+- Empty, manual/unverified, illustrative, simulated and unavailable states remain distinct. No platform is shown as connected without evidence.
+- Original §17 and §19 contracts remain mandatory. The existing 40-check authenticated shared-runtime suite is not removed or weakened.
+- The runtime pair is maintained here alongside `docs/design-handoff/ui.html` and `ui.md`. `world-agent-interactive` is the historical design-source repository, not silently modified by this branch.
+- Penpot receives an import manifest and PNG assets only. No claim is made that a remote Penpot file was edited.
+- Production, cloud-provider availability and a live language-model turn remain outside these browser checks. The inherited standalone `eve build` blocker is not treated as passed by the Next production build.
+
 
 ## Execution status — 2026-09-18
 

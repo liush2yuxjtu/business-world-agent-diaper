@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "method": "real browser rendering; no image-gen",
+  "sourceHashes": {
+    "public/business-world/src/ui-client.mjs": "cd944f971755139f641a87ecb7326f1fbe258bd35e36e1971c4301b0332830f7",
+    "public/business-world/src/ui-report.mjs": "d14b9c1ed90015d0676a39af10e3d237e252ebe89d84b0d6c18a8a5dc58f804a",
+    "public/business-world/src/ui-runtime.mjs": "ce25717995ebd2cf34700d5f2eee39a981ad3adb50584a32661ae1b7bb091e6b",
+    "public/business-world/src/ui-state.mjs": "47ee961bd7e8199fdd853a00f11d5a334c3657b998d17af31656232422d14202",
+    "public/business-world/src/ui-surfaces.mjs": "c587f7ae4328ce10d591f1875e62739a9e5d70415336b6031d9bf928d00fd27a",
+    "public/business-world/src/ui-workbench.css": "44205ff4addcf1b8a5076492a0806b3ffbeeaf3df952f39cd3613c9333201839",
+    "public/business-world/src/ui-workbench.mjs": "4895c5b5057d6ce58522684e547f0b92ef5f72e6d51dbd5eada35aa767f81052",
+    "public/business-world/ui.html": "49231aed3cf380f58e11df4854f81924f0b9eebf4ba82a305d7565bb783771cd",
+    "public/business-world/ui.md": "8548e99eb69515d8bd7011a02bb71076ecd909078c8b3a43fe805b67252e06b8",
+    "tests/concept_workbench_browser.py": "3de5ebce1783176e9935cec20a787d4839069b892fd5c9d3ec7c45bda863cf16"
+  },
+  "screens": [
+    {
+      "screen": "overview",
+      "label": "经营总览",
+      "file": "01-overview.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "48959c36451bb658b53598670d0f30d672839d5f0620dd6aa8b3e3df485a1c87",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "persona",
+      "label": "消费者洞察",
+      "file": "02-persona.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "52d476d65d1c942cac48c47bf903b802eaeebe5ac9ab40b8011d83f009cdaa07",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "world",
+      "label": "业务数据",
+      "file": "03-world.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "e7bfb451ced9760d870fa108b37bc715b7bc70f949338738a9bd3d6e326e59a4",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "content",
+      "label": "内容策略",
+      "file": "04-content.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "12851d7ed38333aa47b594ceba1f3571be8cc67c3726e64c5e475daa59528177",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "live",
+      "label": "直播运营",
+      "file": "05-live.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "2a632bb38dbdc64b8ce0ec56ebe36aa126798b4f05ac7d1828d388b2d52a32a7",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "growth",
+      "label": "投放优化",
+      "file": "06-growth.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "83927440550050c80e6e8d4bab511a242295232a49206984616c5fa8c999391e",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "product",
+      "label": "商品分析",
+      "file": "07-product.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "f58c92e63e776bfdc139fe471904b22265f8e416475357d3e4c7cc89934f4ad2",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "experiment",
+      "label": "情景实验",
+      "file": "08-experiment.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "3f4c1bfef10169c0b2035a19af7ba14a501d845e4d96371e8b94e8d760a20cb8",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    },
+    {
+      "screen": "report",
+      "label": "经营报告",
+      "file": "09-report.png",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "e80761bd7ddcc84db6b327bf78d9f52a180b3ee0cad699bb01ecac1af46a6912",
+      "inputProvenance": "explicit manual design-review examples; not live business data"
+    }
+  ],
+  "penpotFileModified": false
+}

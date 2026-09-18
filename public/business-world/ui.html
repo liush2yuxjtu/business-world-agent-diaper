@@ -103,6 +103,7 @@ body{overflow-x:hidden}.app{grid-template-columns:220px minmax(0,1fr)}.sidebar{m
 .bar-chart{overflow-x:auto;overflow-y:hidden;padding-bottom:28px;height:190px}.bar-group{flex:1 0 48px}.bar-label{bottom:-20px}.host-box>*,.list-row .grow{min-width:0}.panel-head{flex-wrap:wrap}
 .node.related{outline:3px dashed #7564c7;outline-offset:2px}.flow-context{background:#edf4ff;border:1px solid #cbdcf7;padding:10px;border-radius:6px;margin:8px 0;overflow-wrap:anywhere}.share-link{width:100%;min-height:100px;word-break:break-all}.shared-report{max-width:900px;margin:30px auto;padding:0 20px}.shared-report table{width:100%;border-collapse:collapse}.shared-report td,.shared-report th{padding:8px;border-bottom:1px solid #dfe6ef}.shared-report p{white-space:pre-wrap;overflow-wrap:anywhere}
 </style>
+<link rel="stylesheet" href="./src/ui-workbench.css">
 </head>
 <body>
 <div class="browser">
@@ -181,6 +182,7 @@ body{overflow-x:hidden}.app{grid-template-columns:220px minmax(0,1fr)}.sidebar{m
     </aside>
     <main class="workspace">
       <header class="topbar">
+        <div class="screen-breadcrumb">母婴经营工作台 / <strong id="currentScreen">经营总览</strong></div>
         <div class="searchbox"><input id="searchInput" type="search" aria-label="搜索页面、指标、来源或情景" placeholder="搜索页面、指标、来源或情景…" autocomplete="off" aria-controls="searchResults" aria-expanded="false"><div id="searchResults" class="search-results hidden"></div></div>
         <div class="push"></div>
         <button class="btn" id="refreshBtn">↻ 刷新数据</button>

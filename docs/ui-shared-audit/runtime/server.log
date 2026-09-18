@@ -1,0 +1,22 @@
+▲ Next.js 16.2.6
+- Local:         http://127.0.0.1:47427
+- Network:       http://127.0.0.1:47427
+✓ Ready in 135ms
+(node:3518) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.2.6
+- Local:         http://127.0.0.1:47427
+- Network:       http://127.0.0.1:47427
+✓ Ready in 129ms
+(node:3813) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.2.6
+- Local:         http://127.0.0.1:47427
+- Network:       http://127.0.0.1:47427
+✓ Ready in 129ms
+▲ Next.js 16.2.6
+- Local:         http://127.0.0.1:47427
+- Network:       http://127.0.0.1:47427
+✓ Ready in 135ms
+(node:3860) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
