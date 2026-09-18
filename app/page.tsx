@@ -171,6 +171,14 @@ export default function App() {
     finally { setLoading(false); }
   }, []);
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get("screen") as NavId | null;
+    if (requested && nav.some(([id]) => id === requested)) setActive(requested);
+    const requestedSearch = params.get("search");
+    if (requestedSearch) setSearch(requestedSearch);
+    if (params.get("source") === "1") setEditing(true);
+  }, []);
 
   const matches = useMemo(() => search.trim() ? nav.filter(([,label]) => label.toLowerCase().includes(search.trim().toLowerCase())) : [], [search]);
   const data = snapshot?.data ?? null;
