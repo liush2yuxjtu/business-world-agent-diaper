@@ -64,6 +64,7 @@ function createSetupStatus({
   const fullEnvironmentReady = databaseConfigured && vercelAuthReady && rateLimitReady;
   const passwordReady = isPasswordConfigured();
   const localDevReady = isLocalDevelopment();
+  const previewReady = process.env.VERCEL_ENV === "preview";
   if (fullEnvironmentReady) {
     return {
       appReady: databaseReady,
@@ -78,7 +79,7 @@ function createSetupStatus({
     };
   }
 
-  if (passwordReady || localDevReady) {
+  if (passwordReady || localDevReady || previewReady) {
     return {
       appReady: true,
       authMode: passwordReady ? "password" : "local-dev",
