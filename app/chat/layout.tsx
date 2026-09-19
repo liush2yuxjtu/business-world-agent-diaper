@@ -6,17 +6,21 @@ import { getServerViewer } from "@/lib/session";
 import { getInitialSetupStatus, getSetupStatus } from "@/lib/setup";
 
 export default function ChatLayout({ children }: { readonly children: ReactNode }) {
+  const setupStatus = getInitialSetupStatus();
+
   return (
     <AgentChatShell
       initialChats={[]}
       initialNextCursor={null}
-      setupStatus={getInitialSetupStatus()}
+      setupStatus={setupStatus}
       viewer={null}
     >
       {children}
-      <Suspense fallback={null}>
-        <ResolvedChatBootstrap />
-      </Suspense>
+      <div className="hidden" aria-hidden>
+        <Suspense fallback={null}>
+          <ResolvedChatBootstrap />
+        </Suspense>
+      </div>
     </AgentChatShell>
   );
 }
@@ -24,19 +28,16 @@ export default function ChatLayout({ children }: { readonly children: ReactNode 
 async function ResolvedChatBootstrap() {
   const setupStatus = await getSetupStatus();
   const viewer = await getServerViewer(setupStatus);
-  let chats = [];
-  let nextCursor: string | null = null;
-
-  if (viewer && setupStatus.storageMode === "database" && setupStatus.databaseReady) {
-    const page = await listChatsPageByUser(viewer.id);
-    chats = [...page.items];
-    nextCursor = page.nextCursor;
-  }
+  const appReady = setupStatus.appReady;
+  const initialChatsPage =
+    viewer && appReady && setupStatus.storageMode === "database"
+      ? await listChatsPageByUser(viewer.id)
+      : { items: [], nextCursor: null };
 
   return (
     <AgentChatBootstrapSync
-      chats={chats}
-      nextCursor={nextCursor}
+      chats={initialChatsPage.items}
+      nextCursor={initialChatsPage.nextCursor}
       setupStatus={setupStatus}
       viewer={viewer}
     />
