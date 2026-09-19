@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 import { BusinessWorldEveChat } from "@/app/_components/business-world-eve-chat";
 import { PasswordSignInForm } from "@/components/auth/password-sign-in-form";
 import { SignInButton } from "@/components/auth/sign-in-button";
@@ -72,7 +72,7 @@ function ChatGate({
   description,
   title,
 }: {
-  readonly children?: React.ReactNode;
+  readonly children?: ReactNode;
   readonly description: string;
   readonly title: string;
 }) {
