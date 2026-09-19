@@ -20,7 +20,9 @@
     "build:eve": "eve build",
     "dev:eve": "eve dev",
     "start:eve": "eve start",
-    "audit:reality": "node scripts/audit-business-world-reality.mjs"
+    "audit:reality": "node scripts/audit-business-world-reality.mjs",
+    "eval:eve": "eve eval --strict",
+    "verify:eve": "pnpm typecheck && pnpm build:eve"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.0.2",
