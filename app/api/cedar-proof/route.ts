@@ -1,49 +1,6 @@
 import { NextResponse } from "next/server";
-import {
-  CedarInlineAuthorizationEngine,
-  type AuthorizationRequest,
-  type Entity,
-} from "@cedar-policy/cedar-authorization";
 
 export const runtime = "nodejs";
-
-const schema = JSON.stringify({
-  CedarDemo: {
-    entityTypes: {
-      Analyst: {
-        shape: { type: "Record", attributes: {} },
-        memberOfTypes: [],
-      },
-      Database: {
-        shape: { type: "Record", attributes: {} },
-        memberOfTypes: [],
-      },
-    },
-    actions: {
-      Select: {
-        appliesTo: {
-          principalTypes: ["Analyst"],
-          resourceTypes: ["Database"],
-          context: { type: "Record", attributes: {} },
-        },
-      },
-      Delete: {
-        appliesTo: {
-          principalTypes: ["Analyst"],
-          resourceTypes: ["Database"],
-          context: { type: "Record", attributes: {} },
-        },
-      },
-      Other: {
-        appliesTo: {
-          principalTypes: ["Analyst"],
-          resourceTypes: ["Database"],
-          context: { type: "Record", attributes: {} },
-        },
-      },
-    },
-  },
-});
 
 const staticPolicies = `permit (
   principal,
@@ -56,25 +13,6 @@ forbid (
   action == CedarDemo::Action::"Delete",
   resource == CedarDemo::Database::"mock_analytics"
 );`;
-
-const authorizer = new CedarInlineAuthorizationEngine({
-  staticPolicies,
-  schema: { type: "jsonString", schema },
-  validateRequest: true,
-});
-
-const entities: Entity[] = [
-  {
-    uid: { type: "CedarDemo::Analyst", id: "demo-analyst" },
-    attrs: {},
-    parents: [],
-  },
-  {
-    uid: { type: "CedarDemo::Database", id: "mock_analytics" },
-    attrs: {},
-    parents: [],
-  },
-];
 
 const safeRows = [
   { campaign: "秋季拉新", channel: "Douyin", spend: 68240, revenue: 318760, roas: 4.67 },
@@ -91,6 +29,23 @@ function classify(sql: string): "Select" | "Delete" | "Other" {
   return "Other";
 }
 
+async function authorize(action: "Select" | "Delete" | "Other") {
+  const cedar = await import("@cedar-policy/cedar-wasm/nodejs");
+  const result = cedar.isAuthorized({
+    principal: { type: "CedarDemo::Analyst", id: "demo-analyst" },
+    action: { type: "CedarDemo::Action", id: action },
+    resource: { type: "CedarDemo::Database", id: "mock_analytics" },
+    context: {},
+    policies: { staticPolicies },
+    entities: [],
+  });
+
+  return {
+    result,
+    version: cedar.getCedarVersion(),
+  };
+}
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null) as { sql?: unknown } | null;
   if (!body || typeof body.sql !== "string" || !body.sql.trim()) {
@@ -98,24 +53,25 @@ export async function POST(request: Request) {
   }
 
   const action = classify(body.sql);
-  const cedarRequest: AuthorizationRequest = {
-    principal: { type: "CedarDemo::Analyst", id: "demo-analyst" },
-    action: { type: "CedarDemo::Action", id: action },
-    resource: { type: "CedarDemo::Database", id: "mock_analytics" },
-    context: {},
-  };
+  const { result, version } = await authorize(action);
 
-  const decision = await authorizer.isAuthorized(cedarRequest, entities);
-
-  if (decision.type === "error") {
+  if (result.type === "failure") {
     return NextResponse.json({
       ok: false,
       executed: false,
-      cedar: { decision: "ERROR", action, message: decision.message },
+      cedar: {
+        decision: "ERROR",
+        action,
+        version,
+        message: result.errors.map((error) => error.message).join("; "),
+      },
     }, { status: 500 });
   }
 
-  if (decision.type === "deny") {
+  const decision = result.response.decision.toUpperCase();
+  const determiningPolicies = result.response.diagnostics.reason;
+
+  if (decision !== "ALLOW") {
     return NextResponse.json({
       ok: true,
       executed: false,
@@ -123,7 +79,8 @@ export async function POST(request: Request) {
       cedar: {
         decision: "DENY",
         action,
-        determiningPolicies: action === "Delete" ? ["policy1"] : [],
+        version,
+        determiningPolicies,
       },
       runtime: { scannedRows: 0, elapsedMs: 2, role: "analyst_readonly" },
     });
@@ -136,7 +93,8 @@ export async function POST(request: Request) {
     cedar: {
       decision: "ALLOW",
       action,
-      determiningPolicies: decision.authorizerInfo.determiningPolicies,
+      version,
+      determiningPolicies,
     },
     runtime: { scannedRows: 42813, elapsedMs: 428, role: "analyst_readonly" },
   });
