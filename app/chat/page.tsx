@@ -14,6 +14,10 @@ export default function ChatPage() {
 }
 
 async function ResolvedChatPage() {
+  if (process.env.VERCEL_ENV === "preview") {
+    return <BusinessWorldEveChat />;
+  }
+
   const setupStatus = await getSetupStatus();
 
   if (!setupStatus.appReady) {
