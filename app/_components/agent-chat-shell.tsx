@@ -123,7 +123,7 @@ export function AgentChatShell({
     activeChatIdRef.current = null;
     setActiveChatId(null);
     setMobileSidebarOpen(false);
-    router.push("/chat", { scroll: false });
+    router.push("/", { scroll: false });
   }, [router]);
 
   const handleSidebarNavigate = useCallback((chatId?: string | null) => {
