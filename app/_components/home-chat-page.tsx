@@ -38,7 +38,7 @@ export function HomeChatPage() {
   }, [setActiveChatId]);
 
   useEffect(() => {
-    if (pathname === "/") {
+    if (pathname === "/chat") {
       submittingRef.current = false;
       setSubmitting(false);
     }
@@ -126,7 +126,7 @@ export function HomeChatPage() {
     submitting,
   });
 
-  if (pathname !== "/") {
+  if (pathname !== "/chat") {
     return null;
   }
 
