@@ -3,7 +3,10 @@ import { withEve } from "eve/next";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
-  serverExternalPackages: ["@cedar-policy/cedar-wasm"],
+  serverExternalPackages: [
+    "@cedar-policy/cedar-authorization",
+    "@cedar-policy/cedar-wasm",
+  ],
   turbopack: {
     root: process.cwd(),
   },
