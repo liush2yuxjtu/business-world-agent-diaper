@@ -128,7 +128,7 @@ export function SessionChatPage({
         } catch {}
 
         setClientError(error instanceof Error ? error.message : "Failed to start chat.");
-        router.replace("/", { scroll: false });
+        router.replace("/chat", { scroll: false });
       }
     })();
   }, [
