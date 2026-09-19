@@ -1,5 +1,3 @@
-import { HomeChatPage } from "@/app/_components/home-chat-page";
-
 export default function ChatPage() {
-  return <HomeChatPage />;
+  return <main>Business World Agent chat</main>;
 }
