@@ -23,6 +23,7 @@
     "audit:reality": "node scripts/audit-business-world-reality.mjs"
   },
   "dependencies": {
+    "@cedar-policy/cedar-authorization": "0.2.0",
     "@neondatabase/serverless": "1.0.2",
     "@shikijs/core": "4.1.0",
     "@shikijs/engine-javascript": "4.1.0",
