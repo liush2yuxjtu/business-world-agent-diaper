@@ -1,7 +1,7 @@
 import { connect } from "@vercel/connect/eve";
 import { defineMcpClientConnection } from "eve/connections";
 
-const notionConnector = process.env.NOTION_CONNECTOR ?? "mcp.notion.com/business-world";
+const notionConnector = process.env.NOTION_CONNECTOR ?? "mcp.notion.com/notion";
 
 const APPROVAL_REQUIRED_TOOLS = [
   "notion-create-pages",
