@@ -302,5 +302,99 @@ export async function runScenarioExperiment(input: unknown) {
     });
     if (!response.ok) throw new Error(`Supabase Scenario persistence failed: ${response.status}`);
   }
-  return { id, provenance: provenance(state), result };
+
+  const persisted = await getScenarioExperiment(id);
+  if (!persisted) throw new Error("Scenario persistence verification failed: record could not be read back from the database.");
+  return { id, persisted: true, persistedAt: persisted.createdAt, provenance: provenance(state), result };
+}
+
+export async function getScenarioExperiment(id: string) {
+  if (isDatabaseConfigured()) {
+    await ensureSchema();
+    const result = await db.execute(sql`
+      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      from business_world_scenario_run
+      where id = ${id}
+      limit 1
+    `);
+    const row = result.rows[0] as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return {
+      id: String(row.id),
+      prompt: String(row.prompt),
+      lever: String(row.lever),
+      changePercent: Number(row.change_percent),
+      result: row.result,
+      sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+      createdAt: new Date(String(row.created_at)).toISOString(),
+    };
+  }
+
+  const response = await fetch(
+    `${SUPABASE_SCENARIO_ENDPOINT}?id=eq.${encodeURIComponent(id)}&select=id,prompt,lever,change_percent,result,source_state_id,created_at`,
+    {
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      cache: "no-store",
+    },
+  );
+  if (!response.ok) throw new Error(`Supabase Scenario read-back failed: ${response.status}`);
+  const rows = (await response.json()) as Array<Record<string, unknown>>;
+  const row = rows[0];
+  if (!row) return null;
+  return {
+    id: String(row.id),
+    prompt: String(row.prompt),
+    lever: String(row.lever),
+    changePercent: Number(row.change_percent),
+    result: row.result,
+    sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+    createdAt: new Date(String(row.created_at)).toISOString(),
+  };
+}
+
+export async function listScenarioExperiments(limit = 8) {
+  const safeLimit = Math.max(1, Math.min(20, Math.trunc(limit)));
+  if (isDatabaseConfigured()) {
+    await ensureSchema();
+    const result = await db.execute(sql`
+      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      from business_world_scenario_run
+      order by created_at desc
+      limit ${safeLimit}
+    `);
+    return result.rows.map((row) => ({
+      id: String(row.id),
+      prompt: String(row.prompt),
+      lever: String(row.lever),
+      changePercent: Number(row.change_percent),
+      result: row.result,
+      sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+      createdAt: new Date(String(row.created_at)).toISOString(),
+    }));
+  }
+
+  const response = await fetch(
+    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc&limit=${safeLimit}`,
+    {
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      cache: "no-store",
+    },
+  );
+  if (!response.ok) throw new Error(`Supabase Scenario history read failed: ${response.status}`);
+  const rows = (await response.json()) as Array<Record<string, unknown>>;
+  return rows.map((row) => ({
+    id: String(row.id),
+    prompt: String(row.prompt),
+    lever: String(row.lever),
+    changePercent: Number(row.change_percent),
+    result: row.result,
+    sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+    createdAt: new Date(String(row.created_at)).toISOString(),
+  }));
 }
