@@ -5,7 +5,7 @@ import { db, isDatabaseConfigured } from "@/lib/db/client";
 
 const SUPABASE_URL = "https://mezthyaerhhohywcxmqi.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__DV3WdzjR4_az6k_g5DrTQ_yAlNuQyn";
-const SUPABASE_STATE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state?id=eq.primary&select=id,source_label,source_type,observed_at,updated_at,payload`;
+const SUPABASE_STATE_TABLE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state`;\nconst SUPABASE_STATE_ENDPOINT = `${SUPABASE_STATE_TABLE_ENDPOINT}?id=eq.primary&select=id,source_label,source_type,observed_at,updated_at,payload`;
 const SUPABASE_SCENARIO_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_scenario_run`;
 
 export const businessWorldPayloadSchema = z.object({
@@ -180,18 +180,41 @@ export async function getBusinessWorldState(): Promise<BusinessWorldState | null
 }
 
 export async function saveBusinessWorldState(input: unknown): Promise<BusinessWorldState> {
-  await ensureSchema();
   const parsed = businessWorldWriteSchema.parse(input);
-  await db.execute(sql`
-    insert into business_world_state (id, source_label, source_type, observed_at, payload, updated_at)
-    values ('primary', ${parsed.sourceLabel}, ${parsed.sourceType}, ${parsed.observedAt}::timestamptz, ${JSON.stringify(parsed.payload)}::jsonb, now())
-    on conflict (id) do update set
-      source_label = excluded.source_label,
-      source_type = excluded.source_type,
-      observed_at = excluded.observed_at,
-      payload = excluded.payload,
-      updated_at = now()
-  `);
+
+  if (isDatabaseConfigured()) {
+    await ensureSchema();
+    await db.execute(sql`
+      insert into business_world_state (id, source_label, source_type, observed_at, payload, updated_at)
+      values ('primary', ${parsed.sourceLabel}, ${parsed.sourceType}, ${parsed.observedAt}::timestamptz, ${JSON.stringify(parsed.payload)}::jsonb, now())
+      on conflict (id) do update set
+        source_label = excluded.source_label,
+        source_type = excluded.source_type,
+        observed_at = excluded.observed_at,
+        payload = excluded.payload,
+        updated_at = now()
+    `);
+  } else {
+    const response = await fetch(SUPABASE_STATE_TABLE_ENDPOINT, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "resolution=merge-duplicates,return=minimal",
+      },
+      body: JSON.stringify({
+        id: "primary",
+        source_label: parsed.sourceLabel,
+        source_type: parsed.sourceType,
+        observed_at: parsed.observedAt,
+        payload: parsed.payload,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    if (!response.ok) throw new Error(`Supabase Business World write failed: ${response.status}`);
+  }
+
   const saved = await getBusinessWorldState();
   if (!saved) throw new Error("Business World state write did not persist.");
   return saved;
@@ -206,7 +229,7 @@ function provenance(state: BusinessWorldState | null) {
         asOf: state.observedAt,
         updatedAt: state.updatedAt,
         storage: isDatabaseConfigured() && state.sourceType !== "system-record" ? "Primary Postgres" : "Supabase Postgres",
-        writable: isDatabaseConfigured(),
+        writable: true,
       }
     : {
         sourceMode: "unavailable" as const,
