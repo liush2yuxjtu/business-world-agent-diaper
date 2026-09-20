@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+<defs>
+  <radialGradient id="g" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#62e8ff"/><stop offset=".32" stop-color="#2374ff"/><stop offset=".68" stop-color="#1436a8"/><stop offset="1" stop-color="#030712" stop-opacity="0"/></radialGradient>
+  <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#39f2ff" stop-opacity=".95"/><stop offset=".5" stop-color="#3f7cff" stop-opacity=".5"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="18" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="3840" height="2160" fill="#020617"/>
+<circle cx="2730" cy="880" r="820" fill="url(#g)" opacity=".82"/>
+<circle cx="2730" cy="880" r="720" fill="none" stroke="#4fdcff" stroke-width="4" opacity=".7" filter="url(#glow)"/>
+<ellipse cx="2730" cy="880" rx="720" ry="230" fill="none" stroke="#7dd3fc" stroke-width="2" opacity=".45"/>
+<ellipse cx="2730" cy="880" rx="480" ry="720" fill="none" stroke="#60a5fa" stroke-width="2" opacity=".35"/>
+<path d="M1970 930 C2300 740 3190 680 3470 910" fill="none" stroke="#c4f4ff" stroke-width="4" opacity=".75"/>
+<path d="M1780 250 L3030 1080" stroke="url(#beam)" stroke-width="42" opacity=".45"/>
+<g fill="#a5f3fc" opacity=".85">
+  <circle cx="2220" cy="570" r="10"/><circle cx="2430" cy="420" r="7"/><circle cx="2660" cy="690" r="9"/>
+  <circle cx="2950" cy="470" r="8"/><circle cx="3100" cy="820" r="10"/><circle cx="3320" cy="650" r="7"/>
+</g>
+<g stroke="#3b82f6" stroke-width="2" opacity=".35">
+  <path d="M2100 370 L2380 500 L2250 760 L2580 820 L2740 580 L3030 700 L3250 470"/>
+  <path d="M2400 300 L2460 610 L2870 530 L2960 890 L3350 820"/>
+</g>
+</svg>
