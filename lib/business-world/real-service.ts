@@ -5,7 +5,8 @@ import { db, isDatabaseConfigured } from "@/lib/db/client";
 
 const SUPABASE_URL = "https://mezthyaerhhohywcxmqi.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__DV3WdzjR4_az6k_g5DrTQ_yAlNuQyn";
-const SUPABASE_STATE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state?id=eq.primary&select=id,source_label,source_type,observed_at,updated_at,payload`;
+const SUPABASE_STATE_TABLE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state`;
+const SUPABASE_STATE_ENDPOINT = `${SUPABASE_STATE_TABLE_ENDPOINT}?id=eq.primary&select=id,source_label,source_type,observed_at,updated_at,payload`;
 const SUPABASE_SCENARIO_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_scenario_run`;
 
 export const businessWorldPayloadSchema = z.object({
@@ -180,18 +181,41 @@ export async function getBusinessWorldState(): Promise<BusinessWorldState | null
 }
 
 export async function saveBusinessWorldState(input: unknown): Promise<BusinessWorldState> {
-  await ensureSchema();
   const parsed = businessWorldWriteSchema.parse(input);
-  await db.execute(sql`
-    insert into business_world_state (id, source_label, source_type, observed_at, payload, updated_at)
-    values ('primary', ${parsed.sourceLabel}, ${parsed.sourceType}, ${parsed.observedAt}::timestamptz, ${JSON.stringify(parsed.payload)}::jsonb, now())
-    on conflict (id) do update set
-      source_label = excluded.source_label,
-      source_type = excluded.source_type,
-      observed_at = excluded.observed_at,
-      payload = excluded.payload,
-      updated_at = now()
-  `);
+
+  if (isDatabaseConfigured()) {
+    await ensureSchema();
+    await db.execute(sql`
+      insert into business_world_state (id, source_label, source_type, observed_at, payload, updated_at)
+      values ('primary', ${parsed.sourceLabel}, ${parsed.sourceType}, ${parsed.observedAt}::timestamptz, ${JSON.stringify(parsed.payload)}::jsonb, now())
+      on conflict (id) do update set
+        source_label = excluded.source_label,
+        source_type = excluded.source_type,
+        observed_at = excluded.observed_at,
+        payload = excluded.payload,
+        updated_at = now()
+    `);
+  } else {
+    const response = await fetch(SUPABASE_STATE_TABLE_ENDPOINT, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "resolution=merge-duplicates,return=minimal",
+      },
+      body: JSON.stringify({
+        id: "primary",
+        source_label: parsed.sourceLabel,
+        source_type: parsed.sourceType,
+        observed_at: parsed.observedAt,
+        payload: parsed.payload,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    if (!response.ok) throw new Error(`Supabase Business World write failed: ${response.status}`);
+  }
+
   const saved = await getBusinessWorldState();
   if (!saved) throw new Error("Business World state write did not persist.");
   return saved;
@@ -206,7 +230,7 @@ function provenance(state: BusinessWorldState | null) {
         asOf: state.observedAt,
         updatedAt: state.updatedAt,
         storage: isDatabaseConfigured() && state.sourceType !== "system-record" ? "Primary Postgres" : "Supabase Postgres",
-        writable: isDatabaseConfigured(),
+        writable: true,
       }
     : {
         sourceMode: "unavailable" as const,
@@ -253,7 +277,7 @@ const leverSchema = z.enum([
 ]);
 
 export async function runScenarioExperiment(input: unknown) {
-  await ensureSchema();
+  if (isDatabaseConfigured()) await ensureSchema();
   const parsed = z.object({
     prompt: z.string().trim().min(3).max(1000).default("Business World scenario"),
     lever: leverSchema,
@@ -302,5 +326,99 @@ export async function runScenarioExperiment(input: unknown) {
     });
     if (!response.ok) throw new Error(`Supabase Scenario persistence failed: ${response.status}`);
   }
-  return { id, provenance: provenance(state), result };
+
+  const persisted = await getScenarioExperiment(id);
+  if (!persisted) throw new Error("Scenario persistence verification failed: record could not be read back from the database.");
+  return { id, persisted: true, persistedAt: persisted.createdAt, provenance: provenance(state), result };
+}
+
+export async function getScenarioExperiment(id: string) {
+  if (isDatabaseConfigured()) {
+    await ensureSchema();
+    const result = await db.execute(sql`
+      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      from business_world_scenario_run
+      where id = ${id}
+      limit 1
+    `);
+    const row = result.rows[0] as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return {
+      id: String(row.id),
+      prompt: String(row.prompt),
+      lever: String(row.lever),
+      changePercent: Number(row.change_percent),
+      result: row.result,
+      sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+      createdAt: new Date(String(row.created_at)).toISOString(),
+    };
+  }
+
+  const response = await fetch(
+    `${SUPABASE_SCENARIO_ENDPOINT}?id=eq.${encodeURIComponent(id)}&select=id,prompt,lever,change_percent,result,source_state_id,created_at`,
+    {
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      cache: "no-store",
+    },
+  );
+  if (!response.ok) throw new Error(`Supabase Scenario read-back failed: ${response.status}`);
+  const rows = (await response.json()) as Array<Record<string, unknown>>;
+  const row = rows[0];
+  if (!row) return null;
+  return {
+    id: String(row.id),
+    prompt: String(row.prompt),
+    lever: String(row.lever),
+    changePercent: Number(row.change_percent),
+    result: row.result,
+    sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+    createdAt: new Date(String(row.created_at)).toISOString(),
+  };
+}
+
+export async function listScenarioExperiments(limit = 8) {
+  const safeLimit = Math.max(1, Math.min(20, Math.trunc(limit)));
+  if (isDatabaseConfigured()) {
+    await ensureSchema();
+    const result = await db.execute(sql`
+      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      from business_world_scenario_run
+      order by created_at desc
+      limit ${safeLimit}
+    `);
+    return result.rows.map((row) => ({
+      id: String(row.id),
+      prompt: String(row.prompt),
+      lever: String(row.lever),
+      changePercent: Number(row.change_percent),
+      result: row.result,
+      sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+      createdAt: new Date(String(row.created_at)).toISOString(),
+    }));
+  }
+
+  const response = await fetch(
+    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc&limit=${safeLimit}`,
+    {
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      cache: "no-store",
+    },
+  );
+  if (!response.ok) throw new Error(`Supabase Scenario history read failed: ${response.status}`);
+  const rows = (await response.json()) as Array<Record<string, unknown>>;
+  return rows.map((row) => ({
+    id: String(row.id),
+    prompt: String(row.prompt),
+    lever: String(row.lever),
+    changePercent: Number(row.change_percent),
+    result: row.result,
+    sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
+    createdAt: new Date(String(row.created_at)).toISOString(),
+  }));
 }

@@ -96,7 +96,7 @@ function SourceBanner({ snapshot, onEdit }: { snapshot: Snapshot | null; onEdit:
   const connected = mode === 'persisted-observation' || mode === 'simulated';
   const simulated = mode === 'simulated';
   return <div className={`source-banner ${connected ? 'real' : 'missing'}`}>
-    <div><ShieldCheck size={18}/><span><b>{simulated ? '模拟数据集 · 非真实经营结果' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
+    <div><ShieldCheck size={18}/><span><b>{simulated ? 'Demo 数据库 · 合成数据' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
     <button onClick={onEdit}>{connected ? '来源详情' : '连接数据'}</button>
   </div>;
 }
@@ -107,7 +107,7 @@ function Header({ title, subtitle, onExperiment }: { title: string; subtitle: st
 
 function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapshot | null; onSaved: () => void; onClose: () => void; readOnly: boolean }) {
   const d = snapshot?.data ?? emptyPayload;
-  const [sourceLabel, setSourceLabel] = useState(snapshot?.provenance.sourceMode === 'persisted-observation' ? snapshot.provenance.sourceLabel : '手工核验经营快照');
+  const [sourceLabel, setSourceLabel] = useState(snapshot?.provenance.sourceLabel || 'Business World Demo 数据库快照');
   const [observedAt, setObservedAt] = useState(snapshot?.provenance.asOf ? snapshot.provenance.asOf.slice(0, 16) : new Date().toISOString().slice(0, 16));
   const [values, setValues] = useState<Record<string, string>>({
     engagementRate: d.content.engagementRate?.toString() ?? '', weeklyOpportunities: d.content.weeklyOpportunities?.toString() ?? '',
@@ -121,7 +121,7 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
     event.preventDefault(); if (readOnly) { setStatus('当前数据源为只读。获得写入权限后才能修改。'); return; } setStatus('保存中…');
     const payload: Payload = {
       ...d,
-      meta: { ...d.meta, dataMode: 'observed', warning: 'Human-entered snapshot. Verify source evidence before treating values as official platform truth.' },
+      meta: { ...d.meta, dataMode: 'simulated', warning: 'Synthetic demo dataset persisted in the database. It is not observed platform or customer data.' },
       content: { ...d.content, engagementRate: numberValue(values.engagementRate), weeklyOpportunities: numberValue(values.weeklyOpportunities) },
       live: { ...d.live, roomEntryRate: numberValue(values.roomEntryRate), cartRate: numberValue(values.cartRate) },
       commerce: { ...d.commerce, conversionRate: numberValue(values.conversionRate), gmv: numberValue(values.gmv), newCustomers: numberValue(values.newCustomers) },
@@ -129,13 +129,13 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
       notes: values.notes,
     };
     try {
-      const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel, sourceType: 'manual-entry', observedAt: new Date(observedAt).toISOString(), payload }) });
+      const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel, sourceType: 'simulated', observedAt: new Date(observedAt).toISOString(), payload }) });
       const body = await response.json(); if (!response.ok) throw new Error(body.error || 'Save failed');
-      setStatus('经营快照已保存'); await onSaved();
+      setStatus('Demo 快照已写入数据库'); await onSaved();
     } catch (error) { setStatus(error instanceof Error ? error.message : 'Save failed'); }
   }
   const fields: Array<[string, string, string]> = [['engagementRate','内容互动率','%'],['weeklyOpportunities','本周内容机会','条'],['roomEntryRate','直播进房率','%'],['cartRate','直播加购率','%'],['conversionRate','商品转化率','%'],['gmv','GMV','元'],['newCustomers','新客数','人'],['budget','投放预算','元'],['roi','ROI',''],['cpa','CPA','元']];
-  return <div className="editor-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}><form className="data-editor" role="dialog" aria-modal="true" aria-labelledby="data-source-title" onSubmit={submit}><div className="editor-head"><div><b id="data-source-title">{readOnly ? '经营数据源' : '连接 Business World 数据'}</b><span>{readOnly ? '当前来源为只读；暂未提供的指标会保持为空。' : '保存后将更新当前经营快照。'}</span></div><button type="button" aria-label="关闭数据源面板" onClick={onClose}>×</button></div><label>来源名称<input required disabled={readOnly} value={sourceLabel} onChange={e => setSourceLabel(e.target.value)}/></label><label>观测时间<input required disabled={readOnly} type="datetime-local" value={observedAt} onChange={e => setObservedAt(e.target.value)}/></label><div className="field-grid">{fields.map(([key,label,unit]) => <label key={key}>{label}<div className="unit-input"><input type="number" step="any" disabled={readOnly} value={values[key]} onChange={e => set(key,e.target.value)}/><span>{unit}</span></div></label>)}</div><label>来源说明 / 备注<textarea disabled={readOnly} value={values.notes} onChange={e => set('notes',e.target.value)} placeholder="例如：来自 2026-09-17 店铺后台导出；文件已由运营核验。"/></label><div className="editor-actions"><span role="status" aria-live="polite">{status}</span><button className="primary" type="submit" disabled={readOnly}><Save size={16}/>{readOnly ? '只读来源' : '保存真实快照'}</button></div></form></div>;
+  return <div className="editor-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}><form className="data-editor" role="dialog" aria-modal="true" aria-labelledby="data-source-title" onSubmit={submit}><div className="editor-head"><div><b id="data-source-title">{readOnly ? '经营数据源' : '编辑 Demo 数据库快照'}</b><span>{readOnly ? '当前来源为只读；暂未提供的指标会保持为空。' : '保存后会更新数据库中的 Demo 快照，刷新页面仍然存在。'}</span></div><button type="button" aria-label="关闭数据源面板" onClick={onClose}>×</button></div><label>来源名称<input required disabled={readOnly} value={sourceLabel} onChange={e => setSourceLabel(e.target.value)}/></label><label>观测时间<input required disabled={readOnly} type="datetime-local" value={observedAt} onChange={e => setObservedAt(e.target.value)}/></label><div className="field-grid">{fields.map(([key,label,unit]) => <label key={key}>{label}<div className="unit-input"><input type="number" step="any" disabled={readOnly} value={values[key]} onChange={e => set(key,e.target.value)}/><span>{unit}</span></div></label>)}</div><label>来源说明 / 备注<textarea disabled={readOnly} value={values.notes} onChange={e => set('notes',e.target.value)} placeholder="例如：来自 2026-09-17 店铺后台导出；文件已由运营核验。"/></label><div className="editor-actions"><span role="status" aria-live="polite">{status}</span><button className="primary" type="submit" disabled={readOnly}><Save size={16}/>{readOnly ? '只读来源' : '保存 Demo 快照'}</button></div></form></div>;
 }
 
 export default function App() {
