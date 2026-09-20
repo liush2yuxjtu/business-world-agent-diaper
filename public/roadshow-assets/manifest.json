@@ -1,0 +1,59 @@
+{
+  "version": "2026-09-20",
+  "sourceConcepts": [
+    "商业路演 Demo / 角色价值",
+    "真实操作 Demo / 边操作边反馈",
+    "商业事件 → 行为原型 → 模拟推演 → 建议行动",
+    "Business World Agent 产品英雄页",
+    "Cursor-style 伪交互 Landing"
+  ],
+  "rules": {
+    "generation": "code-only",
+    "imageGen": false,
+    "vectorFirst": true,
+    "masterCanvas": "3840x2160",
+    "pptWebShared": true
+  },
+  "assets": [
+    {
+      "id": "globe-grid",
+      "path": "/roadshow-assets/globe-grid.svg",
+      "use": [
+        "landing hero",
+        "deck background"
+      ]
+    },
+    {
+      "id": "product-console",
+      "path": "/roadshow-assets/product-console.svg",
+      "use": [
+        "landing product demo",
+        "deck interaction slide"
+      ]
+    },
+    {
+      "id": "event-to-action",
+      "path": "/roadshow-assets/event-to-action.svg",
+      "use": [
+        "system explanation",
+        "deck architecture slide"
+      ]
+    },
+    {
+      "id": "potato-loop",
+      "path": "/roadshow-assets/potato-loop.svg",
+      "use": [
+        "Potato Mode",
+        "workshop slide"
+      ]
+    },
+    {
+      "id": "value-bars",
+      "path": "/roadshow-assets/value-bars.svg",
+      "use": [
+        "business value",
+        "closing slide"
+      ]
+    }
+  ]
+}
