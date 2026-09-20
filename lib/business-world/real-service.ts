@@ -5,7 +5,8 @@ import { db, isDatabaseConfigured } from "@/lib/db/client";
 
 const SUPABASE_URL = "https://mezthyaerhhohywcxmqi.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__DV3WdzjR4_az6k_g5DrTQ_yAlNuQyn";
-const SUPABASE_STATE_TABLE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state`;\nconst SUPABASE_STATE_ENDPOINT = `${SUPABASE_STATE_TABLE_ENDPOINT}?id=eq.primary&select=id,source_label,source_type,observed_at,updated_at,payload`;
+const SUPABASE_STATE_TABLE_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_state`;
+const SUPABASE_STATE_ENDPOINT = `${SUPABASE_STATE_TABLE_ENDPOINT}?id=eq.primary&select=id,source_label,source_type,observed_at,updated_at,payload`;
 const SUPABASE_SCENARIO_ENDPOINT = `${SUPABASE_URL}/rest/v1/business_world_scenario_run`;
 
 export const businessWorldPayloadSchema = z.object({
@@ -276,7 +277,7 @@ const leverSchema = z.enum([
 ]);
 
 export async function runScenarioExperiment(input: unknown) {
-  await ensureSchema();
+  if (isDatabaseConfigured()) await ensureSchema();
   const parsed = z.object({
     prompt: z.string().trim().min(3).max(1000).default("Business World scenario"),
     lever: leverSchema,
