@@ -80,31 +80,37 @@ values (
     "topTopics": [
       {
         "title": "宝宝整夜不漏尿挑战",
+        "opportunityScore": {"competition":20,"opportunity":85,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "新手家庭",
         "potential": "high"
       },
       {
         "title": "夏季透气纸尿裤测评",
+        "opportunityScore": {"competition":50,"opportunity":80,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "新手家庭",
         "potential": "high"
       },
       {
         "title": "新生儿囤货清单",
+        "opportunityScore": {"competition":20,"opportunity":40,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "复购家庭",
         "potential": "high"
       },
       {
         "title": "红屁屁护理误区",
+        "opportunityScore": {"competition":80,"opportunity":45,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "长辈照护",
         "potential": "medium"
       },
       {
         "title": "纸尿裤尺码怎么选",
+        "opportunityScore": {"competition":50,"opportunity":20,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "长辈照护",
         "potential": "high"
       },
       {
         "title": "夜用纸尿裤真实对比",
+        "opportunityScore": {"competition":80,"opportunity":90,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "内容分享者",
         "potential": "medium"
       }
