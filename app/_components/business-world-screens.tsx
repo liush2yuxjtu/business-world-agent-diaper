@@ -121,7 +121,7 @@ export function ExperimentRestored({ snapshot }: { snapshot: BusinessSnapshot | 
   return <><section className="panel experiment-brief"><LifestyleArt name="family-night"/><div><h2>经营效率情景实验</h2><p>以当前快照为基线，对单个变量进行方向性推演。</p></div><div><small>实验来源</small><b>{mode(snapshot?.data??null)}</b></div><div><small>执行边界</small><b>不操作外部平台</b></div></section><ExperimentForm snapshot={snapshot}/><section className="panel review-checkpoint"><span className="portrait"><Check/></span><div><h3>人工复核检查点</h3><p>比较结果前，确认假设、来源与适用边界。</p><label><input type="checkbox"/>已理解结果为线性情景推演，不是预测保证</label><label><input type="checkbox"/>已核对库存、履约和品牌约束</label></div></section></>;
 }
 export function ReportRestored({ snapshot }: { snapshot: BusinessSnapshot | null }) {
-  return <ReportWorkspace snapshot={snapshot} preview={(source, navigationDisabled, sourceKey) => <ReportPreview key={sourceKey} snapshot={source} navigationDisabled={navigationDisabled}/>}/>;
+  return <ReportWorkspace snapshot={snapshot} preview={(source, navigationDisabled, sourceKey) => <ReportPreview key={`preview:${sourceKey}`} snapshot={source} navigationDisabled={navigationDisabled}/>}/>;
 }
 function ReportPreview({ snapshot, navigationDisabled }: { snapshot: BusinessSnapshot | null; navigationDisabled: boolean }) {
   const [tab,setTab]=useState('brief');

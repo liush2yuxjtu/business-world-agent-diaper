@@ -131,7 +131,7 @@ export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnaps
     {selected?.scenario && <section className="panel report-editor"><h3>关联情景 · 推演结果，非实际发生</h3><p className="report-preserve-lines">{scenarioReportText(selected.scenario)}</p><a href={`/?screen=experiment&run=${selected.scenario.id}`}>返回来源实验</a></section>}
     {selected && <div className="report-actions"><button type="button" disabled={busy || dirty || emailReport !== null} onClick={() => setEmailReport(structuredClone(selected))}>发送到邮箱</button></div>}
     {emailReport && <ReportEmailComposer key={`${emailReport.id}:${emailReport.revision}`} report={emailReport} onClose={() => setEmailReport(null)}/>}
-    {selected && <ReportSharePanel key={selected.id} report={selected} disabled={busy || dirty}/>}
+    {selected && <ReportSharePanel key={`share:${selected.id}`} report={selected} disabled={busy || dirty}/>}
     {selected
       ? preview(selected.snapshot, dirty, selected.id)
       : busy || error
