@@ -1,5 +1,6 @@
 import type { BusinessSnapshot } from '@/app/_components/business-world-restored';
 import type { ScenarioRun } from './scenario-client';
+import { personaEvidenceFields } from './persona-evidence';
 import { entityHref, type EntityKind } from './entity-links';
 
 export type SearchEntry = { id: string; kind: string; label: string; href: string; terms: string; fields?: Array<[string, string]> };
@@ -14,7 +15,7 @@ export function buildSearchIndex(snapshot: BusinessSnapshot | null, pages: Reado
       const key = `${type}:${id}`;
       entries.push({ id:key, kind, label, href:entityHref(type,id), terms:[kind,label,...fields.flat(),...source.flat()].join(' '), fields:[...fields,...source] });
     };
-    data.personas.forEach(p=>add('persona',p.id,'人群',p.title,'persona', [['称呼',p.name],['需求',p.goal],['痛点',p.pain],['内容方向',p.content],['触发线索',p.trigger],['人群规模',value(p.population)],['转化率',value(p.conversionRate,'%')],['复购率',value(p.repeatRate,'%')]]));
+    data.personas.forEach(p=>add('persona',p.id,'人群',p.title,'persona', [...personaEvidenceFields(p,data.meta.dataMode),['称呼',p.name],['需求',p.goal],['痛点',p.pain],['内容方向',p.content],['触发线索',p.trigger],['人群规模',value(p.population)],['转化率',value(p.conversionRate,'%')],['复购率',value(p.repeatRate,'%')]]));
     data.content.topTopics.forEach(p=>add('topic',p.title,'内容选题',p.title,'content',[['关联人群',p.persona],['机会标识',p.potential]]));
     data.commerce.products.forEach(p=>add('product',p.id,'商品',p.name,'product',[['尺码',p.size],['价格',value(p.price,' 元')],['GMV',value(p.gmv,' 元')],['转化率',value(p.conversionRate,'%')],['库存天数',value(p.stockDays)],['退款率',value(p.refundRate,'%')]]));
     data.ads.campaigns.forEach(p=>add('campaign',p.id,'广告活动',p.name,'growth',[['渠道',p.channel],['状态',p.status],['预算',value(p.budget,' 元')],['消耗',value(p.spend,' 元')],['ROI',value(p.roi)],['CTR',value(p.ctr,'%')],['CPA',value(p.cpa,' 元')]]));

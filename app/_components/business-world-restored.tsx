@@ -1,5 +1,6 @@
 'use client';
 
+import type { PersonaEvidence } from '@/lib/business-world/persona-evidence';
 import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -14,6 +15,7 @@ import {
 export type BusinessPayload = {
   meta: { dataMode: 'simulated' | 'observed'; datasetVersion: string; designSource: string; warning: string };
   personas: Array<{
+    evidence?: PersonaEvidence;
     id: string; name: string; title: string; goal: string; pain: string; content: string; trigger: string;
     population: number | null; conversionRate: number | null; repeatRate: number | null; gmvShare: number | null;
   }>;

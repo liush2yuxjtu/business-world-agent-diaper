@@ -225,11 +225,12 @@ export default function App() {
     window.history.replaceState(null, '', url);
   }, []);
 
+  const clearEntity = useCallback(()=>{setEntityId('');const url=new URL(location.href);url.searchParams.delete('entity');history.replaceState(null,'',url);},[]);
   const selectEntity = useCallback((kind: EntityKind,id: string)=>{const entity=`${kind}:${id}`;setEntityId(entity);const url=new URL(location.href);url.searchParams.set('entity',entity);history.replaceState(null,'',url);},[]);
   const data = snapshot?.data ?? null;
   const view =
     active === 'overview' ? <OverviewRestored data={data}/> :
-    active === 'persona' ? <PersonaRestored data={data} onEntity={selectEntity}/> :
+    active === 'persona' ? <PersonaRestored data={data} onEntity={selectEntity} onClearEntity={clearEntity} onSource={()=>setEditing(true)}/> :
     active === 'world' ? <WorldRestored data={data}/> :
     active === 'content' ? <ContentRestored data={data} onEntity={selectEntity}/> :
     active === 'live' ? <LiveRestored data={data}/> :

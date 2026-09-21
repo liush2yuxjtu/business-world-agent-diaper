@@ -1,3 +1,4 @@
+import { personaEvidenceSchema } from "./persona-evidence";
 import { randomUUID } from "node:crypto";
 import { BaselineUnavailableError } from "./public-errors";
 import { sql } from "drizzle-orm";
@@ -19,6 +20,7 @@ export const businessWorldPayloadSchema = z.object({
   }),
   personas: z.array(z.object({
     id: z.string(),
+    evidence: personaEvidenceSchema.optional(),
     name: z.string(),
     title: z.string(),
     goal: z.string(),
