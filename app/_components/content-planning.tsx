@@ -24,6 +24,7 @@ export function ContentPlanning({ topicTitle, personaId }: { topicTitle?: string
   const queryKey = taskMode ? 'task' : 'draft';
   const belongs = (draft: ContentDraft) => taskMode ? draft.kind === 'task' : draft.kind !== 'task';
   const editor = useRef<HTMLFormElement>(null);
+  const [focusEditor,setFocusEditor]=useState(false);
   const [creating, setCreating] = useState(false);
   const [newTitle,setNewTitle]=useState(''); const [newAudience,setNewAudience]=useState(''); const [newBody,setNewBody]=useState('');
   const [week,setWeek]=useState('');
@@ -34,6 +35,7 @@ export function ContentPlanning({ topicTitle, personaId }: { topicTitle?: string
   const [date, setDate] = useState(''); const [channel, setChannel] = useState('');
   const [planDate, setPlanDate] = useState(''); const [planChannel, setPlanChannel] = useState('');
   const [planning, setPlanning] = useState(false); const [busy, setBusy] = useState(true);
+  useEffect(()=>{if(!focusEditor||busy)return; editor.current?.scrollIntoView({block:'start',behavior:'smooth'});editor.current?.querySelector<HTMLInputElement>('input')?.focus({preventScroll:true});setFocusEditor(false);},[focusEditor,busy]);
   const [error, setError] = useState(''); const [status, setStatus] = useState('');
   const dirty = !!selected && (title !== selected.title || body !== selected.body || (selected.kind === 'plan' && (date !== selected.scheduledFor || channel !== selected.channel)));
   function display(draft: ContentDraft) {
@@ -62,7 +64,7 @@ export function ContentPlanning({ topicTitle, personaId }: { topicTitle?: string
   async function choose(id: string, keepEdit = false) {
     await operate(async () => {
       const draft = await read<ContentDraft>(await fetch(`${endpoint}?id=${encodeURIComponent(id)}`, { cache: 'no-store' }));
-      if (keepEdit) { setSelected(draft); setStatus('已读取最新版本，编辑框中的未保存内容仍保留。'); } else {display(draft); requestAnimationFrame(()=>{editor.current?.scrollIntoView({block:'start',behavior:'smooth'}); editor.current?.querySelector<HTMLInputElement>('input')?.focus({preventScroll:true});});}
+      if (keepEdit) { setSelected(draft); setStatus('已读取最新版本，编辑框中的未保存内容仍保留。'); } else {display(draft); setFocusEditor(true);}
     });
   }
   async function createBrief() {
