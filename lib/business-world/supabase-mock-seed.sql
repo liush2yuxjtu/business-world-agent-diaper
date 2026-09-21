@@ -134,6 +134,7 @@ values (
     ]
   },
   "live": {
+    "funnel": {"source":"PR9 数据库演示集 · 人工构造的递进人群样本","asOf":"2026-09-22T00:00:00.000Z","period":"2026-09-22 演示场次（独立合成样本）","cohort":"固定10000个虚构观众标识，同一场次按曝光→进房→停留→商品点击→加购→支付逐级取子集。","methodology":"所有数值为人工构造的演示人数；各阶段按同一虚构观众标识去重，停留为累计观看至少30秒，支付为至少一笔已支付订单的去重观众。后续阶段均为前一阶段子集。该样本独立于页面整体快照指标，不与观看UV、订单数或来源报告比例混算；人数差不代表已证实原因。","unit":"unique_people","mode":"simulated","counts":{"exposure":10000,"entry":3600,"retained":2400,"productClick":960,"cart":480,"paid":144}},
     "roomEntryRate": 18.6,
     "cartRate": 10.2,
     "avgWatchSec": 214,
