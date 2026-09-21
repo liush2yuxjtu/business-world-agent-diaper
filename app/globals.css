@@ -77,3 +77,6 @@
 .bundle-hypothesis { display: grid; gap: 6px; margin: 14px 0; }
 .bundle-hypothesis textarea { width: 100%; min-height: 90px; box-sizing: border-box; resize: vertical; padding: 10px; border: 1px solid #879586; border-radius: 8px; color: inherit; background: transparent; }
 .bundle-proposals td { white-space: normal; overflow-wrap: anywhere; }
+
+.live-audience-segments { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:16px; margin:16px 0; }
+.live-audience-segment { display:flex; flex-direction:column; gap:10px; padding:16px; border:1px solid #deded5; border-radius:14px; min-width:0; overflow-wrap:anywhere; }
