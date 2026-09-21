@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import type { BusinessSnapshot } from './business-world-restored';
 import { reportText, type SavedReport } from '@/lib/business-world/report-model';
+import { ReportEmailComposer } from './report-email-composer';
 
 const messages: Record<string, string> = {
   REPORT_INVALID: '请检查报告标题、读者和备注长度。',
@@ -31,6 +32,7 @@ export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnaps
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
+  const [emailReport, setEmailReport] = useState<SavedReport | null>(null);
   const dirty = selected !== null && note !== selected.humanNote;
 
   useEffect(() => {
@@ -112,6 +114,8 @@ export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnaps
     <section className="panel report-editor"><label>历史报告<select value={selected?.id || ''} disabled={busy || dirty} onChange={e => { if (e.target.value) void choose(e.target.value); }}><option value="" disabled>选择已保存报告</option>{reports.map(report => <option key={report.id} value={report.id}>{report.title} · {new Date(report.createdAt).toLocaleString('zh-CN')}</option>)}</select></label>{!busy && !reports.length && <p>当前浏览器还没有保存的报告。</p>}{selected && <button type="button" disabled={busy} onClick={() => void choose(selected.id, dirty)}>重新读取当前报告</button>}</section>
     {error && <p role="alert" className="report-error">{error}</p>}{status && <p role="status">{status}</p>}{busy && <p role="status">正在处理报告…</p>}
     {selected && <section className="panel report-editor"><h3>自动生成摘要</h3><p className="report-preserve-lines">{selected.generatedSummary}</p><form onSubmit={saveNote}><label>人工备注<textarea maxLength={4000} rows={5} value={note} disabled={busy} onChange={e => setNote(e.target.value)}/></label><div className="report-actions"><button type="submit" className="primary" disabled={busy || !dirty}>保存备注</button><button type="button" disabled={busy || !dirty} onClick={() => setNote(selected.humanNote)}>放弃未保存修改</button><button type="button" onClick={download} disabled={busy || dirty}>下载文本</button><button type="button" onClick={() => void exportFile('pdf')} disabled={busy || dirty}>导出 PDF</button><button type="button" onClick={() => void exportFile('pptx')} disabled={busy || dirty}>导出 PPT</button></div>{dirty && <p>有未保存的备注。保存或放弃修改后，可切换报告与下载。</p>}</form><p>报告要点和下方数据来自生成时的快照；自动摘要由固定规则整理。</p></section>}
+    {selected && <div className="report-actions"><button type="button" disabled={busy || dirty || emailReport !== null} onClick={() => setEmailReport(structuredClone(selected))}>发送到邮箱</button></div>}
+    {emailReport && <ReportEmailComposer key={`${emailReport.id}:${emailReport.revision}`} report={emailReport} onClose={() => setEmailReport(null)}/>}
     {preview(selected?.snapshot ?? snapshot)}
   </div>;
 }
