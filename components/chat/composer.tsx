@@ -28,7 +28,7 @@ export function ChatComposer({
   onChange,
   onStop,
   onSubmit,
-  placeholder = "Ask eve anything...",
+  placeholder = "向 eve 提问…",
   value,
 }: {
   readonly autoFocus?: boolean;
@@ -101,7 +101,7 @@ export function ChatComposer({
       onSubmit={handleSubmit}
     >
       <label className="sr-only" htmlFor={composerId}>
-        Message eve
+        向 eve 提问
       </label>
       <textarea
         autoFocus={autoFocus}
@@ -124,7 +124,7 @@ export function ChatComposer({
         <div className="flex shrink-0 items-center">
           {isBusy ? (
             <Button
-              aria-label={isStopping ? "Stopping response" : "Stop response"}
+              aria-label={isStopping ? "正在停止回答" : "停止回答"}
               className="size-6 cursor-pointer rounded-md bg-foreground/15 text-foreground/55 shadow-none hover:bg-foreground/25"
               disabled={isStopping}
               onClick={onStop}
@@ -139,7 +139,7 @@ export function ChatComposer({
             </Button>
           ) : isPreparing ? (
             <Button
-              aria-label="Preparing chat"
+              aria-label="正在准备对话"
               className="size-6 rounded-md bg-foreground/75 text-background"
               disabled
               size="icon-xs"
@@ -149,7 +149,7 @@ export function ChatComposer({
             </Button>
           ) : (
             <Button
-              aria-label="Send message"
+              aria-label="发送问题"
               className="size-6 cursor-pointer rounded-md bg-foreground text-background hover:bg-foreground/90 disabled:cursor-not-allowed disabled:pointer-events-auto disabled:opacity-30"
               disabled={disabled || trimmedValue.length === 0 || isOverMaxLength}
               size="icon-xs"
