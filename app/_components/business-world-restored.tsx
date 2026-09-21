@@ -213,7 +213,7 @@ export function ProductRestored({ data }: { data: BusinessPayload | null }) {
   </>;
 }
 
-export function ExperimentRestored({ snapshot, worldMode = false, selectedEntity }: { snapshot: BusinessSnapshot | null; worldMode?: boolean; selectedEntity?: string }) {
+export function ExperimentRestored({ snapshot, worldMode = false, selectedEntity, onSelectedEntity }: { snapshot: BusinessSnapshot | null; worldMode?: boolean; selectedEntity?: string; onSelectedEntity?: (id: string) => void }) {
   const [prompt,setPrompt]=useState(worldMode ? '评估当前经营基线' : '评估当前投放效率提升 10% 的方向性影响');
   const [lever,setLever]=useState('ad_efficiency');
   const [changePercent,setChangePercent]=useState(worldMode ? '0' : '10');
@@ -226,6 +226,7 @@ export function ExperimentRestored({ snapshot, worldMode = false, selectedEntity
   const selectSaved = useCallback((saved: ScenarioRun) => {
     setResult(saved);
     setEntityId(saved.result.context?.entity?.id ?? "");
+    onSelectedEntity?.(saved.result.context?.entity?.id ?? "");
     setPreset(worldPresets.find(p=>p.change===saved.changePercent)?.id ?? "custom");
     setPrompt(saved.prompt); setLever(saved.lever); setChangePercent(String(saved.changePercent));
     setStatus(`已读取保存的情景 · ${new Date(saved.createdAt).toLocaleString('zh-CN')}`);
@@ -233,7 +234,7 @@ export function ExperimentRestored({ snapshot, worldMode = false, selectedEntity
     url.searchParams.set('run', saved.id);
     if(saved.result.context?.entity) url.searchParams.set('entity',saved.result.context.entity.id); else url.searchParams.delete('entity');
     window.history.replaceState(null, '', url);
-  }, []);
+  }, [onSelectedEntity]);
   useEffect(() => {
     const id = new URL(window.location.href).searchParams.get('run');
     if (!id) return;
@@ -247,6 +248,7 @@ export function ExperimentRestored({ snapshot, worldMode = false, selectedEntity
   useEffect(() => {
     const id = selectedEntity ?? new URL(window.location.href).searchParams.get('entity') ?? '';
     if (!worldMode && new URL(window.location.href).searchParams.has('run')) return;
+    if (result && (result.result.context?.entity?.id ?? '') === id) return;
     setEntityId(id);
     const entity = scenarioEntity(snapshot?.data ?? null,id);
     if(entity){setLever(entity.lever);setPrompt(`评估「${entity.label}」相关经营假设的方向性影响`);}
