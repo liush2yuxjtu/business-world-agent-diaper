@@ -142,13 +142,14 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
     };
   }, [onClose]);
   const d = snapshot?.data ?? emptyPayload;
-  const [sourceLabel, setSourceLabel] = useState(snapshot?.provenance.sourceLabel || '尚未连接来源');
+  const presented = snapshot ? presentSnapshot(snapshot) : null;
+  const [sourceLabel, setSourceLabel] = useState(presented?.provenance.sourceLabel || '尚未连接来源');
   const [observedAt, setObservedAt] = useState(snapshot?.provenance.asOf ? localObservationMinute(snapshot.provenance.asOf) : '');
   const [values, setValues] = useState<Record<string, string>>({
     engagementRate: d.content.engagementRate?.toString() ?? '', weeklyOpportunities: d.content.weeklyOpportunities?.toString() ?? '',
     roomEntryRate: d.live.roomEntryRate?.toString() ?? '', cartRate: d.live.cartRate?.toString() ?? '',
     conversionRate: d.commerce.conversionRate?.toString() ?? '', gmv: d.commerce.gmv?.toString() ?? '', newCustomers: d.commerce.newCustomers?.toString() ?? '',
-    budget: d.ads.budget?.toString() ?? '', roi: d.ads.roi?.toString() ?? '', cpa: d.ads.cpa?.toString() ?? '', notes: d.notes ?? '',
+    budget: d.ads.budget?.toString() ?? '', roi: d.ads.roi?.toString() ?? '', cpa: d.ads.cpa?.toString() ?? '', notes: presented?.data?.notes ?? '',
   });
   const [status, setStatus] = useState('');
   const [saving, setSaving] = useState(false);
@@ -164,15 +165,15 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
     setStatus('保存中…');
     const payload: Payload = {
       ...d,
-      meta: { ...d.meta, dataMode: 'simulated', warning: 'Synthetic demo dataset persisted in the database. It is not observed platform or customer data.' },
+      meta: { ...d.meta, dataMode: 'simulated', warning: d.meta.dataMode === 'simulated' ? d.meta.warning : 'Synthetic demo dataset persisted in the database. It is not observed platform or customer data.' },
       content: { ...d.content, engagementRate: numberValue(values.engagementRate), weeklyOpportunities: numberValue(values.weeklyOpportunities) },
       live: { ...d.live, roomEntryRate: numberValue(values.roomEntryRate), cartRate: numberValue(values.cartRate) },
       commerce: { ...d.commerce, conversionRate: numberValue(values.conversionRate), gmv: numberValue(values.gmv), newCustomers: numberValue(values.newCustomers) },
       ads: { ...d.ads, budget: numberValue(values.budget), roi: numberValue(values.roi), cpa: numberValue(values.cpa) },
-      notes: values.notes,
+      notes: values.notes === presented?.data?.notes ? d.notes : values.notes,
     };
     try {
-      const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel, sourceType: 'simulated', observedAt: observationTimeForSave(observedAt, snapshot?.provenance.asOf), payload }) });
+      const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel: sourceLabel === presented?.provenance.sourceLabel ? snapshot!.provenance.sourceLabel : sourceLabel, sourceType: 'simulated', observedAt: observationTimeForSave(observedAt, snapshot?.provenance.asOf), payload }) });
       const body = await response.json(); if (!response.ok) throw new Error(publicErrorMessage(body, 'SAVE_FAILED'));
       setStatus('演示数据已保存'); await onSaved();
     } catch (error) { setStatus(error instanceof Error && Object.values(publicMessages).some(message => message === error.message) ? error.message : publicMessages.SAVE_FAILED); }
@@ -184,7 +185,8 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
 
 export default function App() {
   const [active, setActive] = useState<NavId>('overview');
-  const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const [sourceSnapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const snapshot = sourceSnapshot ? presentSnapshot(sourceSnapshot) : null;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);
@@ -209,7 +211,7 @@ export default function App() {
 
   const load = useCallback(async () => {
     setLoading(true); setError('');
-    try { const response = await fetch('/api/business-world/state', { cache: 'no-store' }); const body = await response.json(); if (!response.ok) throw new Error(publicErrorMessage(body, 'READ_FAILED')); setSnapshot(presentSnapshot(body)); }
+    try { const response = await fetch('/api/business-world/state', { cache: 'no-store' }); const body = await response.json(); if (!response.ok) throw new Error(publicErrorMessage(body, 'READ_FAILED')); setSnapshot(body); }
     catch (err) { setSnapshot(null); setError(publicMessages.READ_FAILED); }
     finally { setLoading(false); }
   }, []);
@@ -251,5 +253,5 @@ export default function App() {
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
     <ReportRestored snapshot={snapshot}/>;
 
-  return <main className={`app-shell screen-${active}`}><aside className="sidebar"><div className="brand"><div><span className="brand-wordmark">eve</span><b>Business World</b><small>DIAPER OPERATING SYSTEM</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-label={label} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><a href="?screen=experiment" className="sidebar-promo" aria-label="模拟工作区"><Box size={25}/><div>模拟工作区<small>建模 · 验证 · 成长<br/>让每一次决策更可靠</small></div></a></aside><section className="workspace"><div className="topbar"><BusinessSearch snapshot={snapshot} pages={nav.map(([id,label])=>[id,label] as const)} query={search} setQuery={setSearch} inputRef={searchRef}/><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => { window.location.href = "/chat"; }}><Sparkles size={13}/>问 Agent</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle={screenDescriptions[active]} onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : <>{entityId && active !== 'world' && <EntitySearchDetail snapshot={snapshot} entityId={entityId} onClose={()=>{setEntityId('');const url=new URL(location.href);url.searchParams.delete('entity');history.replaceState(null,'',url);}} onSource={()=>setEditing(true)}/>} {view}</>}</div></section>{editing && !loading && <DataEditor snapshot={snapshot} onSaved={load} onClose={closeEditor} readOnly={!snapshot?.provenance.writable}/>}</main>;
+  return <main className={`app-shell screen-${active}`}><aside className="sidebar"><div className="brand"><div><span className="brand-wordmark">eve</span><b>Business World</b><small>DIAPER OPERATING SYSTEM</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-label={label} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><a href="?screen=experiment" className="sidebar-promo" aria-label="模拟工作区"><Box size={25}/><div>模拟工作区<small>建模 · 验证 · 成长<br/>让每一次决策更可靠</small></div></a></aside><section className="workspace"><div className="topbar"><BusinessSearch snapshot={snapshot} pages={nav.map(([id,label])=>[id,label] as const)} query={search} setQuery={setSearch} inputRef={searchRef}/><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => { window.location.href = "/chat"; }}><Sparkles size={13}/>问 Agent</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle={screenDescriptions[active]} onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : <>{entityId && active !== 'world' && <EntitySearchDetail snapshot={snapshot} entityId={entityId} onClose={()=>{setEntityId('');const url=new URL(location.href);url.searchParams.delete('entity');history.replaceState(null,'',url);}} onSource={()=>setEditing(true)}/>} {view}</>}</div></section>{editing && !loading && <DataEditor snapshot={sourceSnapshot} onSaved={load} onClose={closeEditor} readOnly={!snapshot?.provenance.writable}/>}</main>;
 }
