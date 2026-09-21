@@ -258,6 +258,7 @@ values (
     "products": [
       {
         "id": "newborn",
+        "category": "日常护理",
         "name": "新生儿系列",
         "size": "NB / S",
         "price": 79,
@@ -269,6 +270,7 @@ values (
       },
       {
         "id": "daily",
+        "category": "日常护理",
         "name": "日常成长系列",
         "size": "M / L",
         "price": 89,
@@ -280,6 +282,7 @@ values (
       },
       {
         "id": "night",
+        "category": "夜间护理",
         "name": "夜间加强系列",
         "size": "XL+",
         "price": 109,
