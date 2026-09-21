@@ -7,6 +7,7 @@ export const publicMessages = {
   CROSS_ORIGIN: '请在当前应用页面内提交此操作。',
   BASELINE_UNAVAILABLE: '尚无可用的经营基线，请先读取数据再运行实验。',
   READ_FAILED: '暂时无法读取经营数据，请稍后重试。',
+  SOURCE_READ_ONLY: '当前来源只提供读取权限，尚未接通受控的保存服务。',
   SAVE_FAILED: '未能确认保存成功，请刷新数据核对后再试。',
   SCENARIO_FAILED: '未能确认实验已保存，请稍后核对场景记录。',
   INVALID_RECORD: '情景记录链接无效，请从历史记录重新选择。',
@@ -17,13 +18,16 @@ export const publicMessages = {
 export type PublicErrorCode = keyof typeof publicMessages;
 
 export class BaselineUnavailableError extends Error {}
+export class SourceReadOnlyError extends Error {}
 
 export function errorResponse(error: unknown, fallback: PublicErrorCode, validation?: PublicErrorCode) {
-  const code = error instanceof BaselineUnavailableError ? 'BASELINE_UNAVAILABLE'
+  const code = error instanceof SourceReadOnlyError ? 'SOURCE_READ_ONLY'
+    : error instanceof BaselineUnavailableError ? 'BASELINE_UNAVAILABLE'
     : error instanceof ZodError && validation ? validation
     : error instanceof SyntaxError && validation ? 'INVALID_JSON'
     : fallback;
-  const status = code === 'INVALID_INPUT' || code === 'INVALID_STATE' || code === 'INVALID_JSON' ? 400
+  const status = code === 'SOURCE_READ_ONLY' ? 403
+    : code === 'INVALID_INPUT' || code === 'INVALID_STATE' || code === 'INVALID_JSON' ? 400
     : code === 'BASELINE_UNAVAILABLE' ? 409 : 503;
   return Response.json({ code, error: publicMessages[code] }, { status });
 }

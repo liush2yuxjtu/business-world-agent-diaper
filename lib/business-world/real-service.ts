@@ -3,7 +3,7 @@ import { topicOpportunitySchema } from './topic-opportunity';
 import { scenarioEntity } from './scenario-context';
 import { personaEvidenceSchema } from "./persona-evidence";
 import { randomUUID } from "node:crypto";
-import { BaselineUnavailableError } from "./public-errors";
+import { BaselineUnavailableError, SourceReadOnlyError } from "./public-errors";
 import { sql } from "drizzle-orm";
 import { z } from "zod";
 import { db, isDatabaseConfigured } from "@/lib/db/client";
@@ -220,6 +220,7 @@ export async function saveBusinessWorldState(input: unknown): Promise<BusinessWo
         updated_at: new Date().toISOString(),
       }),
     });
+    if (response.status === 401 || response.status === 403) throw new SourceReadOnlyError();
     if (!response.ok) throw new Error(`Supabase Business World write failed: ${response.status}`);
   }
 
@@ -237,7 +238,8 @@ function provenance(state: BusinessWorldState | null) {
         asOf: state.observedAt,
         updatedAt: state.updatedAt,
         storage: isDatabaseConfigured() && state.sourceType !== "system-record" ? "Primary Postgres" : "Supabase Postgres",
-        writable: true,
+        // The public Supabase fallback has read access only; do not advertise a save capability.
+        writable: isDatabaseConfigured(),
       }
     : {
         sourceMode: "unavailable" as const,

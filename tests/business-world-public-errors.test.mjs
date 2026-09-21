@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { z } from 'zod';
-import { BaselineUnavailableError, crossOriginResponse, errorResponse, publicErrorMessage, publicMessages } from '../lib/business-world/public-errors.ts';
+import { BaselineUnavailableError, SourceReadOnlyError, crossOriginResponse, errorResponse, publicErrorMessage, publicMessages } from '../lib/business-world/public-errors.ts';
 
 test('unexpected storage errors cannot disclose implementation details', async () => {
   const response = errorResponse(new Error('database credentials=private-value SQL SELECT'), 'SAVE_FAILED');
@@ -40,4 +40,10 @@ test('client presentation accepts only known codes, never raw messages', () => {
     assert.equal(publicErrorMessage(body, 'READ_FAILED'), publicMessages.READ_FAILED);
   }
   assert.equal(publicErrorMessage({ code: 'INVALID_INPUT', error: 'private detail' }, 'READ_FAILED'), publicMessages.INVALID_INPUT);
+});
+
+ test('read-only source failure is actionable and does not disclose backend policy details', async () => {
+  const response = errorResponse(new SourceReadOnlyError('private policy detail'), 'SAVE_FAILED');
+  assert.equal(response.status, 403);
+  assert.deepEqual(await response.json(), { code: 'SOURCE_READ_ONLY', error: publicMessages.SOURCE_READ_ONLY });
 });
