@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { ZodError } from "zod";
+import { crossOriginResponse, errorResponse } from "@/lib/business-world/public-errors";
 import { getBusinessWorldSnapshot, saveBusinessWorldState } from "@/lib/business-world/real-service";
 
 export async function GET() {
@@ -9,19 +9,13 @@ export async function GET() {
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
-    return Response.json(
-      { error: error instanceof Error ? error.message : "Failed to read Business World state" },
-      { status: 503 },
-    );
+    return errorResponse(error, "READ_FAILED");
   }
 }
 
 export async function PUT(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("host");
-  if (origin && host && new URL(origin).host !== host) {
-    return Response.json({ error: "Cross-origin writes are not allowed" }, { status: 403 });
-  }
+  const rejected = crossOriginResponse(request);
+  if (rejected) return rejected;
   try {
     const saved = await saveBusinessWorldState(await request.json());
     return Response.json(
@@ -29,10 +23,6 @@ export async function PUT(request: NextRequest) {
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
-    const status = error instanceof ZodError ? 400 : 503;
-    return Response.json(
-      { error: error instanceof Error ? error.message : "Failed to persist Business World state" },
-      { status },
-    );
+    return errorResponse(error, "SAVE_FAILED", "INVALID_STATE");
   }
 }

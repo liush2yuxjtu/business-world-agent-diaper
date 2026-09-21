@@ -1,5 +1,8 @@
 'use client';
 
+import { presentSnapshot } from '@/lib/business-world/presentation';
+import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
+
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BarChart3, Box, ClipboardList, Database, FlaskConical, Home, Package, Play,
@@ -96,7 +99,7 @@ function SourceBanner({ snapshot, onEdit }: { snapshot: Snapshot | null; onEdit:
   const connected = mode === 'persisted-observation' || mode === 'simulated';
   const simulated = mode === 'simulated';
   return <div className={`source-banner ${connected ? 'real' : 'missing'}`}>
-    <div><ShieldCheck size={18}/><span><b>{simulated ? 'Demo 数据库 · 合成数据' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
+    <div><ShieldCheck size={18}/><span><b>{simulated ? '演示数据 · 非真实经营记录' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
     <button onClick={onEdit}>{connected ? '来源详情' : '连接数据'}</button>
   </div>;
 }
@@ -135,7 +138,7 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
     };
   }, [onClose]);
   const d = snapshot?.data ?? emptyPayload;
-  const [sourceLabel, setSourceLabel] = useState(snapshot?.provenance.sourceLabel || 'Business World Demo 数据库快照');
+  const [sourceLabel, setSourceLabel] = useState(snapshot?.provenance.sourceLabel || '经营演示数据');
   const [observedAt, setObservedAt] = useState(snapshot?.provenance.asOf ? snapshot.provenance.asOf.slice(0, 16) : new Date().toISOString().slice(0, 16));
   const [values, setValues] = useState<Record<string, string>>({
     engagementRate: d.content.engagementRate?.toString() ?? '', weeklyOpportunities: d.content.weeklyOpportunities?.toString() ?? '',
@@ -158,12 +161,12 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
     };
     try {
       const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel, sourceType: 'simulated', observedAt: new Date(observedAt).toISOString(), payload }) });
-      const body = await response.json(); if (!response.ok) throw new Error(body.error || 'Save failed');
-      setStatus('Demo 快照已写入数据库'); await onSaved();
-    } catch (error) { setStatus(error instanceof Error ? error.message : 'Save failed'); }
+      const body = await response.json(); if (!response.ok) throw new Error(publicErrorMessage(body, 'SAVE_FAILED'));
+      setStatus('演示数据已保存'); await onSaved();
+    } catch (error) { setStatus(error instanceof Error && Object.values(publicMessages).some(message => message === error.message) ? error.message : publicMessages.SAVE_FAILED); }
   }
   const fields: Array<[string, string, string]> = [['engagementRate','内容互动率','%'],['weeklyOpportunities','本周内容机会','条'],['roomEntryRate','直播进房率','%'],['cartRate','直播加购率','%'],['conversionRate','商品转化率','%'],['gmv','GMV','元'],['newCustomers','新客数','人'],['budget','投放预算','元'],['roi','ROI',''],['cpa','CPA','元']];
-  return <div className="editor-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}><form className="data-editor" role="dialog" aria-modal="true" aria-labelledby="data-source-title" onSubmit={submit}><div className="editor-head"><div><b id="data-source-title">{readOnly ? '经营数据源' : '编辑 Demo 数据库快照'}</b><span>{readOnly ? '当前来源为只读；暂未提供的指标会保持为空。' : '保存后会更新数据库中的 Demo 快照，刷新页面仍然存在。'}</span></div><button type="button" aria-label="关闭数据源面板" onClick={onClose}>×</button></div><label>来源名称<input required disabled={readOnly} value={sourceLabel} onChange={e => setSourceLabel(e.target.value)}/></label><label>观测时间<input required disabled={readOnly} type="datetime-local" value={observedAt} onChange={e => setObservedAt(e.target.value)}/></label><div className="field-grid">{fields.map(([key,label,unit]) => <label key={key}>{label}<div className="unit-input"><input type="number" step="any" disabled={readOnly} value={values[key]} onChange={e => set(key,e.target.value)}/><span>{unit}</span></div></label>)}</div><label>来源说明 / 备注<textarea disabled={readOnly} value={values.notes} onChange={e => set('notes',e.target.value)} placeholder="例如：来自 2026-09-17 店铺后台导出；文件已由运营核验。"/></label><div className="editor-actions"><span role="status" aria-live="polite">{status}</span><button className="primary" type="submit" disabled={readOnly}><Save size={16}/>{readOnly ? '只读来源' : '保存 Demo 快照'}</button></div></form></div>;
+  return <div className="editor-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}><form className="data-editor" role="dialog" aria-modal="true" aria-labelledby="data-source-title" onSubmit={submit}><div className="editor-head"><div><b id="data-source-title">{readOnly ? '经营数据源' : '编辑演示数据'}</b><span>{readOnly ? '当前来源为只读；暂未提供的指标会保持为空。' : '保存后会更新各页面使用的演示数据，刷新页面仍然保留。'}</span></div><button type="button" aria-label="关闭数据源面板" onClick={onClose}>×</button></div><label>来源名称<input required disabled={readOnly} value={sourceLabel} onChange={e => setSourceLabel(e.target.value)}/></label><label>观测时间<input required disabled={readOnly} type="datetime-local" value={observedAt} onChange={e => setObservedAt(e.target.value)}/></label><div className="field-grid">{fields.map(([key,label,unit]) => <label key={key}>{label}<div className="unit-input"><input type="number" step="any" disabled={readOnly} value={values[key]} onChange={e => set(key,e.target.value)}/><span>{unit}</span></div></label>)}</div><label>来源说明 / 备注<textarea disabled={readOnly} value={values.notes} onChange={e => set('notes',e.target.value)} placeholder="例如：本次比较采用的假设、适用范围与注意事项。"/></label><div className="editor-actions"><span role="status" aria-live="polite">{status}</span><button className="primary" type="submit" disabled={readOnly}><Save size={16}/>{readOnly ? '只读来源' : '保存演示数据'}</button></div></form></div>;
 }
 
 export default function App() {
@@ -192,8 +195,8 @@ export default function App() {
 
   const load = useCallback(async () => {
     setLoading(true); setError('');
-    try { const response = await fetch('/api/business-world/state', { cache: 'no-store' }); const body = await response.json(); if (!response.ok) throw new Error(body.error || 'Failed to load'); setSnapshot(body); }
-    catch (err) { setSnapshot(null); setError(err instanceof Error ? err.message : 'Failed to load'); }
+    try { const response = await fetch('/api/business-world/state', { cache: 'no-store' }); const body = await response.json(); if (!response.ok) throw new Error(publicErrorMessage(body, 'READ_FAILED')); setSnapshot(presentSnapshot(body)); }
+    catch (err) { setSnapshot(null); setError(publicMessages.READ_FAILED); }
     finally { setLoading(false); }
   }, []);
   useEffect(() => { void load(); }, [load]);

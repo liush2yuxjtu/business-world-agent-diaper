@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { BaselineUnavailableError } from "./public-errors";
 import { sql } from "drizzle-orm";
 import { z } from "zod";
 import { db, isDatabaseConfigured } from "@/lib/db/client";
@@ -284,7 +285,8 @@ export async function runScenarioExperiment(input: unknown) {
     changePercent: z.number().min(-80).max(200),
   }).parse(input);
   const state = await getBusinessWorldState();
-  const baselineRoi = state?.payload.ads.roi ?? null;
+  if (!state) throw new BaselineUnavailableError();
+  const baselineRoi = state.payload.ads.roi;
   const baselineConversion = state?.payload.commerce.conversionRate ?? null;
   const multiplier = 1 + parsed.changePercent / 100;
   const result = {
