@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useState, type RefObject } from 'react';
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Search } from 'lucide-react';
 import type { BusinessSnapshot } from './business-world-restored';
 import { buildSearchIndex, searchEntries } from '@/lib/business-world/search-model';
@@ -10,6 +10,8 @@ export function BusinessSearch({snapshot,pages,query,setQuery,inputRef}:{snapsho
   const [historyState,setHistoryState]=useState<'idle'|'loading'|'ready'|'error'>('idle');
   const [retry,setRetry]=useState(0);
   const [selected,setSelected]=useState(0);
+  const resultsRef=useRef<HTMLDivElement>(null);
+  const activeOptionRef=useRef<HTMLButtonElement>(null);
   const open=!!query.trim();
   useEffect(()=>{
     if(!open) return;
@@ -22,13 +24,23 @@ export function BusinessSearch({snapshot,pages,query,setQuery,inputRef}:{snapsho
   },[open,query,retry]);
   const matches=useMemo(()=>searchEntries(buildSearchIndex(snapshot,pages,runs),query),[snapshot,pages,runs,query]);
   const current=Math.min(selected,Math.max(0,matches.length-1));
+  useEffect(()=>{
+    const panel=resultsRef.current;
+    const option=activeOptionRef.current;
+    if(!open || !panel || !option)return;
+    const bounds=panel.getBoundingClientRect();
+    const active=option.getBoundingClientRect();
+    // Keep the active descendant visible without moving focus or scrolling the page.
+    if(active.top<bounds.top+8)panel.scrollTop+=active.top-bounds.top-8;
+    else if(active.bottom>bounds.bottom-8)panel.scrollTop+=active.bottom-bounds.bottom+8;
+  },[open,current,matches]);
   const navigate=(href:string)=>{window.location.href=href;};
   return <div className="search real-search"><Search size={16}/><input ref={inputRef} aria-label="搜索页面、实体、证据或情景" role="combobox" aria-autocomplete="list" aria-expanded={open} aria-controls={open?'feature-search-results':undefined} aria-activedescendant={open&&matches.length?`search-match-${current}`:undefined} placeholder="搜索页面、实体、证据或情景" value={query} onChange={e=>{setSelected(0);setQuery(e.target.value);}} onKeyDown={e=>{
     if(e.key==='ArrowDown'){e.preventDefault();setSelected((current+1)%Math.max(1,matches.length));}
     if(e.key==='ArrowUp'){e.preventDefault();setSelected((current-1+matches.length)%Math.max(1,matches.length));}
     if(e.key==='Enter'&&matches[current]){e.preventDefault();navigate(matches[current].href);}
     if(e.key==='Escape'){e.preventDefault();setQuery('');}
-  }}/>{open&&<div className="search-results"><div id="feature-search-results" role="listbox" aria-label="搜索结果">{matches.map((entry,i)=><button id={`search-match-${i}`} key={entry.id} role="option" aria-selected={i===current} onMouseEnter={()=>setSelected(i)} onClick={()=>navigate(entry.href)}><small>{entry.kind}</small><span>{entry.label}</span></button>)}</div><p role="status">{matches.length?`${matches.length} 个结果`:'当前已加载数据中没有匹配结果。'}</p>{historyState==='loading'&&<p role="status">正在检索已保存情景…</p>}{historyState==='ready'&&<p>情景按首个非类别关键词检索，最多显示最近20条匹配记录；可用完整情景编号精确查找。</p>}{historyState==='error'&&<p role="alert">情景历史暂时无法读取，页面与实体结果仍可使用。<button onClick={()=>setRetry(n=>n+1)}>重试情景搜索</button></p>}</div>}</div>;
+  }}/>{open&&<div ref={resultsRef} className="search-results"><div id="feature-search-results" role="listbox" aria-label="搜索结果">{matches.map((entry,i)=><button ref={i===current?activeOptionRef:undefined} id={`search-match-${i}`} key={entry.id} role="option" aria-selected={i===current} onMouseEnter={()=>setSelected(i)} onClick={()=>navigate(entry.href)}><small>{entry.kind}</small><span>{entry.label}</span></button>)}</div><p role="status">{matches.length?`${matches.length} 个结果`:'当前已加载数据中没有匹配结果。'}</p>{historyState==='loading'&&<p role="status">正在检索已保存情景…</p>}{historyState==='ready'&&<p>情景按首个非类别关键词检索，最多显示最近20条匹配记录；可用完整情景编号精确查找。</p>}{historyState==='error'&&<p role="alert">情景历史暂时无法读取，页面与实体结果仍可使用。<button onClick={()=>setRetry(n=>n+1)}>重试情景搜索</button></p>}</div>}</div>;
 }
 
 export function EntitySearchDetail({snapshot,entityId,onClose,onSource}:{snapshot:BusinessSnapshot|null;entityId:string;onClose:()=>void;onSource:()=>void}) {
