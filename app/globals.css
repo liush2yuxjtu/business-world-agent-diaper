@@ -80,3 +80,5 @@
 
 .live-audience-segments { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:16px; margin:16px 0; }
 .live-audience-segment { display:flex; flex-direction:column; gap:10px; padding:16px; border:1px solid #deded5; border-radius:14px; min-width:0; overflow-wrap:anywhere; }
+
+.table-scroll:focus-visible{outline:3px solid var(--bw-color-brand-600);outline-offset:3px}

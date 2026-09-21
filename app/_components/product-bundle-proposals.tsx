@@ -40,7 +40,7 @@ export function ProductBundleProposals({ data, onSource }: { data: BusinessPaylo
       <p role="status">已选择 {validSelected.length} 件商品；{canCreate ? '可创建本页草稿。' : '至少选择两件商品并填写组合假设。'}</p>
       <button className="primary" type="submit" disabled={!canCreate}>创建组合草稿</button>
     </form>
-    <div className="table-scroll"><table aria-label="组合提案列表"><thead><tr><th>组合</th><th>研究假设</th><th>状态</th></tr></thead><tbody>{drafts.map(item => <tr key={item.id}><td><button type="button" onClick={event => { trigger.current = event.currentTarget; setOpenId(item.id); }}>查看组合提案 {item.id}</button></td><td>{item.hypothesis}</td><td>待核查 · 未执行</td></tr>)}</tbody></table></div>
+    <div className="table-scroll" role="region" tabIndex={0} aria-label="组合提案表格，支持横向滚动"><table aria-label="组合提案列表"><thead><tr><th scope="col">组合</th><th scope="col">研究假设</th><th scope="col">状态</th></tr></thead><tbody>{drafts.map(item => <tr key={item.id}><td><button type="button" onClick={event => { trigger.current = event.currentTarget; setOpenId(item.id); }}>查看组合提案 {item.id}</button></td><td>{item.hypothesis}</td><td>待核查 · 未执行</td></tr>)}</tbody></table></div>
     {!drafts.length && <p>尚无组合提案。</p>}
     <dialog ref={dialog} className="campaign-review-dialog" aria-labelledby="bundle-proposal-title" onCancel={event => { event.preventDefault(); close(); }}>
       {draft && <><div className="section-title"><h2 id="bundle-proposal-title">组合提案 {draft.id}</h2><button type="button" onClick={close} aria-label="关闭组合提案">关闭</button></div>
