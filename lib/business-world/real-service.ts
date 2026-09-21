@@ -1,3 +1,4 @@
+import { scenarioEntity } from './scenario-context';
 import { personaEvidenceSchema } from "./persona-evidence";
 import { randomUUID } from "node:crypto";
 import { BaselineUnavailableError } from "./public-errors";
@@ -285,14 +286,18 @@ export async function runScenarioExperiment(input: unknown) {
     prompt: z.string().trim().min(3).max(1000).default("Business World scenario"),
     lever: leverSchema,
     changePercent: z.number().min(-80).max(200),
+    entityId: z.string().max(500).optional(),
   }).parse(input);
   const state = await getBusinessWorldState();
   if (!state) throw new BaselineUnavailableError();
+  const entity = parsed.entityId ? scenarioEntity(state.payload, parsed.entityId) : null;
+  if (parsed.entityId) z.string().refine(() => entity !== null).parse(parsed.entityId);
   const baselineRoi = state.payload.ads.roi;
   const baselineConversion = state?.payload.commerce.conversionRate ?? null;
   const multiplier = 1 + parsed.changePercent / 100;
   const result = {
     modeled: true,
+    context: { entity, baseline: { stateId: state.id, datasetVersion: state.payload.meta.datasetVersion, sourceLabel: state.sourceLabel, observedAt: state.observedAt, dataMode: state.payload.meta.dataMode } },
     assumption: `${parsed.lever} changes by ${parsed.changePercent}%`,
     baselineRoi,
     modeledRoi: baselineRoi == null ? null : Number((baselineRoi * multiplier).toFixed(2)),

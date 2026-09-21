@@ -48,7 +48,8 @@ export function scenarioReportText(scenario: ScenarioRun) {
     `基线 ROI：${metric(scenario.result.baselineRoi)} → 推演 ROI：${metric(scenario.result.modeledRoi)}`,
     `基线转化率：${metric(scenario.result.baselineConversionRate, '%')} → 推演转化率：${metric(scenario.result.modeledConversionRate, '%')}`,
     `情景保存时间：${scenario.createdAt}`, `情景编号：${scenario.id}`,
-    '单一变量方向性推演，不代表真实经营结果。原记录未保存来源观测时间，报告不推测该时间。'].join('\n');
+    ...(scenario.result.context ? [`研究对象：${scenario.result.context.entity?.label ?? '整体经营'}`, `基线来源：${scenario.result.context.baseline.sourceLabel}`, `基线编号：${scenario.result.context.baseline.stateId}`, `基线版本：${scenario.result.context.baseline.datasetVersion}`, `来源观测时间：${scenario.result.context.baseline.observedAt}`] : ['原记录未保存来源观测时间，报告不推测该时间。']),
+    '单一变量方向性推演，不代表真实经营结果；研究对象不等于实体级归因。'].join('\n');
 }
 
 export function composeScenarioReport(baseline: BusinessPayload, scenario: ScenarioRun, input: { id: string; title: string; audience: string }, createdAt: string) {

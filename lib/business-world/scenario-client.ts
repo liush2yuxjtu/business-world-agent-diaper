@@ -3,6 +3,10 @@ import { publicErrorMessage } from './public-errors';
 
 const resultSchema = z.object({
   assumption: z.string(),
+  context: z.object({
+    entity: z.object({ id: z.string(), label: z.string(), lever: z.string() }).nullable(),
+    baseline: z.object({ stateId: z.string(), datasetVersion: z.string(), sourceLabel: z.string(), observedAt: z.string(), dataMode: z.enum(['observed','simulated']) }),
+  }).optional(),
   baselineRoi: z.number().nullable(),
   modeledRoi: z.number().nullable(),
   baselineConversionRate: z.number().nullable(),
@@ -28,7 +32,7 @@ export async function readRun(id: string) {
 export async function readHistory(query?: string) {
   return z.object({ runs: z.array(runSchema) }).parse(await request('/api/business-world/scenario' + (query === undefined ? '' : `?q=${encodeURIComponent(query)}`))).runs;
 }
-export async function saveScenario(input: {prompt: string; lever: string; changePercent: number}) {
+export async function saveScenario(input: {prompt: string; lever: string; changePercent: number; entityId?: string}) {
   const saved = savedSchema.parse(await request('/api/business-world/scenario', {method: 'POST', headers: {'Content-Type':'application/json'}, body:JSON.stringify(input)}));
   const readback = await readRun(saved.id);
   if (readback.id !== saved.id) throw new Error('情景记录未能读回，请稍后从历史记录重试。');
