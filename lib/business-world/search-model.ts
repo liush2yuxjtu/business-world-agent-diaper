@@ -10,7 +10,7 @@ export function buildSearchIndex(snapshot: BusinessSnapshot | null, pages: Reado
   const data = snapshot?.data;
   if (data && snapshot) {
     const mode = data.meta.dataMode === 'simulated' ? '合成演示 · 非真实观测' : '经营快照';
-    const source: Array<[string,string]> = [['数据模式',mode],['来源',snapshot.provenance.sourceLabel],['观测时间',snapshot.provenance.asOf ?? '未指定']];
+    const source: Array<[string,string]> = [['数据模式',mode],['来源',snapshot.provenance.sourceLabel],['观测时间',snapshot.provenance.asOf ?? '未指定'],['基线版本',data.meta.datasetVersion || '未指定'],['情景归属','当前保存基线，非已运行情景结果']];
     const add = (type:EntityKind,id:string,kind:string,label:string,screen:string,fields:Array<[string,string]>) => {
       const key = `${type}:${id}`;
       entries.push({ id:key, kind, label, href:entityHref(type,id), terms:[kind,label,...fields.flat(),...source.flat()].join(' '), fields:[...fields,...source] });
