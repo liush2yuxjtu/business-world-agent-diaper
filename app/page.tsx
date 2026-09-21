@@ -237,7 +237,7 @@ export default function App() {
     active === 'content' ? <ContentRestored data={data} onEntity={selectEntity}/> :
     active === 'live' ? <LiveRestored data={data} onSource={()=>setEditing(true)}/> :
     active === 'growth' ? <GrowthRestored data={data} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
-    active === 'product' ? <ProductRestored data={data}/> :
+    active === 'product' ? <ProductRestored data={data} onSource={() => setEditing(true)}/> :
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
     <ReportRestored snapshot={snapshot}/>;
 
