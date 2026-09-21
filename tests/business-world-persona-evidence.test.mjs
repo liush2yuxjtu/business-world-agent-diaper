@@ -18,3 +18,11 @@ test('synthetic mode overrides measured claims and missing evidence never become
   assert.equal(personaState({evidence:{state:'template',source:'Research template'}},'observed'),'template');
   assert.ok(!personaEvidenceFields(p,'simulated').some(([k])=>k==='人群来源'));
 });
+
+test('metric provenance follows each persona rather than the containing observed snapshot',()=>{
+ for(const [state,expected] of [['template','模板假设值'],['inferred','不等于直接观测'],['simulated','非客户观测']]) {
+  const fields=personaEvidenceFields({evidence:{state,source:'Fixture',confidence:72,signals:['fixture'],asOf:'2026-09-20T00:00:00Z'}},'observed');
+  assert.ok(fields.some(([k,v])=>k==='指标口径'&&v.includes(expected)));
+ }
+ assert.ok(personaEvidenceFields({},'observed').some(([k,v])=>k==='指标口径'&&v.includes('尚待核验')));
+});
