@@ -69,3 +69,11 @@
 .product-category-chart button:focus-visible { outline: 3px solid #236a9c; outline-offset: 3px; }
 .product-category-track { display: block; height: 10px; margin-top: 8px; background: #e8ede7; border-radius: 5px; overflow: hidden; }
 .product-category-track i { display: block; height: 100%; background: #427759; }
+
+.bundle-proposals fieldset { border: 1px solid #d9ded5; border-radius: 10px; padding: 12px; }
+.bundle-product-choice { display: flex; align-items: flex-start; gap: 10px; margin: 10px 0; }
+.bundle-product-choice input { margin-top: 5px; }
+.bundle-product-choice small { display: block; }
+.bundle-hypothesis { display: grid; gap: 6px; margin: 14px 0; }
+.bundle-hypothesis textarea { width: 100%; min-height: 90px; box-sizing: border-box; resize: vertical; padding: 10px; border: 1px solid #879586; border-radius: 8px; color: inherit; background: transparent; }
+.bundle-proposals td { white-space: normal; overflow-wrap: anywhere; }
