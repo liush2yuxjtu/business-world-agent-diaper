@@ -6,7 +6,7 @@ import { localObservationMinute, observationTimeForSave } from '@/lib/business-w
 import { presentSnapshot } from '@/lib/business-world/presentation';
 import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
 
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BarChart3, Box, ClipboardList, Database, FlaskConical, Home, Package, Play,
   Radio, RefreshCw, Save, ShieldCheck, Sparkles, Users,
@@ -186,7 +186,7 @@ function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapsh
 export default function App() {
   const [active, setActive] = useState<NavId>('overview');
   const [sourceSnapshot, setSnapshot] = useState<Snapshot | null>(null);
-  const snapshot = sourceSnapshot ? presentSnapshot(sourceSnapshot) : null;
+  const snapshot = useMemo(() => sourceSnapshot ? presentSnapshot(sourceSnapshot) : null, [sourceSnapshot]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);

@@ -259,6 +259,10 @@ export function ExperimentRestored({ snapshot, worldMode = false, selectedEntity
     setEntityId(id);
     const entity = scenarioEntity(snapshot?.data ?? null,id);
     if(entity){setLever(entity.lever);setPrompt(`评估「${entity.label}」相关经营假设的方向性影响`);}
+    if (!worldMode && entity && new URL(window.location.href).searchParams.get('draft') === 'campaign-review') {
+      setChangePercent('0');
+      setStatus('来自投放建议核查的实验草稿 · 尚未运行或保存，请编辑假设与变化幅度。');
+    }
   }, [selectedEntity, snapshot, worldMode]);
   const currentEntity = scenarioEntity(snapshot?.data ?? null,entityId);
   const invalidEntity = !!entityId && !currentEntity;
