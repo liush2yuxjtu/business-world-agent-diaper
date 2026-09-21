@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { BusinessSnapshot } from '@/app/_components/business-world-restored';
+import type { BusinessSnapshot, BusinessPayload } from '@/app/_components/business-world-restored';
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(value => {
   const parsed = new Date(`${value}T00:00:00Z`);
@@ -10,15 +10,32 @@ const body = z.string().trim().min(1).max(12000);
 const channel = z.string().trim().min(1).max(80);
 export const createDraftInput = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('brief'), topicTitle: z.string().min(1).max(200) }),
+  z.strictObject({ kind: z.literal('task'), personaId: z.string().min(1).max(200) }),
   z.strictObject({ kind: z.literal('plan'), briefId: z.string().uuid(), revision: z.number().int().min(1), scheduledFor: date, channel }),
 ]);
 export const editDraftInput = z.strictObject({ id: z.string().uuid(), revision: z.number().int().min(1), title, body, scheduledFor: date.optional(), channel: channel.optional() });
 export type ContentDraft = {
-  id: string; kind: 'brief' | 'plan'; title: string; body: string; revision: number; createdAt: string;
+  id: string; kind: 'brief' | 'plan' | 'task'; title: string; body: string; revision: number; createdAt: string;
   source: { topicTitle: string; persona: string; dataMode: 'simulated' | 'observed'; sourceLabel: string; asOf: string | null };
   basedOnBrief?: { id: string; revision: number };
+  personaEvidence?: BusinessPayload['personas'][number];
   scheduledFor?: string; channel?: string;
 };
+export function composePersonaTask(snapshot: BusinessSnapshot, personaId: string, id: string, createdAt: string): ContentDraft {
+  const person = snapshot.data?.personas.find(item => item.id === personaId);
+  if (!person || !snapshot.data) throw new Error('CONTENT_SOURCE_MISSING');
+  const simulated = snapshot.data.meta.dataMode === 'simulated';
+  return { id, kind: 'task', title: `验证${person.title}的需求与内容方向`.slice(0,120), revision: 1, createdAt,
+    source: { topicTitle: person.goal, persona: person.title, dataMode: snapshot.data.meta.dataMode, sourceLabel: snapshot.provenance.sourceLabel, asOf: snapshot.provenance.asOf },
+    personaEvidence: structuredClone(person),
+    body: [simulated ? '合成人群研究提案；不是已验证的客户事实。' : '基于经营快照的研究提案；执行前需核对来源。',
+      `目标人群：${person.title}`, `需求假设：${person.goal}`, `待验证问题：${person.pain}`,
+      `触发线索：${person.trigger}`, `内容方向：${person.content}`,
+      `快照指标：转化率 ${person.conversionRate ?? '未观测'}%；复购率 ${person.repeatRate ?? '未观测'}%。`,
+      '建议行动：核对人群定义与原始证据，设计访谈或有界实验，记录支持与反对该假设的结果。',
+      '验收：明确样本、时间、来源和判断标准；证据不足时保持待验证。',
+      '任务状态：提案草稿，尚未执行；没有自动投放、联系客户或修改外部平台。'].join('\n') };
+}
 export function composeContentBrief(snapshot: BusinessSnapshot, topicTitle: string, id: string, createdAt: string): ContentDraft {
   const data = snapshot.data;
   const topic = data?.content.topTopics.find(item => item.title === topicTitle);

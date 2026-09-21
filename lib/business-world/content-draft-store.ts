@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { reportOwner } from './report-store';
 import { getBusinessWorldSnapshot } from './real-service';
 import { presentSnapshot } from './presentation';
-import { composeContentBrief, composeContentPlan, createDraftInput, editDraftInput, type ContentDraft } from './content-draft-model';
+import { composeContentBrief, composeContentPlan, composePersonaTask, createDraftInput, editDraftInput, type ContentDraft } from './content-draft-model';
 
 const endpoint = 'https://mezthyaerhhohywcxmqi.supabase.co/rest/v1/business_world_content_draft';
 const key = 'sb_publishable__DV3WdzjR4_az6k_g5DrTQ_yAlNuQyn';
@@ -25,6 +25,10 @@ export async function createContentDraft(raw: unknown) {
     const snapshot = presentSnapshot(await getBusinessWorldSnapshot());
     if (!snapshot.data?.content.topTopics.some(topic => topic.title === input.topicTitle)) throw new ContentDraftError('CONTENT_SOURCE_MISSING');
     draft = composeContentBrief(snapshot, input.topicTitle, randomUUID(), new Date().toISOString());
+  } else if (input.kind === 'task') {
+    const snapshot = presentSnapshot(await getBusinessWorldSnapshot());
+    if (!snapshot.data?.personas.some(person => person.id === input.personaId)) throw new ContentDraftError('CONTENT_SOURCE_MISSING');
+    draft = composePersonaTask(snapshot, input.personaId, randomUUID(), new Date().toISOString());
   } else {
     const brief = (await readContentDrafts(input.briefId))[0];
     if (!brief || brief.kind !== 'brief') throw new ContentDraftError('CONTENT_MISSING');
@@ -41,7 +45,7 @@ export async function updateContentDraft(raw: unknown) {
   const current = (await readContentDrafts(input.id))[0];
   if (!current) throw new ContentDraftError('CONTENT_MISSING');
   if (current.revision !== input.revision) throw new ContentDraftError('CONTENT_CONFLICT');
-  if (current.kind === 'brief' && (input.channel !== undefined || input.scheduledFor !== undefined)) throw new ContentDraftError('CONTENT_INVALID');
+  if (current.kind !== 'plan' && (input.channel !== undefined || input.scheduledFor !== undefined)) throw new ContentDraftError('CONTENT_INVALID');
   const updated = { ...current, title: input.title, body: input.body, revision: current.revision + 1,
     ...(current.kind === 'plan' ? { scheduledFor: input.scheduledFor ?? current.scheduledFor, channel: input.channel ?? current.channel } : {}),
   };

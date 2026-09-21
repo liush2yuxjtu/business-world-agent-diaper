@@ -1,8 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { composeContentBrief, composeContentPlan, createDraftInput, editDraftInput } from '../lib/business-world/content-draft-model.ts';
+import { composeContentBrief, composeContentPlan, composePersonaTask, createDraftInput, editDraftInput } from '../lib/business-world/content-draft-model.ts';
 
 const snapshot = { provenance: { sourceLabel: '合成选题', asOf: '2026-09-21T00:00:00Z' }, data: { meta: { dataMode: 'simulated' }, content: { topTopics: [{ title: '夜间防漏', persona: '夜间护理人群', potential: '待验证' }], scripts: [{ name: '问题引入', format: '讲解', durationSec: 10 }] } } };
+test('persona task freezes evidence and never becomes a publication plan', () => {
+  const source = structuredClone(snapshot);
+  source.data.personas = [{ id: 'p1', title: '护理家庭', goal: '夜间安心', pain: '漏尿', trigger: '护理问题', content: '防漏讲解', conversionRate: 0, repeatRate: null }];
+  const task = composePersonaTask(source, 'p1', 'task', 'now');
+  source.data.personas[0].goal = '改变后的需求';
+  assert.equal(task.personaEvidence.goal, '夜间安心');
+  assert.match(task.body, /合成人群研究提案/);
+  assert.match(task.body, /转化率 0/);
+  assert.match(task.body, /未观测/);
+  assert.match(task.body, /尚未执行/);
+  assert.equal(task.kind, 'task');
+  assert.throws(() => composePersonaTask(source, 'missing', 'task', 'now'));
+  assert.throws(() => composeContentPlan(task, { id: 'plan', scheduledFor: '2026-09-25', channel: '频道' }, 'now'));
+  assert.equal(createDraftInput.safeParse({kind:'task', personaId:'p1', body:'客户端伪造的依据'}).success, false);
+});
 test('editable brief preserves selected source and planned copy stays independent', () => {
   const source = structuredClone(snapshot);
   const brief = composeContentBrief(source, '夜间防漏', 'brief', '2026-09-21');
