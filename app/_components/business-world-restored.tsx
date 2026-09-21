@@ -2,7 +2,9 @@
 
 import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { ScenarioHistory } from './scenario-history';
+import { readRun, saveScenario, type ScenarioRun } from '@/lib/business-world/scenario-client';
 import Image from 'next/image';
 import {
   BarChart3, Bot, ChevronRight, Heart, Megaphone, Package, Play, Radio,
@@ -216,6 +218,8 @@ export function ExperimentRestored({ snapshot }: { snapshot: BusinessSnapshot | 
     id: string;
     persisted: boolean;
     persistedAt: string;
+    lever: string;
+    changePercent: number;
     result: {
       assumption: string;
       baselineRoi: number | null;
@@ -225,6 +229,26 @@ export function ExperimentRestored({ snapshot }: { snapshot: BusinessSnapshot | 
     };
   }|null>(null);
   const [status,setStatus]=useState('');
+  const [historyVersion, setHistoryVersion] = useState(0);
+  const [historyReading, setHistoryReading] = useState(false);
+  const selectSaved = useCallback((saved: ScenarioRun) => {
+    setResult({ id: saved.id, persisted: true, persistedAt: saved.createdAt, lever: saved.lever, changePercent: saved.changePercent, result: saved.result });
+    setPrompt(saved.prompt); setLever(saved.lever); setChangePercent(String(saved.changePercent));
+    setStatus(`已读取保存的情景 · ${new Date(saved.createdAt).toLocaleString('zh-CN')}`);
+    const url = new URL(window.location.href);
+    url.searchParams.set('run', saved.id);
+    window.history.replaceState(null, '', url);
+  }, []);
+  useEffect(() => {
+    const id = new URL(window.location.href).searchParams.get('run');
+    if (!id) return;
+    let cancelled = false;
+    setStatus('正在读取保存的情景…'); setHistoryReading(true);
+    readRun(id).then(saved => { if (!cancelled) selectSaved(saved); })
+      .catch(() => { if (!cancelled) setStatus('链接中的情景无法读取，请从历史记录重新选择。'); })
+      .finally(() => { if (!cancelled) setHistoryReading(false); });
+    return () => { cancelled = true; };
+  }, [selectSaved]);
   async function run(){
     const change = Number(changePercent);
     if (!changePercent.trim() || !Number.isFinite(change) || change < -80 || change > 200 || prompt.trim().length < 3 || prompt.trim().length > 1000) {
@@ -232,15 +256,17 @@ export function ExperimentRestored({ snapshot }: { snapshot: BusinessSnapshot | 
     }
     setStatus('运行中…'); setResult(null);
     try{
-      const response=await fetch('/api/business-world/scenario',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,lever,changePercent:Number(changePercent)})});
-      const body=await response.json();
-      if(!response.ok) throw new Error(publicErrorMessage(body, 'SCENARIO_FAILED'));
-      setResult(body); setStatus(body.persisted ? `数据库已保存并读回验证 · ${new Date(body.persistedAt).toLocaleString('zh-CN')}` : '模拟完成');
+      const saved = await saveScenario({ prompt, lever, changePercent: change });
+      selectSaved(saved);
+      setStatus(`情景已保存 · ${new Date(saved.createdAt).toLocaleString('zh-CN')}`);
+      setHistoryVersion(n => n + 1);
     }catch(error){setStatus(error instanceof Error && Object.values(publicMessages).some(message => message === error.message) ? error.message : publicMessages.SCENARIO_FAILED)}
   }
-  return <div className="simulator restored-simulator"><section className="panel experiment-panel"><div className="section-title"><span>模拟实验</span><small>推演结果 · 非实际发生</small></div><p>以当前经营快照为基线进行情景推演；缺少基础指标时不会生成结果。</p><textarea aria-label="实验假设" value={prompt} onChange={e=>setPrompt(e.target.value)}/><div className="experiment-controls"><select aria-label="实验变量" value={lever} onChange={e=>setLever(e.target.value)}><option value="ad_efficiency">投放效率</option><option value="content_engagement">内容互动</option><option value="live_watch_time">直播观看</option><option value="checkout_conversion">交易转化</option><option value="repeat_purchase">复购</option></select><input aria-label="变化百分比" type="number" value={changePercent} onChange={e=>setChangePercent(e.target.value)}/><button className="primary" onClick={run} disabled={!snapshot?.data || status === '运行中…'}><Play size={16}/>运行并保存</button></div><div className="model-warning">模拟结果用于方案比较，不代表市场实际已经发生。</div></section>
-    <section className="panel scenario-comparison"><div className="section-title"><span>基线与情景比较</span></div><p>按单一变量计算；不推断时间趋势或置信区间。</p><div className="scenario-bars">{[{label:'基线 ROI',value:result?.result.baselineRoi ?? snapshot?.data?.ads.roi},{label:'情景 ROI',value:result?.result.modeledRoi}].map((item,i)=><div key={item.label}><b>{fmt(item.value)}</b><div style={{height:`${Math.max(0, (item.value ?? 0) / Math.max(1,result?.result.baselineRoi ?? snapshot?.data?.ads.roi ?? 0,result?.result.modeledRoi ?? 0) * 180)}px`}} className={i === 0 ? 'baseline-bar' : 'modeled-bar'}/><span>{item.label}</span></div>)}</div>{!result && <p className="caption">运行实验后显示情景值；当前只展示基线。</p>}</section>
-    <section className="panel sim-result restored-model-result"><div className="pulse">SIM</div><h3>方向性结果</h3>{status&&<p role="status" aria-live="polite">{status}</p>}{result?<><div className="scenario-result-grid"><div><span>基线 ROI</span><b>{fmt(result.result.baselineRoi)}</b></div><div><span>推演 ROI</span><b>{fmt(result.result.modeledRoi)}</b></div><div><span>基线转化率</span><b>{fmt(result.result.baselineConversionRate,'%')}</b></div><div><span>推演转化率</span><b>{fmt(result.result.modeledConversionRate,'%')}</b></div></div><p className="confidence">假设：{result.result.assumption}</p><p className="caption">数据库记录 ID：{result.id}</p></>:<p>运行后在这里展示推演结果；缺少基础指标时对应结果保持为空。</p>}</section></div>;
+  const shownBaselineRoi = result ? result.result.baselineRoi : snapshot?.data?.ads.roi;
+  const leverLabels: Record<string, string> = { ad_efficiency: '投放效率', content_engagement: '内容互动', live_watch_time: '直播观看', checkout_conversion: '交易转化', repeat_purchase: '复购' };
+  return <><div className="simulator restored-simulator"><section className="panel experiment-panel"><div className="section-title"><span>模拟实验</span><small>推演结果 · 非实际发生</small></div><p>以当前经营快照为基线进行情景推演；缺少基础指标时不会生成结果。</p><textarea aria-label="实验假设" value={prompt} onChange={e=>setPrompt(e.target.value)}/><div className="experiment-controls"><select aria-label="实验变量" value={lever} onChange={e=>setLever(e.target.value)}><option value="ad_efficiency">投放效率</option><option value="content_engagement">内容互动</option><option value="live_watch_time">直播观看</option><option value="checkout_conversion">交易转化</option><option value="repeat_purchase">复购</option></select><input aria-label="变化百分比" type="number" value={changePercent} onChange={e=>setChangePercent(e.target.value)}/><button className="primary" onClick={run} disabled={historyReading || !snapshot?.data || status === '运行中…'}><Play size={16}/>运行并保存</button></div><div className="model-warning">模拟结果用于方案比较，不代表市场实际已经发生。</div></section>
+    <section className="panel scenario-comparison"><div className="section-title"><span>基线与情景比较</span></div><p>按单一变量计算；不推断时间趋势或置信区间。</p><div className="scenario-bars">{[{label:'基线 ROI',value:shownBaselineRoi},{label:'情景 ROI',value:result?.result.modeledRoi}].map((item,i)=><div key={item.label}><b>{fmt(item.value)}</b><div style={{height:`${Math.max(0, (item.value ?? 0) / Math.max(1,shownBaselineRoi ?? 0,result?.result.modeledRoi ?? 0) * 180)}px`}} className={i === 0 ? 'baseline-bar' : 'modeled-bar'}/><span>{item.label}</span></div>)}</div>{!result && <p className="caption">运行实验后显示情景值；当前只展示基线。</p>}</section>
+    <section className="panel sim-result restored-model-result"><div className="pulse">SIM</div><h3>方向性结果</h3>{status&&<p role="status" aria-live="polite">{status}</p>}{result?<><div className="scenario-result-grid"><div><span>基线 ROI</span><b>{fmt(result.result.baselineRoi)}</b></div><div><span>推演 ROI</span><b>{fmt(result.result.modeledRoi)}</b></div><div><span>基线转化率</span><b>{fmt(result.result.baselineConversionRate,'%')}</b></div><div><span>推演转化率</span><b>{fmt(result.result.modeledConversionRate,'%')}</b></div></div><p className="confidence">假设：{leverLabels[result.lever] ?? '所选变量'}变化 {result.changePercent}%</p><p className="caption">数据库记录 ID：{result.id}</p></>:<p>运行后在这里展示推演结果；缺少基础指标时对应结果保持为空。</p>}</section></div><ScenarioHistory onReading={setHistoryReading} disabled={status === '运行中…'} activeId={result?.id} refreshKey={historyVersion} onSelect={selectSaved}/></>;
 }
 
 export function ReportRestored({ snapshot }: { snapshot: BusinessSnapshot | null }) {

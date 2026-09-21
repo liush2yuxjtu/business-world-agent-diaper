@@ -9,6 +9,8 @@ export const publicMessages = {
   READ_FAILED: '暂时无法读取经营数据，请稍后重试。',
   SAVE_FAILED: '未能确认保存成功，请刷新数据核对后再试。',
   SCENARIO_FAILED: '未能确认实验已保存，请稍后核对场景记录。',
+  INVALID_RECORD: '情景记录链接无效，请从历史记录重新选择。',
+  RECORD_NOT_FOUND: '未找到这条情景记录，请刷新历史记录后重试。',
   HISTORY_FAILED: '暂时无法读取场景记录，请稍后重试。',
 } as const;
 

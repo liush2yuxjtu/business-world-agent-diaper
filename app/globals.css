@@ -16,3 +16,5 @@
 @media(max-width:900px){.world-network{grid-template-columns:1fr 1fr;grid-template-rows:auto}.world-wires{display:none}.world-hub{padding:var(--bw-space-5)}.world-evidence{grid-template-columns:1fr}}
 @media(max-width:700px){.world-network{grid-template-columns:1fr}.world-hub{grid-row:1}.world-evidence-columns{grid-template-columns:1fr}.world-evidence-columns>div{border-bottom:1px solid var(--bw-color-line);padding-bottom:var(--bw-space-3)}.world-network .persona-list button{padding:var(--bw-space-3)}.world-live>.lifestyle-art{height:var(--bw-world-hub)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.scenario-history{margin-top:24px}.scenario-history .action-row{width:100%;border:0;border-bottom:1px solid var(--bw-color-line);background:transparent;text-align:left}.scenario-history .action-row[aria-pressed=true]{background:var(--bw-color-soft)}.scenario-history .action-row small{display:block}.scenario-history .action-row>span:first-child{min-width:0;overflow-wrap:anywhere}.scenario-history .action-row>span:last-child{flex-shrink:0}
