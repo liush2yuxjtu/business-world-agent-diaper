@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { crossOriginResponse } from '@/lib/business-world/public-errors';
-import { createReport, readReports, ReportConflict, saveReportNote } from '@/lib/business-world/report-store';
+import { createReport, readReports, ReportConflict, ReportScenarioMissing, saveReportNote } from '@/lib/business-world/report-store';
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 function failure(error: unknown) {
+  if (error instanceof ReportScenarioMissing) return json({ code: 'REPORT_SCENARIO_MISSING', error: '未找到关联情景，请从实验历史重新选择。' }, 404);
   if (error instanceof z.ZodError || error instanceof SyntaxError) return json({ code: 'REPORT_INVALID', error: '请检查报告标题、读者和备注长度。' }, 400);
   if (error instanceof ReportConflict) return json({ code: 'REPORT_CONFLICT', error: '这份报告已有更新，请重新读取后再保存。' }, 409);
   return json({ code: 'REPORT_UNAVAILABLE', error: '暂时无法确认报告读写结果，请稍后重新读取。' }, 503);

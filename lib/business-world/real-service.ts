@@ -334,11 +334,11 @@ export async function runScenarioExperiment(input: unknown) {
   return { id, persisted: true, persistedAt: persisted.createdAt, provenance: provenance(state), result };
 }
 
-export async function getScenarioExperiment(id: string) {
+export async function getScenarioExperiment(id: string, includeBaseline = false) {
   if (isDatabaseConfigured()) {
     await ensureSchema();
     const result = await db.execute(sql`
-      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      select id, prompt, lever, change_percent, result, baseline, source_state_id, created_at
       from business_world_scenario_run
       where id = ${id}
       limit 1
@@ -351,13 +351,14 @@ export async function getScenarioExperiment(id: string) {
       lever: String(row.lever),
       changePercent: Number(row.change_percent),
       result: row.result,
+      ...(includeBaseline ? { baseline: businessWorldPayloadSchema.parse(row.baseline) } : {}),
       sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
       createdAt: new Date(String(row.created_at)).toISOString(),
     };
   }
 
   const response = await fetch(
-    `${SUPABASE_SCENARIO_ENDPOINT}?id=eq.${encodeURIComponent(id)}&select=id,prompt,lever,change_percent,result,source_state_id,created_at`,
+    `${SUPABASE_SCENARIO_ENDPOINT}?id=eq.${encodeURIComponent(id)}&select=id,prompt,lever,change_percent,result,baseline,source_state_id,created_at`,
     {
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,
@@ -376,6 +377,7 @@ export async function getScenarioExperiment(id: string) {
     lever: String(row.lever),
     changePercent: Number(row.change_percent),
     result: row.result,
+    ...(includeBaseline ? { baseline: businessWorldPayloadSchema.parse(row.baseline) } : {}),
     sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
     createdAt: new Date(String(row.created_at)).toISOString(),
   };

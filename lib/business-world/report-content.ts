@@ -1,4 +1,4 @@
-import type { SavedReport } from './report-model';
+import { scenarioReportText, type SavedReport } from './report-model';
 
 export type ReportSection = { heading: string; text: string };
 const value = (number: number | null | undefined, unit = '') => number == null ? '暂无数据' : `${number.toLocaleString('zh-CN')}${unit}`;
@@ -19,6 +19,7 @@ export function reportSections(report: SavedReport): ReportSection[] {
       ...(data?.commerce.products ?? []).map(product => `${product.name} GMV：${value(product.gmv, ' 元')}`),
     ].join('\n') },
     { heading: '报告要点', text: data?.report.sections.join('\n') || '暂无报告要点' },
+    ...(report.scenario ? [{ heading: '关联情景 · 推演结果，非实际发生', text: scenarioReportText(report.scenario) }] : []),
     { heading: '人工备注', text: report.humanNote || '暂无人工备注' },
     { heading: '来源与适用边界', text: [
       `来源：${report.snapshot.provenance.sourceLabel}`,

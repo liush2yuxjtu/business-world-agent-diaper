@@ -1,16 +1,18 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
-import { getBusinessWorldSnapshot } from './real-service';
+import { getBusinessWorldSnapshot, getScenarioExperiment } from './real-service';
 import { presentSnapshot } from './presentation';
-import { composeReport, type SavedReport } from './report-model';
+import { composeReport, composeScenarioReport, type SavedReport } from './report-model';
+import { runSchema } from './scenario-client';
 
 const cookieName = 'bw-report-workspace';
 const endpoint = 'https://mezthyaerhhohywcxmqi.supabase.co/rest/v1/business_world_report';
 const publishableKey = 'sb_publishable__DV3WdzjR4_az6k_g5DrTQ_yAlNuQyn';
-export const reportInput = z.strictObject({ title: z.string().trim().min(1).max(120), audience: z.string().trim().min(1).max(80) });
+export const reportInput = z.strictObject({ title: z.string().trim().min(1).max(120), audience: z.string().trim().min(1).max(80), scenarioId: z.string().uuid().optional() });
 export const noteInput = z.strictObject({ id: z.string().uuid(), revision: z.number().int().min(1), note: z.string().max(4000) });
 export class ReportConflict extends Error {}
+export class ReportScenarioMissing extends Error {}
 
 async function owner(create = false) {
   const jar = await cookies();
@@ -43,10 +45,19 @@ export async function readReports(id?: string) {
 
 export async function createReport(raw: unknown) {
   const input = reportInput.parse(raw);
-  const snapshot = presentSnapshot(await getBusinessWorldSnapshot());
-  if (!snapshot.data) throw new Error('Report baseline unavailable');
+  const identity = { id: randomUUID(), title: input.title, audience: input.audience };
+  let report: SavedReport;
+  if (input.scenarioId) {
+    const saved = await getScenarioExperiment(input.scenarioId, true);
+    if (!saved) throw new ReportScenarioMissing();
+    if (!saved.baseline) throw new Error('Scenario baseline unavailable');
+    report = composeScenarioReport(saved.baseline, runSchema.parse(saved), identity, new Date().toISOString());
+  } else {
+    const snapshot = presentSnapshot(await getBusinessWorldSnapshot());
+    if (!snapshot.data) throw new Error('Report baseline unavailable');
+    report = composeReport(snapshot, identity, new Date().toISOString());
+  }
   const ownerHash = (await owner(true))!;
-  const report = composeReport(snapshot, { ...input, id: randomUUID() }, new Date().toISOString());
   const rows = await request(ownerHash, '', { method: 'POST', body: JSON.stringify({ id: report.id, owner_hash: ownerHash, document: report }) });
   if (rows.length !== 1) throw new Error('Report save not confirmed');
   return { ...rows[0].document, revision: rows[0].revision };
