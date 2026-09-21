@@ -10,6 +10,7 @@ const body = z.string().trim().min(1).max(12000);
 const channel = z.string().trim().min(1).max(80);
 export const createDraftInput = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('brief'), topicTitle: z.string().min(1).max(200) }),
+  z.strictObject({ kind: z.literal('new-topic'), title, body, audience: z.string().trim().min(1).max(200) }),
   z.strictObject({ kind: z.literal('task'), personaId: z.string().min(1).max(200) }),
   z.strictObject({ kind: z.literal('plan'), briefId: z.string().uuid(), revision: z.number().int().min(1), scheduledFor: date, channel }),
 ]);
@@ -17,6 +18,7 @@ export const editDraftInput = z.strictObject({ id: z.string().uuid(), revision: 
 export type ContentDraft = {
   id: string; kind: 'brief' | 'plan' | 'task'; title: string; body: string; revision: number; createdAt: string;
   source: { topicTitle: string; persona: string; dataMode: 'simulated' | 'observed'; sourceLabel: string; asOf: string | null };
+  origin?: 'manual-topic';
   basedOnBrief?: { id: string; revision: number };
   personaEvidence?: BusinessPayload['personas'][number];
   scheduledFor?: string; channel?: string;
@@ -53,4 +55,11 @@ export function composeContentBrief(snapshot: BusinessSnapshot, topicTitle: stri
 export function composeContentPlan(brief: ContentDraft, input: { id: string; scheduledFor: string; channel: string }, createdAt: string): ContentDraft {
   if (brief.kind !== 'brief') throw new Error('CONTENT_INVALID');
   return { ...structuredClone(brief), ...input, kind: 'plan', revision: 1, createdAt, basedOnBrief: { id: brief.id, revision: brief.revision } };
+}
+
+export function composeManualTopic(input: { title: string; body: string; audience: string }, id: string, createdAt: string): ContentDraft {
+  const parsed = createDraftInput.parse({kind:'new-topic',...input});
+  if(parsed.kind !== 'new-topic') throw new Error('CONTENT_INVALID');
+  return { id, kind:'brief', origin:'manual-topic', title:parsed.title, body:parsed.body, revision:1, createdAt,
+    source:{topicTitle:parsed.title,persona:parsed.audience,dataMode:'simulated',sourceLabel:'用户手动创建的选题假设 · 尚待验证',asOf:null} };
 }

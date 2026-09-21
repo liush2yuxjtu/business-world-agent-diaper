@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { reportOwner } from './report-store';
 import { getBusinessWorldSnapshot } from './real-service';
 import { presentSnapshot } from './presentation';
-import { composeContentBrief, composeContentPlan, composePersonaTask, createDraftInput, editDraftInput, type ContentDraft } from './content-draft-model';
+import { composeContentBrief, composeContentPlan, composePersonaTask, composeManualTopic, createDraftInput, editDraftInput, type ContentDraft } from './content-draft-model';
 
 const endpoint = 'https://mezthyaerhhohywcxmqi.supabase.co/rest/v1/business_world_content_draft';
 const key = 'sb_publishable__DV3WdzjR4_az6k_g5DrTQ_yAlNuQyn';
@@ -21,7 +21,9 @@ export async function readContentDrafts(id?: string) {
 export async function createContentDraft(raw: unknown) {
   const input = createDraftInput.parse(raw);
   let draft: ContentDraft;
-  if (input.kind === 'brief') {
+  if (input.kind === 'new-topic') {
+    draft = composeManualTopic(input, randomUUID(), new Date().toISOString());
+  } else if (input.kind === 'brief') {
     const snapshot = presentSnapshot(await getBusinessWorldSnapshot());
     if (!snapshot.data?.content.topTopics.some(topic => topic.title === input.topicTitle)) throw new ContentDraftError('CONTENT_SOURCE_MISSING');
     draft = composeContentBrief(snapshot, input.topicTitle, randomUUID(), new Date().toISOString());
