@@ -1,5 +1,6 @@
 import type { BusinessSnapshot } from '@/app/_components/business-world-restored';
 import type { ScenarioRun } from './scenario-client';
+import { entityHref, type EntityKind } from './entity-links';
 
 export type SearchEntry = { id: string; kind: string; label: string; href: string; terms: string; fields?: Array<[string, string]> };
 const value = (n: number | null, unit = '') => n == null ? '未观测' : `${n}${unit}`;
@@ -9,9 +10,9 @@ export function buildSearchIndex(snapshot: BusinessSnapshot | null, pages: Reado
   if (data && snapshot) {
     const mode = data.meta.dataMode === 'simulated' ? '合成演示 · 非真实观测' : '经营快照';
     const source: Array<[string,string]> = [['数据模式',mode],['来源',snapshot.provenance.sourceLabel],['观测时间',snapshot.provenance.asOf ?? '未指定']];
-    const add = (type:string,id:string,kind:string,label:string,screen:string,fields:Array<[string,string]>) => {
+    const add = (type:EntityKind,id:string,kind:string,label:string,screen:string,fields:Array<[string,string]>) => {
       const key = `${type}:${id}`;
-      entries.push({ id:key, kind, label, href:`?screen=${screen}&entity=${encodeURIComponent(key)}`, terms:[kind,label,...fields.flat(),...source.flat()].join(' '), fields:[...fields,...source] });
+      entries.push({ id:key, kind, label, href:entityHref(type,id), terms:[kind,label,...fields.flat(),...source.flat()].join(' '), fields:[...fields,...source] });
     };
     data.personas.forEach(p=>add('persona',p.id,'人群',p.title,'persona', [['称呼',p.name],['需求',p.goal],['痛点',p.pain],['内容方向',p.content],['触发线索',p.trigger],['人群规模',value(p.population)],['转化率',value(p.conversionRate,'%')],['复购率',value(p.repeatRate,'%')]]));
     data.content.topTopics.forEach(p=>add('topic',p.title,'内容选题',p.title,'content',[['关联人群',p.persona],['机会标识',p.potential]]));

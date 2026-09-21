@@ -33,5 +33,5 @@ export function BusinessSearch({snapshot,pages,query,setQuery,inputRef}:{snapsho
 
 export function EntitySearchDetail({snapshot,entityId,onClose,onSource}:{snapshot:BusinessSnapshot|null;entityId:string;onClose:()=>void;onSource:()=>void}) {
   const entry=buildSearchIndex(snapshot,[]).find(item=>item.id===entityId&&item.fields);
-  return <section className="panel search-entity-detail" aria-label="搜索实体详情"><div className="section-title"><h2>{entry?`${entry.kind}：${entry.label}`:'未找到该实体'}</h2><button onClick={onClose}>关闭详情</button></div>{entry?<><dl className="detail-list">{entry.fields!.map(([label,v])=><div key={label}><dt>{label}</dt><dd>{v}</dd></div>)}</dl><p>详情来自当前经营快照；合成数据不能作为真实经营证据。</p><button onClick={onSource}>查看来源详情</button></>:<p>该实体不在当前快照中，可能已被移除或来源不可用。请刷新数据后重新搜索。</p>}</section>;
+  return <section className="panel search-entity-detail" aria-label="实体详情"><div className="section-title"><h2>{entry?`${entry.kind}：${entry.label}`:'未找到该实体'}</h2><button onClick={onClose}>关闭详情</button></div>{entry?<><dl className="detail-list">{entry.fields!.map(([label,v])=><div key={label}><dt>{label}</dt><dd>{v}</dd></div>)}</dl><p>详情来自当前经营快照；合成数据不能作为真实经营证据。</p><button onClick={onSource}>查看来源详情</button></>:<p>该实体不在当前快照中，可能已被移除或来源不可用。请刷新数据后重新搜索。</p>}</section>;
 }

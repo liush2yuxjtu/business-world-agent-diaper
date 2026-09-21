@@ -1,5 +1,6 @@
 'use client';
 
+import type { EntityKind } from '@/lib/business-world/entity-links';
 import { BusinessSearch, EntitySearchDetail } from './_components/business-search';
 import { presentSnapshot } from '@/lib/business-world/presentation';
 import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
@@ -224,12 +225,13 @@ export default function App() {
     window.history.replaceState(null, '', url);
   }, []);
 
+  const selectEntity = useCallback((kind: EntityKind,id: string)=>{const entity=`${kind}:${id}`;setEntityId(entity);const url=new URL(location.href);url.searchParams.set('entity',entity);history.replaceState(null,'',url);},[]);
   const data = snapshot?.data ?? null;
   const view =
     active === 'overview' ? <OverviewRestored data={data}/> :
-    active === 'persona' ? <PersonaRestored data={data}/> :
+    active === 'persona' ? <PersonaRestored data={data} onEntity={selectEntity}/> :
     active === 'world' ? <WorldRestored data={data}/> :
-    active === 'content' ? <ContentRestored data={data}/> :
+    active === 'content' ? <ContentRestored data={data} onEntity={selectEntity}/> :
     active === 'live' ? <LiveRestored data={data}/> :
     active === 'growth' ? <GrowthRestored data={data}/> :
     active === 'product' ? <ProductRestored data={data}/> :

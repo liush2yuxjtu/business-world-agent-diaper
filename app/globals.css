@@ -31,3 +31,5 @@
 .report-error { color: #983a32; }
 
 .search-results{max-height:65vh;overflow:auto;min-width:min(380px,calc(100vw - 40px))}.search-results button[aria-selected=true]{background:var(--bw-color-soft)}.search-results small,.search-results span{display:block}.search-results small{color:var(--bw-color-muted-600);font-size:12px}.search-results p{font-size:13px;padding:8px}.search-entity-detail{margin-bottom:20px}.search-entity-detail dd{overflow-wrap:anywhere}
+
+.entity-row{cursor:pointer}.entity-row a{text-decoration:underline;text-underline-offset:3px}.entity-row a:focus-visible{outline:2px solid var(--bw-color-brand-500);outline-offset:4px}

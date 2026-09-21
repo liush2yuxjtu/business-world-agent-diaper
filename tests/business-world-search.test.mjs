@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildSearchIndex, searchEntries } from '../lib/business-world/search-model.ts';
+import { entityHref, selectedEntityIndex } from '../lib/business-world/entity-links.ts';
+
+test('cross-page selection follows stable identity, including encoded titles and reordered lists',()=>{
+ const href=entityHref('topic','夜间 A&B');
+ assert.equal(selectedEntityIndex('topic',['其他','夜间 A&B'],href),1);
+ assert.equal(selectedEntityIndex('topic',['夜间 A&B','其他'],href),0);
+ assert.equal(selectedEntityIndex('persona',['p1','p2'],entityHref('persona','p2')),1);
+ assert.equal(selectedEntityIndex('persona',['p1','p2'],'?entity=product:p2'),0);
+ assert.equal(new URL(entityHref('session','直播&1'),'https://example.org').searchParams.get('entity'),'session:直播&1');
+});
 
 const snapshot={provenance:{sourceLabel:'验证数据集',asOf:null},data:{meta:{dataMode:'simulated'},personas:[{id:'p1',name:'小雨',title:'护理人群',goal:'夜间防漏',pain:'尺码',content:'护理',trigger:'复购',population:0,conversionRate:0,repeatRate:null}],content:{topTopics:[{title:'A&B 夜间',persona:'护理人群',potential:'待验证'}]},commerce:{products:[]},ads:{campaigns:[]},live:{sessions:[]}}};
 test('search finds real entities and encodes exact targets with explicit provenance',()=>{
