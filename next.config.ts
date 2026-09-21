@@ -3,6 +3,7 @@ import { withEve } from "eve/next";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  serverExternalPackages: ["zod"],
   turbopack: {
     root: process.cwd(),
   },

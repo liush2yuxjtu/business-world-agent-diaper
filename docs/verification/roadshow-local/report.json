@@ -1,0 +1,97 @@
+{
+  "baseUrl": "http://localhost:3139",
+  "checkedAt": "2026-09-21T02:13:27.589748+00:00",
+  "checks": [
+    {
+      "name": "Database snapshot",
+      "result": "PASS",
+      "source": {
+        "sourceMode": "simulated",
+        "provider": "simulated",
+        "sourceLabel": "Supabase simulated PR9 complete demo dataset",
+        "asOf": "2026-09-18T05:18:09.198Z",
+        "updatedAt": "2026-09-18T05:18:35.468Z",
+        "storage": "Supabase Postgres",
+        "writable": true
+      },
+      "personas": 4
+    },
+    {
+      "name": "All shared SVG assets",
+      "result": "PASS",
+      "count": 70
+    },
+    {
+      "name": "Five integrated desktop surfaces",
+      "result": "PASS"
+    },
+    {
+      "name": "Sixteen persona selections and provenance labels",
+      "result": "PASS"
+    },
+    {
+      "name": "Search, region templates and ten commercial entities",
+      "result": "PASS"
+    },
+    {
+      "name": "Eight event selections and database-backed stock rule",
+      "result": "PASS"
+    },
+    {
+      "name": "Eight scenario templates map to existing Product Demo levers",
+      "result": "PASS"
+    },
+    {
+      "name": "Invalid hypothesis rejected without a write",
+      "result": "PASS"
+    },
+    {
+      "name": "Real write, targeted readback, correct result and reload persistence",
+      "result": "PASS",
+      "id": "8e257e5c-7fa3-4b7b-91f0-2607e106d987"
+    },
+    {
+      "name": "Network failure cannot display a saved result",
+      "result": "PASS"
+    },
+    {
+      "name": "Record validation and cross-origin write protection",
+      "result": "PASS"
+    },
+    {
+      "name": "Asset workbench filters",
+      "result": "PASS"
+    },
+    {
+      "name": "Nine existing Product Demo screens still load",
+      "result": "PASS"
+    },
+    {
+      "name": "Five mobile surfaces, no horizontal overflow, usable persona selection",
+      "result": "PASS"
+    },
+    {
+      "name": "No browser runtime errors",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "errors": [],
+  "savedRun": {
+    "id": "8e257e5c-7fa3-4b7b-91f0-2607e106d987",
+    "prompt": "路演验收：比较投放效率提升 10% 的方向性影响",
+    "lever": "ad_efficiency",
+    "changePercent": 10,
+    "result": {
+      "modeled": true,
+      "warning": "Scenario output is a transparent mathematical model over the persisted baseline, not an observed market outcome or AI prediction.",
+      "assumption": "ad_efficiency changes by 10%",
+      "modeledRoi": 4.75,
+      "baselineRoi": 4.32,
+      "modeledConversionRate": 3.56,
+      "baselineConversionRate": 3.24
+    },
+    "sourceStateId": "primary",
+    "createdAt": "2026-09-21T02:13:45.585Z"
+  }
+}
