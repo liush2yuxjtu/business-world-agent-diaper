@@ -67,7 +67,7 @@ export const businessWorldPayloadSchema = z.object({
     sellThroughRate: z.number().min(0).max(100).nullable(),
     aov: z.number().min(0).nullable(),
     products: z.array(z.object({
-      id: z.string(), name: z.string(), size: z.string(), price: z.number().min(0), gmv: z.number().min(0),
+      id: z.string(), name: z.string(), category: z.string().trim().min(1).max(120).nullable().optional(), size: z.string(), price: z.number().min(0), gmv: z.number().min(0),
       conversionRate: z.number().min(0).max(100), stockDays: z.number().min(0), refundRate: z.number().min(0).max(100),
       image: z.string(),
     })),

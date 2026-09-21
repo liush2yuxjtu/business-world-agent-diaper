@@ -34,7 +34,7 @@ export type BusinessPayload = {
   commerce: {
     conversionRate: number | null; gmv: number | null; newCustomers: number | null; refundRate: number | null;
     sellThroughRate: number | null; aov: number | null;
-    products: Array<{ id: string; name: string; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;
+    products: Array<{ id: string; name: string; category?: string | null; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;
   };
   ads: {
     budget: number | null; spend: number | null; roi: number | null; cpa: number | null; ctr: number | null; newCustomerCost: number | null;
