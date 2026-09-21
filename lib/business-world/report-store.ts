@@ -14,7 +14,7 @@ export const noteInput = z.strictObject({ id: z.string().uuid(), revision: z.num
 export class ReportConflict extends Error {}
 export class ReportScenarioMissing extends Error {}
 
-async function owner(create = false) {
+export async function reportOwner(create = false) {
   const jar = await cookies();
   let token = jar.get(cookieName)?.value;
   if (!token || !/^[a-f0-9]{64}$/.test(token)) {
@@ -37,7 +37,7 @@ async function request(ownerHash: string, query: string, init?: RequestInit) {
 }
 
 export async function readReports(id?: string) {
-  const ownerHash = await owner();
+  const ownerHash = await reportOwner();
   if (!ownerHash) return [];
   const rows = await request(ownerHash, `?select=document,revision&order=created_at.desc&limit=50${id ? `&id=eq.${encodeURIComponent(id)}` : ''}`);
   return rows.map(row => ({ ...row.document, revision: row.revision }));
@@ -57,7 +57,7 @@ export async function createReport(raw: unknown) {
     if (!snapshot.data) throw new Error('Report baseline unavailable');
     report = composeReport(snapshot, identity, new Date().toISOString());
   }
-  const ownerHash = (await owner(true))!;
+  const ownerHash = (await reportOwner(true))!;
   const rows = await request(ownerHash, '', { method: 'POST', body: JSON.stringify({ id: report.id, owner_hash: ownerHash, document: report }) });
   if (rows.length !== 1) throw new Error('Report save not confirmed');
   return { ...rows[0].document, revision: rows[0].revision };
@@ -65,7 +65,7 @@ export async function createReport(raw: unknown) {
 
 export async function saveReportNote(raw: unknown) {
   const input = noteInput.parse(raw);
-  const ownerHash = await owner();
+  const ownerHash = await reportOwner();
   if (!ownerHash) return null;
   const current = (await readReports(input.id))[0];
   if (!current) return null;
