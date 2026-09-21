@@ -132,6 +132,10 @@ export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnaps
     {selected && <div className="report-actions"><button type="button" disabled={busy || dirty || emailReport !== null} onClick={() => setEmailReport(structuredClone(selected))}>发送到邮箱</button></div>}
     {emailReport && <ReportEmailComposer key={`${emailReport.id}:${emailReport.revision}`} report={emailReport} onClose={() => setEmailReport(null)}/>}
     {selected && <ReportSharePanel key={selected.id} report={selected} disabled={busy || dirty}/>}
-    {preview(selected?.snapshot ?? snapshot, dirty, selected?.id ?? 'current')}
+    {selected
+      ? preview(selected.snapshot, dirty, selected.id)
+      : busy || error
+        ? <p role="status">报告来源尚未成功读取，暂不展示依据。不会用当前经营数据替代历史报告。</p>
+        : preview(snapshot, false, 'current')}
   </div>;
 }
