@@ -231,7 +231,7 @@ export default function App() {
   const view =
     active === 'overview' ? <OverviewRestored data={data}/> :
     active === 'persona' ? <PersonaRestored data={data} onEntity={selectEntity} onClearEntity={clearEntity} onSource={()=>setEditing(true)}/> :
-    active === 'world' ? <WorldRestored data={data}/> :
+    active === 'world' ? <WorldRestored snapshot={snapshot} onSource={()=>setEditing(true)}/> :
     active === 'content' ? <ContentRestored data={data} onEntity={selectEntity}/> :
     active === 'live' ? <LiveRestored data={data}/> :
     active === 'growth' ? <GrowthRestored data={data}/> :
