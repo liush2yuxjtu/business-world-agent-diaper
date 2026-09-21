@@ -1,0 +1,99 @@
+'use client';
+
+import { useEffect, useState, type ReactNode } from 'react';
+import type { BusinessSnapshot } from './business-world-restored';
+import { reportText, type SavedReport } from '@/lib/business-world/report-model';
+
+const messages: Record<string, string> = {
+  REPORT_INVALID: '请检查报告标题、读者和备注长度。',
+  REPORT_CONFLICT: '这份报告已有更新。请保留你的备注内容，重新读取后再保存。',
+  REPORT_MISSING: '当前浏览器未找到这份报告。',
+  REPORT_UNAVAILABLE: '暂时无法确认报告读写结果，请稍后重新读取。',
+  CROSS_ORIGIN: '请在当前应用页面内提交此操作。',
+};
+async function readResponse<T>(response: Response): Promise<T> {
+  const body = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(messages[body?.code] || messages.REPORT_UNAVAILABLE);
+  return body as T;
+}
+const endpoint = '/api/business-world/reports';
+
+export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnapshot | null; preview: (snapshot: BusinessSnapshot | null) => ReactNode }) {
+  const [reports, setReports] = useState<SavedReport[]>([]);
+  const [selected, setSelected] = useState<SavedReport | null>(null);
+  const [title, setTitle] = useState('经营决策报告');
+  const [audience, setAudience] = useState('管理层');
+  const [composer, setComposer] = useState(false);
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(true);
+  const [error, setError] = useState('');
+  const [status, setStatus] = useState('');
+  const dirty = selected !== null && note !== selected.humanNote;
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const list = await readResponse<{ reports: SavedReport[] }>(await fetch(endpoint, { cache: 'no-store' }));
+        const id = new URLSearchParams(location.search).get('report');
+        const report = id ? await readResponse<SavedReport>(await fetch(`${endpoint}?id=${encodeURIComponent(id)}`, { cache: 'no-store' })) : null;
+        if (alive) { setReports(list.reports); setSelected(report); setNote(report?.humanNote ?? ''); }
+      } catch (cause) { if (alive) setError(cause instanceof Error ? cause.message : messages.REPORT_UNAVAILABLE); }
+      finally { if (alive) setBusy(false); }
+    })();
+    return () => { alive = false; };
+  }, []);
+
+  function select(report: SavedReport) {
+    setSelected(report); setNote(report.humanNote);
+    const url = new URL(location.href); url.searchParams.set('report', report.id);
+    history.replaceState(null, '', url);
+  }
+  async function choose(id: string, keepNote = false) {
+    setBusy(true); setError(''); setStatus('');
+    try {
+      const report = await readResponse<SavedReport>(await fetch(`${endpoint}?id=${encodeURIComponent(id)}`, { cache: 'no-store' }));
+      if (keepNote) {
+        setSelected(report);
+        setStatus('已读取最新版本，你尚未保存的备注仍保留在编辑框中。');
+      } else select(report);
+    } catch (cause) { setError(cause instanceof Error ? cause.message : messages.REPORT_UNAVAILABLE); }
+    finally { setBusy(false); }
+  }
+  async function create(event: React.FormEvent) {
+    event.preventDefault(); setBusy(true); setError(''); setStatus('');
+    try {
+      const saved = await readResponse<SavedReport>(await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, audience }) }));
+      const verified = await readResponse<SavedReport>(await fetch(`${endpoint}?id=${saved.id}`, { cache: 'no-store' }));
+      select(verified); setReports(current => [verified, ...current.filter(r => r.id !== verified.id)]);
+      setComposer(false); setStatus('报告已保存并回读，来源快照已固定。');
+    } catch (cause) { setError(cause instanceof Error ? cause.message : messages.REPORT_UNAVAILABLE); }
+    finally { setBusy(false); }
+  }
+  async function saveNote(event: React.FormEvent) {
+    event.preventDefault(); if (!selected) return;
+    setBusy(true); setError(''); setStatus('');
+    try {
+      const updated = await readResponse<SavedReport>(await fetch(endpoint, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: selected.id, revision: selected.revision, note }) }));
+      select(updated); setReports(current => current.map(r => r.id === updated.id ? updated : r));
+      setStatus('人工备注已保存，自动摘要和来源快照保持不变。');
+    } catch (cause) { setError(cause instanceof Error ? cause.message : messages.REPORT_UNAVAILABLE); }
+    finally { setBusy(false); }
+  }
+  function download() {
+    if (!selected) return;
+    const url = URL.createObjectURL(new Blob([reportText(selected)], { type: 'text/plain;charset=utf-8' }));
+    const a = document.createElement('a'); a.href = url; a.download = `business-world-report-${selected.id}.txt`; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  return <div className="report-workspace">
+    <div className="report-toolbar"><div><h2>{selected?.title || '当前经营快照'}</h2><p>{selected ? `面向 ${selected.audience} · ${new Date(selected.createdAt).toLocaleString('zh-CN')}` : '尚未生成报告。新建后可保留此时的来源与摘要。'}</p></div><button className="primary" disabled={busy || dirty || !snapshot?.data} onClick={() => setComposer(!composer)}>新建报告</button></div>
+    <p className="soft-note">报告保存于数据库，通过当前浏览器访问。清除浏览器数据或换浏览器后无法自动找回，请及时下载留存。</p>
+    {composer && <form className="panel report-editor" onSubmit={create}><h3>新建报告</h3><label>报告标题<input autoFocus required maxLength={120} value={title} onChange={e => setTitle(e.target.value)} disabled={busy}/></label><label>报告读者<input required maxLength={80} value={audience} onChange={e => setAudience(e.target.value)} disabled={busy}/></label><div className="report-actions"><button type="submit" className="primary" disabled={busy}>生成并保存报告</button><button type="button" disabled={busy} onClick={() => setComposer(false)}>取消</button></div></form>}
+    <section className="panel report-editor"><label>历史报告<select value={selected?.id || ''} disabled={busy || dirty} onChange={e => { if (e.target.value) void choose(e.target.value); }}><option value="" disabled>选择已保存报告</option>{reports.map(report => <option key={report.id} value={report.id}>{report.title} · {new Date(report.createdAt).toLocaleString('zh-CN')}</option>)}</select></label>{!busy && !reports.length && <p>当前浏览器还没有保存的报告。</p>}{selected && <button type="button" disabled={busy} onClick={() => void choose(selected.id, dirty)}>重新读取当前报告</button>}</section>
+    {error && <p role="alert" className="report-error">{error}</p>}{status && <p role="status">{status}</p>}{busy && <p role="status">正在读取或保存报告…</p>}
+    {selected && <section className="panel report-editor"><h3>自动生成摘要</h3><p className="report-preserve-lines">{selected.generatedSummary}</p><form onSubmit={saveNote}><label>人工备注<textarea maxLength={4000} rows={5} value={note} disabled={busy} onChange={e => setNote(e.target.value)}/></label><div className="report-actions"><button type="submit" className="primary" disabled={busy || !dirty}>保存备注</button><button type="button" disabled={busy || !dirty} onClick={() => setNote(selected.humanNote)}>放弃未保存修改</button><button type="button" onClick={download} disabled={busy || dirty}>下载已保存报告</button></div>{dirty && <p>有未保存的备注。保存或放弃修改后，可切换报告与下载。</p>}</form><p>报告要点和下方数据来自生成时的快照；自动摘要由固定规则整理。</p></section>}
+    {preview(selected?.snapshot ?? snapshot)}
+  </div>;
+}

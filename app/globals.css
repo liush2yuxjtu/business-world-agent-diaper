@@ -18,3 +18,14 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
 .scenario-history{margin-top:24px}.scenario-history .action-row{width:100%;border:0;border-bottom:1px solid var(--bw-color-line);background:transparent;text-align:left}.scenario-history .action-row[aria-pressed=true]{background:var(--bw-color-soft)}.scenario-history .action-row small{display:block}.scenario-history .action-row>span:first-child{min-width:0;overflow-wrap:anywhere}.scenario-history .action-row>span:last-child{flex-shrink:0}
+
+/* Persisted report workspace */
+.report-workspace { display: grid; gap: 20px; min-width: 0; }
+.report-editor { display: grid; gap: 16px; }
+.report-editor form, .report-editor label { display: grid; gap: 10px; }
+.report-editor input, .report-editor textarea, .report-editor select { width: 100%; min-width: 0; padding: 12px; border: 1px solid #d9d8d0; border-radius: 10px; background: white; color: #283c35; font: inherit; }
+.report-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.report-actions button, .report-editor > button { padding: 10px 16px; border-radius: 10px; border: 1px solid #d9d8d0; }
+.report-workspace button:disabled { opacity: .5; cursor: not-allowed; }
+.report-preserve-lines { white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-error { color: #983a32; }
