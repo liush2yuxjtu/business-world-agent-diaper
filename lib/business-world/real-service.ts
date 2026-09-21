@@ -1,3 +1,4 @@
+import { liveFunnelSchema } from './live-funnel';
 import { topicOpportunitySchema } from './topic-opportunity';
 import { scenarioEntity } from './scenario-context';
 import { personaEvidenceSchema } from "./persona-evidence";
@@ -43,6 +44,7 @@ export const businessWorldPayloadSchema = z.object({
     scripts: z.array(z.object({ name: z.string(), durationSec: z.number().int().min(0), format: z.string() })),
   }),
   live: z.object({
+    funnel: liveFunnelSchema.optional(),
     roomEntryRate: z.number().min(0).max(100).nullable(),
     cartRate: z.number().min(0).max(100).nullable(),
     avgWatchSec: z.number().min(0).nullable(),

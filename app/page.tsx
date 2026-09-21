@@ -27,6 +27,7 @@ type Payload = {
     scripts: Array<{ name: string; durationSec: number; format: string }>;
   };
   live: {
+    funnel?: import('@/lib/business-world/live-funnel').LiveFunnel;
     roomEntryRate: number | null; cartRate: number | null; avgWatchSec: number | null; payConversionRate: number | null;
     exposureUv: number | null; watchUv: number | null; peakOnline: number | null; paidOrders: number | null; gmv: number | null;
     sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;
@@ -233,7 +234,7 @@ export default function App() {
     active === 'persona' ? <PersonaRestored data={data} onEntity={selectEntity} onClearEntity={clearEntity} onSource={()=>setEditing(true)}/> :
     active === 'world' ? <WorldRestored snapshot={snapshot} onSource={()=>setEditing(true)}/> :
     active === 'content' ? <ContentRestored data={data} onEntity={selectEntity}/> :
-    active === 'live' ? <LiveRestored data={data}/> :
+    active === 'live' ? <LiveRestored data={data} onSource={()=>setEditing(true)}/> :
     active === 'growth' ? <GrowthRestored data={data} onClearEntity={clearEntity}/> :
     active === 'product' ? <ProductRestored data={data}/> :
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :

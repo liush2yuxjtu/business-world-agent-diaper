@@ -26,6 +26,7 @@ export type BusinessPayload = {
     scripts: Array<{ name: string; durationSec: number; format: string }>;
   };
   live: {
+    funnel?: import('@/lib/business-world/live-funnel').LiveFunnel;
     roomEntryRate: number | null; cartRate: number | null; avgWatchSec: number | null; payConversionRate: number | null;
     exposureUv: number | null; watchUv: number | null; peakOnline: number | null; paidOrders: number | null; gmv: number | null;
     sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;
