@@ -25,8 +25,8 @@ export async function readRun(id: string) {
   const valid = z.string().uuid().parse(id);
   return runSchema.parse(await request(`/api/business-world/scenario?id=${encodeURIComponent(valid)}`));
 }
-export async function readHistory() {
-  return z.object({ runs: z.array(runSchema) }).parse(await request('/api/business-world/scenario')).runs;
+export async function readHistory(query?: string) {
+  return z.object({ runs: z.array(runSchema) }).parse(await request('/api/business-world/scenario' + (query === undefined ? '' : `?q=${encodeURIComponent(query)}`))).runs;
 }
 export async function saveScenario(input: {prompt: string; lever: string; changePercent: number}) {
   const saved = savedSchema.parse(await request('/api/business-world/scenario', {method: 'POST', headers: {'Content-Type':'application/json'}, body:JSON.stringify(input)}));

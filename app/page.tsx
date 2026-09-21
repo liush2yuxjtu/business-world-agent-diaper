@@ -1,12 +1,13 @@
 'use client';
 
+import { BusinessSearch, EntitySearchDetail } from './_components/business-search';
 import { presentSnapshot } from '@/lib/business-world/presentation';
 import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
 
-import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import {
   BarChart3, Box, ClipboardList, Database, FlaskConical, Home, Package, Play,
-  Radio, RefreshCw, Save, Search, ShieldCheck, Sparkles, Users,
+  Radio, RefreshCw, Save, ShieldCheck, Sparkles, Users,
 } from 'lucide-react';
 import {
   OverviewRestored, PersonaRestored, WorldRestored, ContentRestored, LiveRestored,
@@ -176,6 +177,7 @@ export default function App() {
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);
   const [search, setSearch] = useState('');
+  const [entityId,setEntityId]=useState('');
   const searchRef = useRef<HTMLInputElement>(null);
   const closeEditor = useCallback(() => setEditing(false), []);
 
@@ -206,14 +208,17 @@ export default function App() {
     if (requested && nav.some(([id]) => id === requested)) setActive(requested);
     const requestedSearch = params.get("search");
     if (requestedSearch) setSearch(requestedSearch);
+    setEntityId(params.get("entity") ?? "");
     if (params.get("source") === "1") setEditing(true);
   }, []);
 
-  const matches = useMemo(() => search.trim() ? nav.filter(([,label]) => label.toLowerCase().includes(search.trim().toLowerCase())) : [], [search]);
   const goTo = useCallback((id: NavId) => {
     setActive(id);
     setSearch('');
+    setEntityId('');
     const url = new URL(window.location.href);
+    url.searchParams.delete('entity');
+    url.searchParams.delete('search');
     if (id === 'overview') url.searchParams.delete('screen');
     else url.searchParams.set('screen', id);
     window.history.replaceState(null, '', url);
@@ -231,5 +236,5 @@ export default function App() {
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
     <ReportRestored snapshot={snapshot}/>;
 
-  return <main className={`app-shell screen-${active}`}><aside className="sidebar"><div className="brand"><div><span className="brand-wordmark">eve</span><b>Business World</b><small>DIAPER OPERATING SYSTEM</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><a href="?screen=experiment" className="sidebar-promo"><Box size={25}/><div>模拟工作区<small>建模 · 验证 · 成长<br/>让每一次决策更可靠</small></div></a></aside><section className="workspace"><div className="topbar"><div className="search real-search"><Search size={16}/><input ref={searchRef} aria-label="搜索功能" aria-expanded={matches.length>0} aria-controls="feature-search-results" placeholder="搜索功能..." value={search} onChange={e => setSearch(e.target.value)}/>{matches.length>0 && <div id="feature-search-results" role="listbox" className="search-results">{matches.map(([id,label]) => <button key={id} role="option" onClick={() => goTo(id)}>{label}</button>)}</div>}</div><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => { window.location.href = "/chat"; }}><Sparkles size={13}/>问 Agent</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle={screenDescriptions[active]} onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : view}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={closeEditor} readOnly={!snapshot?.provenance.writable}/>}</main>;
+  return <main className={`app-shell screen-${active}`}><aside className="sidebar"><div className="brand"><div><span className="brand-wordmark">eve</span><b>Business World</b><small>DIAPER OPERATING SYSTEM</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><a href="?screen=experiment" className="sidebar-promo"><Box size={25}/><div>模拟工作区<small>建模 · 验证 · 成长<br/>让每一次决策更可靠</small></div></a></aside><section className="workspace"><div className="topbar"><BusinessSearch snapshot={snapshot} pages={nav.map(([id,label])=>[id,label] as const)} query={search} setQuery={setSearch} inputRef={searchRef}/><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => { window.location.href = "/chat"; }}><Sparkles size={13}/>问 Agent</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle={screenDescriptions[active]} onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : <>{entityId && <EntitySearchDetail snapshot={snapshot} entityId={entityId} onClose={()=>{setEntityId('');const url=new URL(location.href);url.searchParams.delete('entity');history.replaceState(null,'',url);}} onSource={()=>setEditing(true)}/>} {view}</>}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={closeEditor} readOnly={!snapshot?.provenance.writable}/>}</main>;
 }

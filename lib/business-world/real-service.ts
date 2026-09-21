@@ -383,13 +383,15 @@ export async function getScenarioExperiment(id: string, includeBaseline = false)
   };
 }
 
-export async function listScenarioExperiments(limit = 8) {
+export async function listScenarioExperiments(limit = 8, query = '') {
   const safeLimit = Math.max(1, Math.min(20, Math.trunc(limit)));
+  const pattern = `%${query.replace(/[\\%_]/g, '\\$&')}%`;
   if (isDatabaseConfigured()) {
     await ensureSchema();
     const result = await db.execute(sql`
       select id, prompt, lever, change_percent, result, source_state_id, created_at
       from business_world_scenario_run
+      where prompt ilike ${pattern} or lever ilike ${pattern} or id::text ilike ${pattern}
       order by created_at desc
       limit ${safeLimit}
     `);
@@ -404,8 +406,10 @@ export async function listScenarioExperiments(limit = 8) {
     }));
   }
 
+  const literal = `"${pattern.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+  const filter = query ? `&or=${encodeURIComponent(`(prompt.ilike.${literal},lever.ilike.${literal}${/^[a-f0-9-]{36}$/i.test(query) ? `,id.eq.${query}` : ''})`)}` : '';
   const response = await fetch(
-    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc&limit=${safeLimit}`,
+    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc&limit=${safeLimit}${filter}`,
     {
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,

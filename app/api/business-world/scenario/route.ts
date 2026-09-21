@@ -13,8 +13,10 @@ export async function GET(request: NextRequest) {
       if (!run) return Response.json({ code: 'RECORD_NOT_FOUND', error: '未找到这条情景记录，请刷新历史记录后重试。' }, { status: 404 });
       return Response.json(run, { headers: { 'Cache-Control': 'no-store' } });
     }
+    const query = request.nextUrl.searchParams.get('q');
+    if (query !== null) z.string().max(200).parse(query);
     return Response.json(
-      { runs: await listScenarioExperiments() },
+      { runs: await listScenarioExperiments(query === null ? 8 : 20, query ?? '') },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
