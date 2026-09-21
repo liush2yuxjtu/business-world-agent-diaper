@@ -22,7 +22,7 @@ export type BusinessPayload = {
   }>;
   content: {
     engagementRate: number | null; weeklyOpportunities: number | null; totalPlays: number | null; interactions: number | null;
-    topTopics: Array<{ title: string; persona: string; potential: string }>;
+    topTopics: Array<{ title: string; persona: string; potential: string; opportunityScore?: import('@/lib/business-world/topic-opportunity').TopicOpportunity }>;
     scripts: Array<{ name: string; durationSec: number; format: string }>;
   };
   live: {

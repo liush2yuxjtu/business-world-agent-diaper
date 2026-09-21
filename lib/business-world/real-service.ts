@@ -1,3 +1,4 @@
+import { topicOpportunitySchema } from './topic-opportunity';
 import { scenarioEntity } from './scenario-context';
 import { personaEvidenceSchema } from "./persona-evidence";
 import { randomUUID } from "node:crypto";
@@ -38,7 +39,7 @@ export const businessWorldPayloadSchema = z.object({
     weeklyOpportunities: z.number().int().min(0).nullable(),
     totalPlays: z.number().int().min(0).nullable(),
     interactions: z.number().int().min(0).nullable(),
-    topTopics: z.array(z.object({ title: z.string(), persona: z.string(), potential: z.string() })),
+    topTopics: z.array(z.object({ title: z.string(), persona: z.string(), potential: z.string(), opportunityScore: topicOpportunitySchema.optional() })),
     scripts: z.array(z.object({ name: z.string(), durationSec: z.number().int().min(0), format: z.string() })),
   }),
   live: z.object({
