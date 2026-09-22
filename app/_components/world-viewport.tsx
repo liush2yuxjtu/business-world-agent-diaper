@@ -9,12 +9,12 @@ export function WorldViewport({children}:{children:ReactNode}) {
   const reset=()=>{setScale(100);viewport.current?.scrollTo({left:0,top:0,behavior:'instant'});};
   return <section className="world-map-panel" aria-label="经营关系图">
     <div className="world-map-controls" role="group" aria-label="关系图视角">
-      <button disabled={scale<=50} onClick={()=>setScale(n=>Math.max(50,n-10))} aria-label="缩小关系图">−</button>
+      <button disabled={scale<=50} onClick={()=>setScale(n=>Math.max(50,n-10))} aria-label="缩小关系图"><span aria-hidden="true">−</span> 缩小</button>
       <output aria-live="polite" aria-label="关系图缩放比例">{scale}%</output>
-      <button disabled={scale>=160} onClick={()=>setScale(n=>Math.min(160,n+10))} aria-label="放大关系图">＋</button>
+      <button disabled={scale>=160} onClick={()=>setScale(n=>Math.min(160,n+10))} aria-label="放大关系图"><span aria-hidden="true">＋</span> 放大</button>
       <button onClick={reset}>重置视角</button>
-      <button onClick={()=>move(-120,0)} aria-label="关系图向左平移">←</button><button onClick={()=>move(120,0)} aria-label="关系图向右平移">→</button>
-      <button onClick={()=>move(0,-120)} aria-label="关系图向上平移">↑</button><button onClick={()=>move(0,120)} aria-label="关系图向下平移">↓</button>
+      <button onClick={()=>move(-120,0)} aria-label="关系图向左平移"><span aria-hidden="true">←</span> 左移</button><button onClick={()=>move(120,0)} aria-label="关系图向右平移"><span aria-hidden="true">→</span> 右移</button>
+      <button onClick={()=>move(0,-120)} aria-label="关系图向上平移"><span aria-hidden="true">↑</span> 上移</button><button onClick={()=>move(0,120)} aria-label="关系图向下平移"><span aria-hidden="true">↓</span> 下移</button>
     </div>
     <p id="world-map-help">选中节点查看右侧详情。可拖动空白处或使用滚动条；聚焦图后用方向键平移，＋/−缩放，Home重置。</p>
     <div ref={viewport} className="world-map-viewport" tabIndex={0} role="region" aria-label="可平移缩放的关系图" aria-describedby="world-map-help"
