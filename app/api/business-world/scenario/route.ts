@@ -15,8 +15,19 @@ export async function GET(request: NextRequest) {
     }
     const query = request.nextUrl.searchParams.get('q');
     if (query !== null) z.string().max(200).parse(query);
+    const rawCursor = request.nextUrl.searchParams.get('cursor');
+    let before: { createdAt: string; id: string } | undefined;
+    if (rawCursor !== null) {
+      try { before = z.object({ createdAt: z.string().datetime({ offset: true }), id: z.string().uuid() }).strict().parse(JSON.parse(rawCursor)); }
+      catch { return Response.json({ code: 'INVALID_CURSOR', error: '历史列表位置无效，请刷新记录。' }, { status: 400 }); }
+    }
+    const pageSize = query === null ? 8 : 20;
+    const rows = await listScenarioExperiments(pageSize + 1, query ?? '', before);
+    const runs = rows.slice(0, pageSize);
+    const last = runs.at(-1);
+    const nextCursor = rows.length > pageSize && last ? JSON.stringify({ createdAt: last.cursorCreatedAt, id: last.id }) : null;
     return Response.json(
-      { runs: await listScenarioExperiments(query === null ? 8 : 20, query ?? '') },
+      { runs, nextCursor },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {

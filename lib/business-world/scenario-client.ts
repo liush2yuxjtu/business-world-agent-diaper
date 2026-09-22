@@ -38,3 +38,9 @@ export async function saveScenario(input: {prompt: string; lever: string; change
   if (readback.id !== saved.id) throw new Error('情景记录未能读回，请稍后从历史记录重试。');
   return readback;
 }
+
+export async function readHistoryPage(cursor?: string) {
+  return z.object({ runs: z.array(runSchema), nextCursor: z.string().nullable() }).parse(
+    await request('/api/business-world/scenario' + (cursor ? `?cursor=${encodeURIComponent(cursor)}` : '')),
+  );
+}

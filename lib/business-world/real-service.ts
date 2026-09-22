@@ -401,16 +401,17 @@ export async function getScenarioExperiment(id: string, includeBaseline = false)
   };
 }
 
-export async function listScenarioExperiments(limit = 8, query = '') {
-  const safeLimit = Math.max(1, Math.min(20, Math.trunc(limit)));
+export async function listScenarioExperiments(limit = 8, query = '', before?: { createdAt: string; id: string }) {
+  const safeLimit = Math.max(1, Math.min(21, Math.trunc(limit)));
   const pattern = `%${query.replace(/[\\%_]/g, '\\$&')}%`;
   if (isDatabaseConfigured()) {
     await ensureSchema();
     const result = await db.execute(sql`
-      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      select id, prompt, lever, change_percent, result, source_state_id, created_at, created_at::text as cursor_created_at
       from business_world_scenario_run
-      where prompt ilike ${pattern} or lever ilike ${pattern} or id::text ilike ${pattern}
-      order by created_at desc
+      where (prompt ilike ${pattern} or lever ilike ${pattern} or id::text ilike ${pattern})
+      ${before ? sql`and (created_at < ${before.createdAt}::timestamptz or (created_at = ${before.createdAt}::timestamptz and id < ${before.id}))` : sql``}
+      order by created_at desc, id desc
       limit ${safeLimit}
     `);
     return result.rows.map((row) => ({
@@ -421,13 +422,15 @@ export async function listScenarioExperiments(limit = 8, query = '') {
       result: row.result,
       sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
       createdAt: new Date(String(row.created_at)).toISOString(),
+      cursorCreatedAt: String(row.cursor_created_at ?? row.created_at).replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
     }));
   }
 
   const literal = `"${pattern.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
   const filter = query ? `&or=${encodeURIComponent(`(prompt.ilike.${literal},lever.ilike.${literal}${/^[a-f0-9-]{36}$/i.test(query) ? `,id.eq.${query}` : ''})`)}` : '';
+  const cursorFilter = before ? `&and=${encodeURIComponent(`(or(created_at.lt.${before.createdAt},and(created_at.eq.${before.createdAt},id.lt.${before.id})))`)}` : '';
   const response = await fetch(
-    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc&limit=${safeLimit}${filter}`,
+    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc,id.desc&limit=${safeLimit}${filter}${cursorFilter}`,
     {
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,
@@ -446,5 +449,6 @@ export async function listScenarioExperiments(limit = 8, query = '') {
     result: row.result,
     sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
     createdAt: new Date(String(row.created_at)).toISOString(),
+      cursorCreatedAt: String(row.cursor_created_at ?? row.created_at).replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
   }));
 }
