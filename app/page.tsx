@@ -30,6 +30,7 @@ type Payload = {
   live: {
     funnel?: import('@/lib/business-world/live-funnel').LiveFunnel;
     audience?: import('@/lib/business-world/live-audience').LiveAudience;
+    questions?: import('zod').infer<typeof import('@/lib/business-world/live-questions').liveQuestionsSchema>;
     roomEntryRate: number | null; cartRate: number | null; avgWatchSec: number | null; payConversionRate: number | null;
     exposureUv: number | null; watchUv: number | null; peakOnline: number | null; paidOrders: number | null; gmv: number | null;
     sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;

@@ -1,3 +1,4 @@
+import { liveQuestionsSchema } from './live-questions';
 import { liveAudienceSchema } from './live-audience';
 import { liveFunnelSchema } from './live-funnel';
 import { topicOpportunitySchema } from './topic-opportunity';
@@ -47,6 +48,7 @@ export const businessWorldPayloadSchema = z.object({
   live: z.object({
     funnel: liveFunnelSchema.optional(),
     audience: liveAudienceSchema.optional(),
+    questions: liveQuestionsSchema.optional(),
     roomEntryRate: z.number().min(0).max(100).nullable(),
     cartRate: z.number().min(0).max(100).nullable(),
     avgWatchSec: z.number().min(0).nullable(),
