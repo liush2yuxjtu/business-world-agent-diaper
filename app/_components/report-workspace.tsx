@@ -8,6 +8,7 @@ import { ReportEmailComposer } from './report-email-composer';
 import { ReportSharePanel } from './report-share-panel';
 
 const messages: Record<string, string> = {
+  REPORT_CURSOR_INVALID: '历史报告列表位置无效，请刷新列表。',
   REPORT_INVALID: '请检查报告标题、读者和备注长度。',
   REPORT_CONFLICT: '这份报告已有更新。请保留未保存的备注，重新读取后再操作。',
   REPORT_MISSING: '当前浏览器未找到这份报告。',
@@ -27,6 +28,8 @@ const endpoint = '/api/business-world/reports';
 
 export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnapshot | null; preview: (snapshot: BusinessSnapshot | null, navigationDisabled: boolean, sourceKey: string) => ReactNode }) {
   const [reports, setReports] = useState<SavedReport[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const [selected, setSelected] = useState<SavedReport | null>(null);
   const [title, setTitle] = useState('经营决策报告');
   const [audience, setAudience] = useState('管理层');
@@ -44,10 +47,11 @@ export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnaps
     let alive = true;
     (async () => {
       try {
-        const list = await readResponse<{ reports: SavedReport[] }>(await fetch(endpoint, { cache: 'no-store' }));
+        const list = await readResponse<{ reports: SavedReport[]; nextCursor: string | null }>(await fetch(endpoint, { cache: 'no-store' }));
+        if (alive) { setReports(list.reports); setNextCursor(list.nextCursor); setHistoryLoaded(true); }
         const id = new URLSearchParams(location.search).get('report');
         const report = id ? await readResponse<SavedReport>(await fetch(`${endpoint}?id=${encodeURIComponent(id)}`, { cache: 'no-store' })) : null;
-        if (alive) { setReports(list.reports); setSelected(report); setNote(report?.humanNote ?? ''); }
+        if (alive) { setSelected(report); setNote(report?.humanNote ?? ''); }
         const sourceId = id ? null : new URLSearchParams(location.search).get('scenario');
         if (sourceId) {
           if (alive) { setScenarioId(sourceId); setComposer(true); }
@@ -59,6 +63,17 @@ export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnaps
     })();
     return () => { alive = false; };
   }, []);
+
+  async function loadHistory(more = false) {
+    if (busy || dirty || (more && !nextCursor)) return;
+    setBusy(true); setError(''); setStatus('');
+    try {
+      const page = await readResponse<{ reports: SavedReport[]; nextCursor: string | null }>(await fetch(endpoint + (more ? `?cursor=${encodeURIComponent(nextCursor!)}` : ''), { cache: 'no-store' }));
+      setReports(previous => more ? [...previous, ...page.reports.filter(report => !previous.some(old => old.id === report.id))] : page.reports);
+      setNextCursor(page.nextCursor); setHistoryLoaded(true);
+    } catch (cause) { setError(safeError(cause)); }
+    finally { setBusy(false); }
+  }
 
   function select(report: SavedReport) {
     setSelected(report); setNote(report.humanNote);
@@ -125,7 +140,7 @@ export function ReportWorkspace({ snapshot, preview }: { snapshot: BusinessSnaps
     <p className="soft-note">报告保存于数据库，通过当前浏览器访问。清除浏览器数据或换浏览器后无法自动找回，请及时下载留存。</p>
     {scenarioId && <section className="panel report-editor"><h3>从实验带入的情景</h3>{sourceScenario ? <p className="report-preserve-lines">{scenarioReportText(sourceScenario)}</p> : <p>情景尚未成功读取，暂不能生成报告。请返回实验历史重新选择。</p>}<p>生成报告将使用此实验保存时的完整基线，不使用下方当前经营快照替换历史。</p></section>}
     {composer && <form className="panel report-editor" onSubmit={create}><h3>新建报告</h3><label>报告标题<input autoFocus required maxLength={120} value={title} onChange={e => setTitle(e.target.value)} disabled={busy}/></label><label>报告读者<input required maxLength={80} value={audience} onChange={e => setAudience(e.target.value)} disabled={busy}/></label><div className="report-actions"><button type="submit" className="primary" disabled={busy || (!!scenarioId && !sourceScenario)}>生成并保存报告</button><button type="button" disabled={busy} onClick={() => setComposer(false)}>取消</button></div></form>}
-    <section className="panel report-editor"><label>历史报告<select value={selected?.id || ''} disabled={busy || dirty} onChange={e => { if (e.target.value) void choose(e.target.value); }}><option value="" disabled>选择已保存报告</option>{reports.map(report => <option key={report.id} value={report.id}>{report.title} · {new Date(report.createdAt).toLocaleString('zh-CN')}</option>)}</select></label>{!busy && !reports.length && <p>当前浏览器还没有保存的报告。</p>}{selected && <button type="button" disabled={busy} onClick={() => void choose(selected.id, dirty)}>重新读取当前报告</button>}</section>
+    <section className="panel report-editor"><label>历史报告<select value={selected?.id || ''} disabled={busy || dirty} onChange={e => { if (e.target.value) void choose(e.target.value); }}><option value="" disabled>选择已保存报告</option>{selected && !reports.some(report => report.id === selected.id) && <option value={selected.id}>{selected.title} · 当前报告</option>}{reports.map(report => <option key={report.id} value={report.id}>{report.title} · {new Date(report.createdAt).toLocaleString('zh-CN')}</option>)}</select></label>{!busy && historyLoaded && !reports.length && <p>当前浏览器还没有保存的报告。</p>}<div className="report-actions"><button type="button" disabled={busy || dirty} onClick={() => void loadHistory()}>刷新历史列表</button>{nextCursor && <button type="button" disabled={busy || dirty} onClick={() => void loadHistory(true)}>查看更多报告</button>}{selected && <button type="button" disabled={busy} onClick={() => void choose(selected.id, dirty)}>重新读取当前报告</button>}</div>{historyLoaded && <p role="status">已显示 {reports.length} 份报告{nextCursor ? '，还有更早报告。' : '，已到列表末尾。'}</p>}</section>
     {error && <p role="alert" className="report-error">{error}</p>}{status && <p role="status">{status}</p>}{busy && <p role="status">正在处理报告…</p>}
     {selected && <section className="panel report-editor"><h3>自动生成摘要</h3><p className="report-preserve-lines">{selected.generatedSummary}</p><form onSubmit={saveNote}><label>人工备注<textarea maxLength={4000} rows={5} value={note} disabled={busy} onChange={e => setNote(e.target.value)}/></label><div className="report-actions"><button type="submit" className="primary" disabled={busy || !dirty}>保存备注</button><button type="button" disabled={busy || !dirty} onClick={() => setNote(selected.humanNote)}>放弃未保存修改</button><button type="button" onClick={download} disabled={busy || dirty}>下载文本</button><button type="button" onClick={() => void exportFile('pdf')} disabled={busy || dirty}>导出 PDF</button><button type="button" onClick={() => void exportFile('pptx')} disabled={busy || dirty}>导出 PPT</button></div>{dirty && <p>有未保存的备注。保存或放弃修改后，可切换报告与下载。</p>}</form><p>报告要点和下方数据来自生成时的快照；自动摘要由固定规则整理。页面顶部的数据源属于当前经营状态，本报告的历史来源请在下方“数据与依据”中核对。</p></section>}
     {selected?.scenario && <section className="panel report-editor"><h3>关联情景 · 推演结果，非实际发生</h3><p className="report-preserve-lines">{scenarioReportText(selected.scenario)}</p><a href={`/?screen=experiment&run=${selected.scenario.id}`}>返回来源实验</a></section>}

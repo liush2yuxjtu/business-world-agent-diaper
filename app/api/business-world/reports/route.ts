@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { crossOriginResponse } from '@/lib/business-world/public-errors';
-import { createReport, readReports, ReportConflict, ReportScenarioMissing, saveReportNote } from '@/lib/business-world/report-store';
+import { createReport, readReports, readReportPage, reportCursorSchema, ReportConflict, ReportScenarioMissing, saveReportNote } from '@/lib/business-world/report-store';
 
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 function failure(error: unknown) {
@@ -14,9 +14,16 @@ export async function GET(request: NextRequest) {
   try {
     const id = request.nextUrl.searchParams.get('id');
     if (id !== null && !z.string().uuid().safeParse(id).success) return json({ code: 'REPORT_INVALID', error: '报告链接无效，请从历史记录选择。' }, 400);
-    const reports = await readReports(id ?? undefined);
+    if (id === null) {
+      const rawCursor = request.nextUrl.searchParams.get('cursor');
+      let cursor;
+      try { cursor = rawCursor === null ? undefined : reportCursorSchema.parse(JSON.parse(rawCursor)); }
+      catch { return json({ code: 'REPORT_CURSOR_INVALID', error: '历史报告列表位置无效，请刷新列表。' }, 400); }
+      return json(await readReportPage(cursor));
+    }
+    const reports = await readReports(id);
     if (id && !reports.length) return json({ code: 'REPORT_MISSING', error: '当前浏览器未找到这份报告。' }, 404);
-    return json(id ? reports[0] : { reports });
+    return json(reports[0]);
   } catch (error) { return failure(error); }
 }
 export async function POST(request: NextRequest) {

@@ -33,13 +33,26 @@ async function request(ownerHash: string, query: string, init?: RequestInit) {
     },
   });
   if (!response.ok) throw new Error('Report storage unavailable');
-  return await response.json() as Array<{ document: SavedReport; revision: number }>;
+  return await response.json() as Array<{ document: SavedReport; revision: number; id: string; created_at: string }>;
 }
 
-export async function readReports(id?: string) {
+export const reportCursorSchema = z.object({ createdAt: z.string().datetime({ offset: true }), id: z.string().uuid() }).strict();
+export async function readReportPage(cursor?: z.infer<typeof reportCursorSchema>) {
+  const ownerHash = await reportOwner();
+  if (!ownerHash) return { reports: [], nextCursor: null };
+  const filter = cursor ? `&and=${encodeURIComponent(`(or(created_at.lt.${cursor.createdAt},and(created_at.eq.${cursor.createdAt},id.lt.${cursor.id})))`)}` : '';
+  const rows = await request(ownerHash, `?select=id,created_at,document,revision&order=created_at.desc,id.desc&limit=9${filter}`);
+  const page = rows.slice(0, 8);
+  const last = page.at(-1);
+  return {
+    reports: page.map(row => ({ ...row.document, revision: row.revision })),
+    nextCursor: rows.length > 8 && last ? JSON.stringify({ createdAt: last.created_at, id: last.id }) : null,
+  };
+}
+export async function readReports(id: string) {
   const ownerHash = await reportOwner();
   if (!ownerHash) return [];
-  const rows = await request(ownerHash, `?select=document,revision&order=created_at.desc&limit=50${id ? `&id=eq.${encodeURIComponent(id)}` : ''}`);
+  const rows = await request(ownerHash, `?select=document,revision&id=eq.${encodeURIComponent(id)}&limit=1`);
   return rows.map(row => ({ ...row.document, revision: row.revision }));
 }
 
