@@ -104,3 +104,8 @@ input[type="date"]:focus-within,input[type="datetime-local"]:focus-within{outlin
 .metric-list{display:grid;gap:8px;margin:12px 0 18px}.metric-detail-trigger.metric-compact{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 12px;padding:12px}.metric-compact .metric-value{font-size:20px;text-align:right}.metric-compact .metric-sub,.metric-compact .text-link{grid-column:1/-1;font-size:var(--bw-text-xs)}.metric-compact .text-link{margin-top:0}.metric-compact .metric-label{font-size:var(--bw-text-sm);overflow-wrap:anywhere}
 
 .budget-slice:focus-visible{stroke:#164bb0;stroke-width:7;stroke-dasharray:8 4}
+
+.restored-model-result{container-type:inline-size}
+.scenario-result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.scenario-result-grid>div{min-width:0;overflow-wrap:anywhere}
+@container(max-width:300px){.scenario-result-grid{grid-template-columns:1fr}}
