@@ -4,9 +4,9 @@ import { useId, useRef } from 'react';
 import { BarChart3 } from 'lucide-react';
 import type { BusinessPayload, BusinessSnapshot } from './business-world-restored';
 
-export function Metric({ label, value, data, snapshot, field, icon: Icon = BarChart3 }: {
+export function Metric({ label, value, data, snapshot, field, compact = false, scope, icon: Icon = BarChart3 }: {
   label: string; value: number | null | undefined; data: BusinessPayload | null;
-  snapshot?: BusinessSnapshot | null; field: string; icon?: typeof BarChart3;
+  snapshot?: BusinessSnapshot | null; field: string; icon?: typeof BarChart3; compact?: boolean; scope?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -15,11 +15,12 @@ export function Metric({ label, value, data, snapshot, field, icon: Icon = BarCh
   const state = value == null ? '待观测' : data?.meta.dataMode === 'simulated' ? '合成演示 · 非真实观测' : '经营快照';
   const close = () => { dialog.current?.close(); trigger.current?.focus(); };
   return <>
-    <button ref={trigger} type="button" className="metric metric-detail-trigger" aria-label={`${label}：${valueText}，查看指标详情`} onClick={() => dialog.current?.showModal()}>
-      <span className="metric-label">{label}<Icon size={22}/></span><strong className="metric-value">{value == null ? '—' : valueText}</strong><span className="metric-sub">{state}</span><span className="text-link">查看指标详情</span>
+    <button ref={trigger} type="button" className={`metric metric-detail-trigger${compact ? ' metric-compact' : ''}`} aria-label={`${label}：${valueText}，查看指标详情`} onClick={() => dialog.current?.showModal()}>
+      <span className="metric-label">{label}{!compact && <Icon size={22}/>}</span><strong className="metric-value">{value == null ? '—' : valueText}</strong><span className="metric-sub">{state}</span><span className="text-link">查看指标详情</span>
     </button>
     <dialog ref={dialog} className="campaign-review-dialog" aria-labelledby={titleId} onCancel={event => { event.preventDefault(); close(); }}>
       <div className="section-title"><h2 id={titleId}>{label} · 指标详情</h2><button type="button" onClick={close}>关闭指标详情</button></div>
+      {scope && <p>{scope}</p>}
       <dl className="detail-list">
         <div><dt>快照值</dt><dd>{valueText}</dd></div><div><dt>状态</dt><dd>{state}</dd></div>
         <div><dt>对应字段</dt><dd>{field}</dd></div>

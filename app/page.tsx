@@ -249,7 +249,7 @@ export default function App() {
     active === 'overview' ? <OverviewRestored data={data} snapshot={snapshot}/> :
     active === 'persona' ? <PersonaRestored data={data} snapshot={snapshot} onEntity={selectEntity} onClearEntity={clearEntity} onSource={()=>setEditing(true)}/> :
     active === 'world' ? <WorldRestored snapshot={snapshot} onSource={()=>setEditing(true)}/> :
-    active === 'content' ? <ContentRestored data={data} onEntity={selectEntity}/> :
+    active === 'content' ? <ContentRestored data={data} snapshot={snapshot} onEntity={selectEntity}/> :
     active === 'live' ? <LiveRestored data={data} snapshot={snapshot} onSource={()=>setEditing(true)}/> :
     active === 'growth' ? <GrowthRestored data={data} snapshot={snapshot} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
     active === 'product' ? <ProductRestored data={data} snapshot={snapshot} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
