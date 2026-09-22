@@ -1,3 +1,4 @@
+import { productAssociationsSchema } from './product-associations';
 import { liveQuestionsSchema } from './live-questions';
 import { liveAudienceSchema } from './live-audience';
 import { liveFunnelSchema } from './live-funnel';
@@ -64,6 +65,7 @@ export const businessWorldPayloadSchema = z.object({
     })),
   }),
   commerce: z.object({
+    associations: productAssociationsSchema.optional(),
     conversionRate: z.number().min(0).max(100).nullable(),
     gmv: z.number().min(0).nullable(),
     newCustomers: z.number().int().min(0).nullable(),

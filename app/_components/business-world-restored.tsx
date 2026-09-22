@@ -34,6 +34,7 @@ export type BusinessPayload = {
     sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;
   };
   commerce: {
+    associations?: import('@/lib/business-world/product-associations').ProductAssociations;
     conversionRate: number | null; gmv: number | null; newCustomers: number | null; refundRate: number | null;
     sellThroughRate: number | null; aov: number | null;
     products: Array<{ id: string; name: string; category?: string | null; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;

@@ -258,6 +258,7 @@ values (
     ]
   },
   "commerce": {
+    "associations": {"source": "PR9 数据库演示集 · 人工构造的同单组合", "asOf": "2026-09-22T00:00:00.000Z", "period": "2026-09-22 独立关联购买演示样本", "methodology": "人工构造的汇总演示：分母为1000个虚构订单的假设样本，未采集或保存逐单交易。口径为同一订单内同时含全部成员商品去重。日夜组合240单，成长阶段组合120单；组合可重叠，不求和。与整体GMV、客单价和真实订单无关，不推算因果、增收或客单提升。", "mode": "simulated", "sampleOrders": 1000, "rows": [{"id": "day-night", "title": "日夜场景组合", "productIds": ["daily", "night"], "jointOrders": 240, "hypothesis": "研究日常与夜间使用场景是否适合组合介绍；先核对同一使用人群、尺码和库存，不能从同单比例推断优惠或增收。"}, {"id": "growth-stage", "title": "成长阶段组合", "productIds": ["newborn", "daily"], "jointOrders": 120, "hypothesis": "研究不同成长阶段的备货需求；先核对家庭是否确有跨阶段需求，避免将不适用的尺码强行组合。"}]},
     "conversionRate": 3.24,
     "gmv": 2483221,
     "newCustomers": 18640,
