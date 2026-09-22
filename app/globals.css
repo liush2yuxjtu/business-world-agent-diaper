@@ -84,3 +84,5 @@
 .table-scroll:focus-visible{outline:3px solid var(--bw-color-brand-600);outline-offset:3px}
 
 @media(min-width:701px) and (max-width:1100px){.metrics-row,.metrics-row.three{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.persona-source-rows a{text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}.persona-source-rows a:focus-visible,.persona-source-dialog button:focus-visible{outline:3px solid var(--bw-color-green-700);outline-offset:3px}.persona-source-dialog dd{white-space:pre-wrap;overflow-wrap:anywhere}
