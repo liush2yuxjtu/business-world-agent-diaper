@@ -1,3 +1,4 @@
+import { scenarioMetrics } from './scenario-model';
 import { productAssociationsSchema } from './product-associations';
 import { liveQuestionsSchema } from './live-questions';
 import { liveAudienceSchema } from './live-audience';
@@ -305,16 +306,12 @@ export async function runScenarioExperiment(input: unknown) {
   if (parsed.entityId) z.string().refine(() => entity !== null).parse(parsed.entityId);
   const baselineRoi = state.payload.ads.roi;
   const baselineConversion = state?.payload.commerce.conversionRate ?? null;
-  const multiplier = 1 + parsed.changePercent / 100;
+  const metrics = scenarioMetrics(baselineRoi, baselineConversion, parsed.changePercent)!;
   const result = {
     modeled: true,
     context: { entity, baseline: { stateId: state.id, datasetVersion: state.payload.meta.datasetVersion, sourceLabel: state.sourceLabel, observedAt: state.observedAt, dataMode: state.payload.meta.dataMode } },
     assumption: `${parsed.lever} changes by ${parsed.changePercent}%`,
-    baselineRoi,
-    modeledRoi: baselineRoi == null ? null : Number((baselineRoi * multiplier).toFixed(2)),
-    baselineConversionRate: baselineConversion,
-    modeledConversionRate:
-      baselineConversion == null ? null : Number((baselineConversion * multiplier).toFixed(2)),
+    ...metrics,
     warning: "Scenario output is a transparent mathematical model over the persisted baseline, not an observed market outcome or AI prediction.",
   };
   const id = randomUUID();
