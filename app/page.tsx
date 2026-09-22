@@ -246,13 +246,13 @@ export default function App() {
   const selectEntity = useCallback((kind: EntityKind,id: string)=>{const entity=`${kind}:${id}`;setEntityId(entity);const url=new URL(location.href);url.searchParams.set('entity',entity);history.replaceState(null,'',url);},[]);
   const data = snapshot?.data ?? null;
   const view =
-    active === 'overview' ? <OverviewRestored data={data}/> :
+    active === 'overview' ? <OverviewRestored data={data} snapshot={snapshot}/> :
     active === 'persona' ? <PersonaRestored data={data} snapshot={snapshot} onEntity={selectEntity} onClearEntity={clearEntity} onSource={()=>setEditing(true)}/> :
     active === 'world' ? <WorldRestored snapshot={snapshot} onSource={()=>setEditing(true)}/> :
     active === 'content' ? <ContentRestored data={data} onEntity={selectEntity}/> :
-    active === 'live' ? <LiveRestored data={data} onSource={()=>setEditing(true)}/> :
-    active === 'growth' ? <GrowthRestored data={data} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
-    active === 'product' ? <ProductRestored data={data} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
+    active === 'live' ? <LiveRestored data={data} snapshot={snapshot} onSource={()=>setEditing(true)}/> :
+    active === 'growth' ? <GrowthRestored data={data} snapshot={snapshot} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
+    active === 'product' ? <ProductRestored data={data} snapshot={snapshot} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
     <ReportRestored snapshot={snapshot}/>;
 
