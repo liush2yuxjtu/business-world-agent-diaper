@@ -9,7 +9,7 @@ export function TopicOpportunityMap({topics, dataMode, selected, onSelect}: {top
   const missing = points.filter(point=>point.score === null);
   const active = points[selected];
   return <section className="panel topic-opportunity-map" aria-label="内容主题机会矩阵">
-    <h2>内容主题机会矩阵</h2>
+    <h2>内容主题机会矩阵</h2><a className="text-link" href="#all-content-topics">查看全部内容机会（{topics.length}项）</a>
     <p>横轴：竞争强度，纵轴：市场机会，范围均为0–100。分数含义与来源见所选选题依据；不同评分口径不能直接比较。气泡大小固定，不代表收益或人群规模。</p>
     <div className="topic-map-scroll"><div className="topic-map-canvas" role="group" aria-label="选题气泡图">
       <span className="topic-axis-y">市场机会 ↑</span><span className="topic-axis-x">竞争强度 →</span>

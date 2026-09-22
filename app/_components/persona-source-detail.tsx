@@ -42,7 +42,7 @@ export function PersonaSourceDetail({ person, snapshot, onSource }: {
   };
   return <>
     <dl className="detail-list persona-source-rows">{fields.map(([label, value]) => <div key={label}><dt>{label}</dt><dd><a href={href} onClick={open} aria-label={`${person.name}：${label}，查看来源详情`}>{value}</a></dd></div>)}</dl>
-    <a ref={fallback} className="text-link" href={href} onClick={open}>查看{person.name}的来源详情</a>
+    <a ref={fallback} className="text-link" href={href} onClick={open}>查看全部来源（{person.name}）</a>
     <dialog ref={dialog} className="campaign-review-dialog persona-source-dialog" aria-labelledby="persona-source-title" onCancel={event => { event.preventDefault(); close(); }}>
       <div className="section-title"><h2 id="persona-source-title">{target ? `${target.name} · 人群来源详情` : '人群来源不可定位'}</h2><button type="button" aria-label="关闭人群来源详情" onClick={close}>关闭</button></div>
       {target ? <>
