@@ -1,0 +1,65 @@
+{
+  "version": "2026-09-21",
+  "personas": [
+    {"id":"new-parents","name":"新手谨慎家庭","group":"consumer","sourceId":"xiaoyu","goal":"安全、透气，安心度过每一个夜晚","pain":"怕选错产品，不知道该相信哪种测评","trigger":"试用反馈与清楚的产品说明","behavior":"先比较和试用，再决定长期购买","action":"测试新生儿试用装与防漏内容","kpi":"首购转化率","entity":"consumer","scenario":"new-product","color":"#69DBE8","hair":0},
+    {"id":"repeat-family","name":"精打细算家庭","group":"consumer","sourceId":"alin","goal":"价格稳定，补货省心","pain":"优惠计算复杂，囤货容易错码","trigger":"透明的单片价格和组合优惠","behavior":"比较总价和用量，集中补货","action":"比较大包装与复购提醒方案","kpi":"复购率","entity":"consumer","scenario":"repeat","color":"#B9A3F7","hair":1},
+    {"id":"grandparent","name":"长辈照护家庭","group":"consumer","sourceId":"wangyi","goal":"尺码清楚，使用简单放心","pain":"产品术语难懂，换码缺少指引","trigger":"子女推荐与线下体验","behavior":"信任熟悉的渠道和明确的说明","action":"测试尺码说明与门店讲解","kpi":"交易转化率","entity":"retailer","scenario":"sizing","color":"#F2BD82","hair":2},
+    {"id":"creator-family","name":"乐于分享家庭","group":"consumer","sourceId":"mia","goal":"找到好用且值得分享的产品","pain":"普通促销内容缺少分享理由","trigger":"真实使用体验和品牌活动","behavior":"记录育儿生活，分享使用心得","action":"比较开箱内容与家庭使用场景","kpi":"内容互动率","entity":"creator","scenario":"content","color":"#91CCA9","hair":3},
+    {"id":"sensitive-family","name":"品质敏感家庭","group":"consumer","sourceId":"","goal":"关注触感、吸收与透气表现","pain":"产品差异难以直观比较","trigger":"有依据的属性对比","behavior":"研究材料与使用反馈，愿意先试用","action":"测试属性说明和试用内容","kpi":"试用转化率","entity":"brand","scenario":"new-product","color":"#F7A6B7","hair":4},
+    {"id":"promotion-family","name":"促销驱动家庭","group":"consumer","sourceId":"","goal":"在预算内购买适合的产品","pain":"优惠门槛和组合规则复杂","trigger":"清晰的优惠与单片价","behavior":"关注促销时点，跨渠道比较","action":"比较单品与组合装转化假设","kpi":"交易转化率","entity":"ecommerce","scenario":"pricing","color":"#B9A3F7","hair":5},
+    {"id":"urgent-family","name":"紧急补货家庭","group":"consumer","sourceId":"","goal":"及时买到当前尺码","pain":"常用商品缺货或配送太慢","trigger":"家中余量不足","behavior":"优先选择有货且可及时送达的渠道","action":"核对库存后测试补货提醒","kpi":"缺货影响","entity":"logistics","scenario":"inventory","color":"#F2BD82","hair":6},
+    {"id":"growing-family","name":"成长换码家庭","group":"consumer","sourceId":"","goal":"随着宝宝成长选择合适尺码","pain":"囤货剩余与换码时间难判断","trigger":"当前尺码贴合度改变","behavior":"寻找尺码指南，先小包装试穿","action":"测试换码指引与小包装组合","kpi":"交易转化率","entity":"retailer","scenario":"sizing","color":"#69DBE8","hair":7},
+    {"id":"ceo","name":"经营负责人","group":"business","sourceId":"","goal":"协调增长、利润与交付","pain":"部门使用不同口径讨论同一问题","trigger":"经营信号或策略评审","behavior":"核对共同基线，比较假设与边界","action":"查看经营报告与情景记录","kpi":"GMV / ROI","entity":"brand","scenario":"channel","color":"#69DBE8","hair":0},
+    {"id":"marketing","name":"市场负责人","group":"business","sourceId":"","goal":"让投入匹配人群需求","pain":"难以判断内容与渠道组合","trigger":"投放效率变化","behavior":"比较人群、内容和渠道","action":"规划小范围投放实验","kpi":"ROI / CPA","entity":"ecommerce","scenario":"channel","color":"#B9A3F7","hair":1},
+    {"id":"product-manager","name":"产品负责人","group":"business","sourceId":"","goal":"让商品组合覆盖不同家庭需求","pain":"需求与产品属性连接不清","trigger":"新品或换码需求","behavior":"核对产品、人群与使用场景","action":"比较新品与组合策略","kpi":"转化率 / 退款率","entity":"factory","scenario":"new-product","color":"#91CCA9","hair":3},
+    {"id":"supply-chain","name":"供应链负责人","group":"business","sourceId":"","goal":"减少缺货，保障交付","pain":"促销节奏与库存脱节","trigger":"库存覆盖天数偏低","behavior":"核对库存与需求变化","action":"先核对补货，再评估转化影响","kpi":"库存天数","entity":"logistics","scenario":"inventory","color":"#F2BD82","hair":0},
+    {"id":"finance","name":"财务负责人","group":"business","sourceId":"","goal":"解释投入与结果之间的关系","pain":"模拟收益容易被当作实际收益","trigger":"预算或经营复盘","behavior":"区分实际基线与假设结果","action":"复核预算、ROI 与情景记录","kpi":"投放支出 / ROI","entity":"brand","scenario":"pricing","color":"#F7A6B7","hair":4},
+    {"id":"distributor","name":"经销商","group":"business","sourceId":"","goal":"保持动销与合理库存","pain":"补货时点和产品组合难判断","trigger":"库存或促销计划变化","behavior":"关注区域渠道和商品供给","action":"核对商品库存与补货计划","kpi":"库存天数 / 动销","entity":"distributor","scenario":"inventory","color":"#91CCA9","hair":2},
+    {"id":"store-manager","name":"零售门店负责人","group":"business","sourceId":"","goal":"帮助家庭选到合适商品","pain":"尺码和卖点解释成本高","trigger":"家庭咨询或换码需求","behavior":"观察需求，解释产品差异","action":"测试尺码指引与推荐组合","kpi":"交易转化率","entity":"retailer","scenario":"sizing","color":"#F2BD82","hair":5},
+    {"id":"live-manager","name":"直播负责人","group":"business","sourceId":"","goal":"让讲解回应家庭的真实问题","pain":"观看、互动与转化连接不清","trigger":"直播表现变化","behavior":"比较脚本、观看与商品反馈","action":"测试防漏讲解与问答结构","kpi":"观看时长 / 支付转化","entity":"creator","scenario":"live","color":"#69DBE8","hair":7}
+  ],
+  "entities": [
+    {"id":"consumer","name":"消费者","detail":"需求、使用与复购","screen":"persona"},
+    {"id":"retailer","name":"零售门店","detail":"咨询、试用与成交","screen":"product"},
+    {"id":"ecommerce","name":"电商平台","detail":"流量、投放与交易","screen":"growth"},
+    {"id":"distributor","name":"经销商","detail":"区域供货与动销","screen":"product"},
+    {"id":"factory","name":"生产工厂","detail":"产品、产能与品质","screen":"product"},
+    {"id":"logistics","name":"物流伙伴","detail":"库存、补货与履约","screen":"product"},
+    {"id":"regulator","name":"监管机构","detail":"产品标准与合规约束","screen":"report"},
+    {"id":"brand","name":"品牌与竞品","detail":"定位、商品与价格","screen":"product"},
+    {"id":"creator","name":"媒体与创作者","detail":"内容、口碑与直播","screen":"content"},
+    {"id":"supplier","name":"原料供应商","detail":"材料、成本与供应","screen":"product"}
+  ],
+  "events": [
+    {"id":"stock-risk","name":"库存覆盖偏低","kind":"rule","detail":"以当前商品库存天数 ≤ 7 为演示提醒阈值。","impact":"可能影响补货家庭与渠道履约","action":"核对库存和交付，再讨论促销","scenario":"inventory","entity":"logistics","color":"#F2BD82"},
+    {"id":"demand-spike","name":"需求突然增加","kind":"template","detail":"假设某类家庭需求增加；当前没有时间序列证明增长。","impact":"关注常用尺码与交付能力","action":"先规划有限的转化实验","scenario":"new-product","entity":"consumer","color":"#69DBE8"},
+    {"id":"cpa-rise","name":"获客成本上升","kind":"template","detail":"假设获客成本上升；当前快照用于查看 CPA 基线。","impact":"投放团队需要比较渠道效率","action":"比较投放效率变化的方向性结果","scenario":"channel","entity":"ecommerce","color":"#F7A6B7"},
+    {"id":"newborn-growth","name":"新生儿需求变化","kind":"template","detail":"区域需求研究模板，尚未接入人口统计。","impact":"新手家庭与新生儿产品线","action":"测试新品介绍与首购指引","scenario":"new-product","entity":"consumer","color":"#91CCA9"},
+    {"id":"competitor-price","name":"竞品价格调整","kind":"template","detail":"假设竞品调价，未接入竞品实时价格。","impact":"促销家庭会重新比较选择","action":"将交易转化变化作为显式假设","scenario":"pricing","entity":"brand","color":"#B9A3F7"},
+    {"id":"channel-shift","name":"渠道偏好变化","kind":"template","detail":"假设家庭调整购买渠道，当前仅提供渠道份额。","impact":"市场负责人需要重新比较组合","action":"核对渠道基线再规划实验","scenario":"channel","entity":"ecommerce","color":"#69DBE8"},
+    {"id":"supply-delay","name":"供货延迟","kind":"template","detail":"供应链情景模板，尚未连接运输时效。","impact":"补货家庭与门店的供给风险","action":"先核对履约，评估转化下降的影响","scenario":"inventory","entity":"supplier","color":"#F2BD82"},
+    {"id":"review-sentiment","name":"用户反馈变化","kind":"template","detail":"口碑研究模板，尚未接入实时评论情绪。","impact":"家庭信任与后续购买意愿","action":"用内容实验验证讲解方向","scenario":"content","entity":"creator","color":"#91CCA9"}
+  ],
+  "scenarios": [
+    {"id":"new-product","name":"新品上市","description":"比较新品介绍的转化假设","lever":"checkout_conversion","leverName":"交易转化","change":10,"entity":"factory","color":"#69DBE8"},
+    {"id":"channel","name":"渠道投放","description":"比较投放效率的变化","lever":"ad_efficiency","leverName":"投放效率","change":10,"entity":"ecommerce","color":"#B9A3F7"},
+    {"id":"inventory","name":"库存与补货","description":"评估供给风险的转化影响","lever":"checkout_conversion","leverName":"交易转化","change":-10,"entity":"logistics","color":"#F2BD82"},
+    {"id":"pricing","name":"价格与组合","description":"比较组合策略的转化假设","lever":"checkout_conversion","leverName":"交易转化","change":5,"entity":"brand","color":"#F7A6B7"},
+    {"id":"live","name":"直播讲解","description":"比较观看时长的变化","lever":"live_watch_time","leverName":"直播观看","change":10,"entity":"creator","color":"#69DBE8"},
+    {"id":"content","name":"内容与人群","description":"比较内容互动的变化","lever":"content_engagement","leverName":"内容互动","change":15,"entity":"creator","color":"#91CCA9"},
+    {"id":"repeat","name":"复购计划","description":"比较复购提醒的假设","lever":"repeat_purchase","leverName":"复购","change":8,"entity":"consumer","color":"#B9A3F7"},
+    {"id":"sizing","name":"成长换码","description":"比较尺码指引的转化假设","lever":"checkout_conversion","leverName":"交易转化","change":5,"entity":"retailer","color":"#F2BD82"}
+  ],
+  "regions": [{"id":"asia","name":"亚洲"},{"id":"europe","name":"欧洲"},{"id":"north-america","name":"北美洲"},{"id":"south-america","name":"南美洲"},{"id":"africa","name":"非洲"},{"id":"oceania","name":"大洋洲"}],
+  "agentStates": [{"id":"neutral","name":"待命"},{"id":"thinking","name":"查看证据"},{"id":"simulating","name":"运行情景"},{"id":"recommendation","name":"结果就绪"},{"id":"alert","name":"需要关注"}],
+  "productSizes": ["NB","S","M","L","XL","XXL"],
+  "attributes": [{"id":"absorbency","name":"吸收"},{"id":"softness","name":"柔软"},{"id":"breathability","name":"透气"},{"id":"fit","name":"贴合"}],
+  "feedback": [{"id":"loading","name":"读取数据"},{"id":"saving","name":"保存情景"},{"id":"saved","name":"已保存"},{"id":"recommendation","name":"行动草案"},{"id":"error","name":"需要重试"}],
+  "slides": [
+    {"id":"world","kicker":"01 / 经营世界","title":"让每个业务角色\n看见同一个世界","copy":"连接家庭需求、商业实体与经营数据。选择一个角色，理解它关心的问题。","visual":"world/world-model-scene.svg"},
+    {"id":"personas","kicker":"02 / 客户与伙伴","title":"不同的家庭，\n不同的选择理由","copy":"把目标、顾虑、触发条件与行为连接起来。人群模板与数据库中的演示人群明确区分。","visual":"world/persona-constellation.svg"},
+    {"id":"events","kicker":"03 / 商业事件","title":"一次库存变化，\n影响哪些人？","copy":"沿着商品、渠道和家庭的关系检查影响范围。当前快照提供证据，Agent 组织下一步讨论。","visual":"world/event-to-action.svg"},
+    {"id":"experiment","kicker":"04 / 现场推演","title":"调整一个假设，\n比较一个情景","copy":"读取当前经营基线，运行方向性推演，再保存结果。现场反馈显示实际记录与保存时间。","visual":"scenarios/channel.svg"},
+    {"id":"action","kicker":"05 / 团队决策","title":"把假设和结果，\n留给下一次决策","copy":"重新打开情景记录，说明依据和适用边界。选择要验证的行动，再进入真实业务工作区。","visual":"world/decision-loop.svg"}
+  ]
+}

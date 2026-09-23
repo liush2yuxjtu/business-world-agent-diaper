@@ -6,9 +6,11 @@ import {
   Radio, RefreshCw, Save, Search, ShieldCheck, Sparkles, Users,
 } from 'lucide-react';
 import {
-  OverviewRestored, PersonaRestored, WorldRestored, ContentRestored, LiveRestored,
+  OverviewRestored, PersonaRestored, ContentRestored, LiveRestored,
   GrowthRestored, ProductRestored, ExperimentRestored, ReportRestored,
 } from './_components/business-world-screens';
+
+import { WorldModelExplorer } from './_components/world-model/world-model';
 
 type Payload = {
   meta: { dataMode: 'simulated' | 'observed'; datasetVersion: string; designSource: string; warning: string };
@@ -176,7 +178,7 @@ export default function App() {
   const view =
     active === 'overview' ? <OverviewRestored data={data}/> :
     active === 'persona' ? <PersonaRestored data={data}/> :
-    active === 'world' ? <WorldRestored data={data}/> :
+    active === 'world' ? <WorldModelExplorer snapshot={snapshot}/> :
     active === 'content' ? <ContentRestored data={data}/> :
     active === 'live' ? <LiveRestored data={data}/> :
     active === 'growth' ? <GrowthRestored data={data}/> :

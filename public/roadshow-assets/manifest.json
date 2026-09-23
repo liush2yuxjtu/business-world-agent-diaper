@@ -1,0 +1,923 @@
+{
+  "version": "2026-09-21",
+  "rules": {
+    "generation": "code-only",
+    "imageGen": false,
+    "vectorFirst": true,
+    "pptWebShared": true,
+    "wideMaster": "3840x2160",
+    "squareMaster": "2160x2160"
+  },
+  "assets": [
+    {
+      "id": "personas/consumer/new-parents",
+      "title": "新手谨慎家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/new-parents.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/consumer/repeat-family",
+      "title": "精打细算家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/repeat-family.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/consumer/grandparent",
+      "title": "长辈照护家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/grandparent.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/consumer/creator-family",
+      "title": "乐于分享家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/creator-family.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/consumer/sensitive-family",
+      "title": "品质敏感家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/sensitive-family.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/consumer/promotion-family",
+      "title": "促销驱动家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/promotion-family.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/consumer/urgent-family",
+      "title": "紧急补货家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/urgent-family.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/consumer/growing-family",
+      "title": "成长换码家庭 · 原创角色插画",
+      "category": "客户画像",
+      "path": "/roadshow-assets/personas/consumer/growing-family.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/ceo",
+      "title": "经营负责人 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/ceo.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/marketing",
+      "title": "市场负责人 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/marketing.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/product-manager",
+      "title": "产品负责人 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/product-manager.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/supply-chain",
+      "title": "供应链负责人 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/supply-chain.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/finance",
+      "title": "财务负责人 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/finance.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/distributor",
+      "title": "经销商 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/distributor.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/store-manager",
+      "title": "零售门店负责人 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/store-manager.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "personas/business/live-manager",
+      "title": "直播负责人 · 原创角色插画",
+      "category": "业务角色",
+      "path": "/roadshow-assets/personas/business/live-manager.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/consumer",
+      "title": "消费者",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/consumer.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/retailer",
+      "title": "零售门店",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/retailer.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/ecommerce",
+      "title": "电商平台",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/ecommerce.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/distributor",
+      "title": "经销商",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/distributor.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/factory",
+      "title": "生产工厂",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/factory.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/logistics",
+      "title": "物流伙伴",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/logistics.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/regulator",
+      "title": "监管机构",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/regulator.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/brand",
+      "title": "品牌与竞品",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/brand.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/creator",
+      "title": "媒体与创作者",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/creator.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "entities/supplier",
+      "title": "原料供应商",
+      "category": "商业实体",
+      "path": "/roadshow-assets/entities/supplier.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-agent-neutral",
+      "title": "待命",
+      "category": "World Agent",
+      "path": "/roadshow-assets/world/world-agent-neutral.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-agent-thinking",
+      "title": "查看证据",
+      "category": "World Agent",
+      "path": "/roadshow-assets/world/world-agent-thinking.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-agent-simulating",
+      "title": "运行情景",
+      "category": "World Agent",
+      "path": "/roadshow-assets/world/world-agent-simulating.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-agent-recommendation",
+      "title": "结果就绪",
+      "category": "World Agent",
+      "path": "/roadshow-assets/world/world-agent-recommendation.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-agent-alert",
+      "title": "需要关注",
+      "category": "World Agent",
+      "path": "/roadshow-assets/world/world-agent-alert.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-agent-core",
+      "title": "Business World Agent",
+      "category": "World Agent",
+      "path": "/roadshow-assets/world/world-agent-core.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-model-globe",
+      "title": "商业区域示意球体 · 非精确地理底图",
+      "category": "世界地图",
+      "path": "/roadshow-assets/world/world-model-globe.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/world-model-scene",
+      "title": "角色、世界与商业实体",
+      "category": "世界地图",
+      "path": "/roadshow-assets/world/world-model-scene.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/persona-constellation",
+      "title": "八类家庭行为原型",
+      "category": "客户画像",
+      "path": "/roadshow-assets/world/persona-constellation.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/new-product",
+      "title": "新品上市",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/new-product.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/channel",
+      "title": "渠道投放",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/channel.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/inventory",
+      "title": "库存与补货",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/inventory.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/pricing",
+      "title": "价格与组合",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/pricing.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/live",
+      "title": "直播讲解",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/live.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/content",
+      "title": "内容与人群",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/content.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/repeat",
+      "title": "复购计划",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/repeat.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "scenarios/sizing",
+      "title": "成长换码",
+      "category": "场景缩略图",
+      "path": "/roadshow-assets/scenarios/sizing.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/stock-risk",
+      "title": "库存覆盖偏低",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/stock-risk.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/demand-spike",
+      "title": "需求突然增加",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/demand-spike.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/cpa-rise",
+      "title": "获客成本上升",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/cpa-rise.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/newborn-growth",
+      "title": "新生儿需求变化",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/newborn-growth.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/competitor-price",
+      "title": "竞品价格调整",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/competitor-price.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/channel-shift",
+      "title": "渠道偏好变化",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/channel-shift.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/supply-delay",
+      "title": "供货延迟",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/supply-delay.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "events/review-sentiment",
+      "title": "用户反馈变化",
+      "category": "行业事件",
+      "path": "/roadshow-assets/events/review-sentiment.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/pack-nb",
+      "title": "NB 码纸尿裤 · 概念包装",
+      "category": "尿布产品",
+      "path": "/roadshow-assets/diaper/pack-nb.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/pack-s",
+      "title": "S 码纸尿裤 · 概念包装",
+      "category": "尿布产品",
+      "path": "/roadshow-assets/diaper/pack-s.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/pack-m",
+      "title": "M 码纸尿裤 · 概念包装",
+      "category": "尿布产品",
+      "path": "/roadshow-assets/diaper/pack-m.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/pack-l",
+      "title": "L 码纸尿裤 · 概念包装",
+      "category": "尿布产品",
+      "path": "/roadshow-assets/diaper/pack-l.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/pack-xl",
+      "title": "XL 码纸尿裤 · 概念包装",
+      "category": "尿布产品",
+      "path": "/roadshow-assets/diaper/pack-xl.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/pack-xxl",
+      "title": "XXL 码纸尿裤 · 概念包装",
+      "category": "尿布产品",
+      "path": "/roadshow-assets/diaper/pack-xxl.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/absorbency",
+      "title": "吸收",
+      "category": "产品属性",
+      "path": "/roadshow-assets/diaper/absorbency.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/softness",
+      "title": "柔软",
+      "category": "产品属性",
+      "path": "/roadshow-assets/diaper/softness.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/breathability",
+      "title": "透气",
+      "category": "产品属性",
+      "path": "/roadshow-assets/diaper/breathability.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "diaper/fit",
+      "title": "贴合",
+      "category": "产品属性",
+      "path": "/roadshow-assets/diaper/fit.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "feedback/loading",
+      "title": "读取数据",
+      "category": "操作反馈",
+      "path": "/roadshow-assets/feedback/loading.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "feedback/saving",
+      "title": "保存情景",
+      "category": "操作反馈",
+      "path": "/roadshow-assets/feedback/saving.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "feedback/saved",
+      "title": "已保存",
+      "category": "操作反馈",
+      "path": "/roadshow-assets/feedback/saved.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "feedback/recommendation",
+      "title": "行动草案",
+      "category": "操作反馈",
+      "path": "/roadshow-assets/feedback/recommendation.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "feedback/error",
+      "title": "需要重试",
+      "category": "操作反馈",
+      "path": "/roadshow-assets/feedback/error.svg",
+      "viewBox": "0 0 512 512",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/event-to-action",
+      "title": "事件、角色、推演与行动",
+      "category": "商业链路",
+      "path": "/roadshow-assets/world/event-to-action.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/decision-loop",
+      "title": "保留假设、比较情景、回看记录",
+      "category": "商业链路",
+      "path": "/roadshow-assets/world/decision-loop.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/market-opportunity-map",
+      "title": "全球机会研究 · 无区域实测数据",
+      "category": "世界地图",
+      "path": "/roadshow-assets/world/market-opportunity-map.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    },
+    {
+      "id": "world/demo-cover",
+      "title": "Business World 产品演示封面",
+      "category": "演示封面",
+      "path": "/roadshow-assets/world/demo-cover.svg",
+      "viewBox": "0 0 1280 720",
+      "format": "svg",
+      "license": "Original project artwork",
+      "usage": [
+        "web",
+        "ppt"
+      ]
+    }
+  ]
+}

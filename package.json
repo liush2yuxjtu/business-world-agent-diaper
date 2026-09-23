@@ -22,7 +22,10 @@
     "start:eve": "eve start",
     "audit:reality": "node scripts/audit-business-world-reality.mjs",
     "eval:eve": "eve eval --strict",
-    "verify:eve": "pnpm typecheck && pnpm build:eve"
+    "verify:eve": "pnpm typecheck && pnpm build:eve",
+    "roadshow:assets": "node scripts/build-roadshow-assets.mjs && python3 scripts/package-roadshow-assets.py",
+    "roadshow:verify": "python3 scripts/verify-roadshow.py",
+    "roadshow:ppt": "node scripts/build-roadshow-ppt.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.0.2",
