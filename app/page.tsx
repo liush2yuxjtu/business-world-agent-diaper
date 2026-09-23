@@ -1,9 +1,15 @@
 'use client';
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import type { EntityKind } from '@/lib/business-world/entity-links';
+import { BusinessSearch, EntitySearchDetail } from './_components/business-search';
+import { localObservationMinute, observationTimeForSave } from '@/lib/business-world/source-editor';
+import { presentSnapshot } from '@/lib/business-world/presentation';
+import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
+
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BarChart3, Box, ClipboardList, Database, FlaskConical, Home, Package, Play,
-  Radio, RefreshCw, Save, Search, ShieldCheck, Sparkles, Users,
+  Radio, RefreshCw, Save, ShieldCheck, Sparkles, Users,
 } from 'lucide-react';
 import {
   OverviewRestored, PersonaRestored, WorldRestored, ContentRestored, LiveRestored,
@@ -22,11 +28,15 @@ type Payload = {
     scripts: Array<{ name: string; durationSec: number; format: string }>;
   };
   live: {
+    funnel?: import('@/lib/business-world/live-funnel').LiveFunnel;
+    audience?: import('@/lib/business-world/live-audience').LiveAudience;
+    questions?: import('zod').infer<typeof import('@/lib/business-world/live-questions').liveQuestionsSchema>;
     roomEntryRate: number | null; cartRate: number | null; avgWatchSec: number | null; payConversionRate: number | null;
     exposureUv: number | null; watchUv: number | null; peakOnline: number | null; paidOrders: number | null; gmv: number | null;
     sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;
   };
   commerce: {
+    associations?: import('@/lib/business-world/product-associations').ProductAssociations;
     conversionRate: number | null; gmv: number | null; newCustomers: number | null; refundRate: number | null;
     sellThroughRate: number | null; aov: number | null;
     products: Array<{ id: string; name: string; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;
@@ -96,7 +106,7 @@ function SourceBanner({ snapshot, onEdit }: { snapshot: Snapshot | null; onEdit:
   const connected = mode === 'persisted-observation' || mode === 'simulated';
   const simulated = mode === 'simulated';
   return <div className={`source-banner ${connected ? 'real' : 'missing'}`}>
-    <div><ShieldCheck size={18}/><span><b>{simulated ? 'Demo 数据库 · 合成数据' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
+    <div><ShieldCheck size={18}/><span><b>{simulated ? '演示数据 · 非真实经营记录' : connected ? '已连接数据源' : '尚未连接数据源'}</b>{connected ? `${snapshot?.provenance.sourceLabel} · ${snapshot?.provenance.provider}` : '连接后会在这里显示来源与更新时间'}</span></div>
     <button onClick={onEdit}>{connected ? '来源详情' : '连接数据'}</button>
   </div>;
 }
@@ -105,84 +115,146 @@ function Header({ title, subtitle, onExperiment }: { title: string; subtitle: st
   return <header className="page-head"><div><h1>{title}</h1><p>{subtitle}</p></div><button className="primary" onClick={onExperiment}><Play size={16}/>开始模拟</button></header>;
 }
 
-function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapshot | null; onSaved: () => void; onClose: () => void; readOnly: boolean }) {
+function DataEditor({ snapshot, onSaved, onClose, readOnly }: { snapshot: Snapshot | null; onSaved: () => void | Promise<void>; onClose: () => void; readOnly: boolean }) {
+  useEffect(() => {
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const dialog = document.querySelector<HTMLElement>('.data-editor');
+    const controls = () => Array.from(dialog?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), [tabindex="0"]') ?? []);
+    controls()[0]?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+      } else if (event.key === 'Tab') {
+        const items = controls();
+        const first = items[0];
+        const last = items.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      previousFocus?.focus();
+    };
+  }, [onClose]);
   const d = snapshot?.data ?? emptyPayload;
-  const [sourceLabel, setSourceLabel] = useState(snapshot?.provenance.sourceLabel || 'Business World Demo 数据库快照');
-  const [observedAt, setObservedAt] = useState(snapshot?.provenance.asOf ? snapshot.provenance.asOf.slice(0, 16) : new Date().toISOString().slice(0, 16));
+  const presented = snapshot ? presentSnapshot(snapshot) : null;
+  const [sourceLabel, setSourceLabel] = useState(presented?.provenance.sourceLabel || '尚未连接来源');
+  const [observedAt, setObservedAt] = useState(snapshot?.provenance.asOf ? localObservationMinute(snapshot.provenance.asOf) : '');
   const [values, setValues] = useState<Record<string, string>>({
     engagementRate: d.content.engagementRate?.toString() ?? '', weeklyOpportunities: d.content.weeklyOpportunities?.toString() ?? '',
     roomEntryRate: d.live.roomEntryRate?.toString() ?? '', cartRate: d.live.cartRate?.toString() ?? '',
     conversionRate: d.commerce.conversionRate?.toString() ?? '', gmv: d.commerce.gmv?.toString() ?? '', newCustomers: d.commerce.newCustomers?.toString() ?? '',
-    budget: d.ads.budget?.toString() ?? '', roi: d.ads.roi?.toString() ?? '', cpa: d.ads.cpa?.toString() ?? '', notes: d.notes ?? '',
+    budget: d.ads.budget?.toString() ?? '', roi: d.ads.roi?.toString() ?? '', cpa: d.ads.cpa?.toString() ?? '', notes: presented?.data?.notes ?? '',
   });
   const [status, setStatus] = useState('');
+  const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
+  const disabled = readOnly || saving;
   const set = (key: string, value: string) => setValues(v => ({ ...v, [key]: value }));
   async function submit(event: FormEvent) {
-    event.preventDefault(); if (readOnly) { setStatus('当前数据源为只读。获得写入权限后才能修改。'); return; } setStatus('保存中…');
+    event.preventDefault();
+    if (savingRef.current) return;
+    if (readOnly) { setStatus('当前数据源为只读。获得写入权限后才能修改。'); return; }
+    savingRef.current = true;
+    setSaving(true);
+    setStatus('保存中…');
     const payload: Payload = {
       ...d,
-      meta: { ...d.meta, dataMode: 'simulated', warning: 'Synthetic demo dataset persisted in the database. It is not observed platform or customer data.' },
+      meta: { ...d.meta, dataMode: 'simulated', warning: d.meta.dataMode === 'simulated' ? d.meta.warning : 'Synthetic demo dataset persisted in the database. It is not observed platform or customer data.' },
       content: { ...d.content, engagementRate: numberValue(values.engagementRate), weeklyOpportunities: numberValue(values.weeklyOpportunities) },
       live: { ...d.live, roomEntryRate: numberValue(values.roomEntryRate), cartRate: numberValue(values.cartRate) },
       commerce: { ...d.commerce, conversionRate: numberValue(values.conversionRate), gmv: numberValue(values.gmv), newCustomers: numberValue(values.newCustomers) },
       ads: { ...d.ads, budget: numberValue(values.budget), roi: numberValue(values.roi), cpa: numberValue(values.cpa) },
-      notes: values.notes,
+      notes: values.notes === presented?.data?.notes ? d.notes : values.notes,
     };
     try {
-      const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel, sourceType: 'simulated', observedAt: new Date(observedAt).toISOString(), payload }) });
-      const body = await response.json(); if (!response.ok) throw new Error(body.error || 'Save failed');
-      setStatus('Demo 快照已写入数据库'); await onSaved();
-    } catch (error) { setStatus(error instanceof Error ? error.message : 'Save failed'); }
+      const response = await fetch('/api/business-world/state', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sourceLabel: sourceLabel === presented?.provenance.sourceLabel ? snapshot!.provenance.sourceLabel : sourceLabel, sourceType: 'simulated', observedAt: observationTimeForSave(observedAt, snapshot?.provenance.asOf), payload }) });
+      const body = await response.json(); if (!response.ok) throw new Error(publicErrorMessage(body, 'SAVE_FAILED'));
+      setStatus('演示数据已保存'); await onSaved();
+    } catch (error) { setStatus(error instanceof Error && Object.values(publicMessages).some(message => message === error.message) ? error.message : publicMessages.SAVE_FAILED); }
+    finally { savingRef.current = false; setSaving(false); }
   }
   const fields: Array<[string, string, string]> = [['engagementRate','内容互动率','%'],['weeklyOpportunities','本周内容机会','条'],['roomEntryRate','直播进房率','%'],['cartRate','直播加购率','%'],['conversionRate','商品转化率','%'],['gmv','GMV','元'],['newCustomers','新客数','人'],['budget','投放预算','元'],['roi','ROI',''],['cpa','CPA','元']];
-  return <div className="editor-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}><form className="data-editor" role="dialog" aria-modal="true" aria-labelledby="data-source-title" onSubmit={submit}><div className="editor-head"><div><b id="data-source-title">{readOnly ? '经营数据源' : '编辑 Demo 数据库快照'}</b><span>{readOnly ? '当前来源为只读；暂未提供的指标会保持为空。' : '保存后会更新数据库中的 Demo 快照，刷新页面仍然存在。'}</span></div><button type="button" aria-label="关闭数据源面板" onClick={onClose}>×</button></div><label>来源名称<input required disabled={readOnly} value={sourceLabel} onChange={e => setSourceLabel(e.target.value)}/></label><label>观测时间<input required disabled={readOnly} type="datetime-local" value={observedAt} onChange={e => setObservedAt(e.target.value)}/></label><div className="field-grid">{fields.map(([key,label,unit]) => <label key={key}>{label}<div className="unit-input"><input type="number" step="any" disabled={readOnly} value={values[key]} onChange={e => set(key,e.target.value)}/><span>{unit}</span></div></label>)}</div><label>来源说明 / 备注<textarea disabled={readOnly} value={values.notes} onChange={e => set('notes',e.target.value)} placeholder="例如：来自 2026-09-17 店铺后台导出；文件已由运营核验。"/></label><div className="editor-actions"><span role="status" aria-live="polite">{status}</span><button className="primary" type="submit" disabled={readOnly}><Save size={16}/>{readOnly ? '只读来源' : '保存 Demo 快照'}</button></div></form></div>;
+  return <div className="editor-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}><form className="data-editor" role="dialog" aria-modal="true" aria-labelledby="data-source-title" onSubmit={submit}><div className="editor-head"><div><b id="data-source-title">{readOnly ? '经营数据源' : '编辑演示数据'}</b><span>{readOnly ? '当前来源为只读；暂未提供的指标会保持为空。' : '保存后会更新各页面使用的演示数据，刷新页面仍然保留。'}</span></div><button type="button" aria-label="关闭数据源面板" onClick={onClose}>×</button></div><label>来源名称<input required minLength={2} maxLength={120} disabled={disabled} value={sourceLabel} onChange={e => setSourceLabel(e.target.value)}/></label><label>观测时间<input required disabled={disabled} type="datetime-local" value={observedAt} onChange={e => setObservedAt(e.target.value)}/></label><div className="field-grid">{fields.map(([key,label,unit]) => <label key={key}>{label}<div className="unit-input"><input type="number" step={key === 'weeklyOpportunities' || key === 'newCustomers' ? 1 : 'any'} min={0} max={unit === '%' ? 100 : undefined} disabled={disabled} value={values[key]} onChange={e => set(key,e.target.value)}/><span>{unit}</span></div></label>)}</div><label>来源说明 / 备注<textarea maxLength={4000} disabled={disabled} value={values.notes} onChange={e => set('notes',e.target.value)} placeholder="例如：本次比较采用的假设、适用范围与注意事项。"/></label><div className="editor-actions"><span role="status" aria-live="polite">{status}</span><button className="primary" type="submit" disabled={disabled}><Save size={16}/>{readOnly ? '只读来源' : saving ? '保存中…' : '保存演示数据'}</button></div></form></div>;
 }
 
 export default function App() {
   const [active, setActive] = useState<NavId>('overview');
-  const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const [sourceSnapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const snapshot = useMemo(() => sourceSnapshot ? presentSnapshot(sourceSnapshot) : null, [sourceSnapshot]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);
   const [search, setSearch] = useState('');
+  const [entityId,setEntityId]=useState('');
+  const searchRef = useRef<HTMLInputElement>(null);
+  const closeEditor = useCallback(() => setEditing(false), []);
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (editing) return;
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        searchRef.current?.focus();
+      } else if (event.key === 'Escape') {
+        setSearch('');
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [editing]);
 
   const load = useCallback(async () => {
     setLoading(true); setError('');
-    try { const response = await fetch('/api/business-world/state', { cache: 'no-store' }); const body = await response.json(); if (!response.ok) throw new Error(body.error || 'Failed to load'); setSnapshot(body); }
-    catch (err) { setSnapshot(null); setError(err instanceof Error ? err.message : 'Failed to load'); }
+    try { const response = await fetch('/api/business-world/state', { cache: 'no-store' }); const body = await response.json(); if (!response.ok) throw new Error(publicErrorMessage(body, 'READ_FAILED')); setSnapshot(body); }
+    catch (err) { setSnapshot(null); setError(publicMessages.READ_FAILED); }
     finally { setLoading(false); }
   }, []);
   useEffect(() => { void load(); }, [load]);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const requested = params.get("screen") as NavId | null;
+    const requested = [params.get("screen"), window.location.hash.slice(1)].find(value => nav.some(([id]) => id === value)) as NavId | undefined;
     if (requested && nav.some(([id]) => id === requested)) setActive(requested);
     const requestedSearch = params.get("search");
     if (requestedSearch) setSearch(requestedSearch);
+    setEntityId(params.get("entity") ?? "");
     if (params.get("source") === "1") setEditing(true);
   }, []);
 
-  const matches = useMemo(() => search.trim() ? nav.filter(([,label]) => label.toLowerCase().includes(search.trim().toLowerCase())) : [], [search]);
   const goTo = useCallback((id: NavId) => {
     setActive(id);
     setSearch('');
+    setEntityId('');
     const url = new URL(window.location.href);
+    url.searchParams.delete('entity');
+    url.searchParams.delete('search');
     if (id === 'overview') url.searchParams.delete('screen');
     else url.searchParams.set('screen', id);
+    url.hash = id;
     window.history.replaceState(null, '', url);
   }, []);
 
+  const clearEntity = useCallback(()=>{setEntityId('');const url=new URL(location.href);url.searchParams.delete('entity');history.replaceState(null,'',url);},[]);
+  const selectEntity = useCallback((kind: EntityKind,id: string)=>{const entity=`${kind}:${id}`;setEntityId(entity);const url=new URL(location.href);url.searchParams.set('entity',entity);history.replaceState(null,'',url);},[]);
   const data = snapshot?.data ?? null;
   const view =
-    active === 'overview' ? <OverviewRestored data={data}/> :
-    active === 'persona' ? <PersonaRestored data={data}/> :
-    active === 'world' ? <WorldRestored data={data}/> :
-    active === 'content' ? <ContentRestored data={data}/> :
-    active === 'live' ? <LiveRestored data={data}/> :
-    active === 'growth' ? <GrowthRestored data={data}/> :
-    active === 'product' ? <ProductRestored data={data}/> :
+    active === 'overview' ? <OverviewRestored data={data} snapshot={snapshot}/> :
+    active === 'persona' ? <PersonaRestored data={data} snapshot={snapshot} onEntity={selectEntity} onClearEntity={clearEntity} onSource={()=>setEditing(true)}/> :
+    active === 'world' ? <WorldRestored snapshot={snapshot} onSource={()=>setEditing(true)}/> :
+    active === 'content' ? <ContentRestored data={data} snapshot={snapshot} onEntity={selectEntity}/> :
+    active === 'live' ? <LiveRestored data={data} snapshot={snapshot} onSource={()=>setEditing(true)}/> :
+    active === 'growth' ? <GrowthRestored data={data} snapshot={snapshot} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
+    active === 'product' ? <ProductRestored data={data} snapshot={snapshot} onClearEntity={clearEntity} onSource={() => setEditing(true)}/> :
     active === 'experiment' ? <ExperimentRestored snapshot={snapshot}/> :
     <ReportRestored snapshot={snapshot}/>;
 
-  return <main className={`app-shell screen-${active}`}><aside className="sidebar"><div className="brand"><div><span className="brand-wordmark">eve</span><b>Business World</b><small>DIAPER OPERATING SYSTEM</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><a href="?screen=experiment" className="sidebar-promo"><Box size={25}/><div>模拟工作区<small>建模 · 验证 · 成长<br/>让每一次决策更可靠</small></div></a></aside><section className="workspace"><div className="topbar"><div className="search real-search"><Search size={16}/><input aria-label="搜索功能" aria-expanded={matches.length>0} aria-controls="feature-search-results" placeholder="搜索功能..." value={search} onChange={e => setSearch(e.target.value)}/>{matches.length>0 && <div id="feature-search-results" role="listbox" className="search-results">{matches.map(([id,label]) => <button key={id} role="option" onClick={() => goTo(id)}>{label}</button>)}</div>}</div><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => { window.location.href = "/chat"; }}><Sparkles size={13}/>问 Agent</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle={screenDescriptions[active]} onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : view}</div></section>{editing && <DataEditor snapshot={snapshot} onSaved={load} onClose={() => setEditing(false)} readOnly={!snapshot?.provenance.writable}/>}</main>;
+  return <main className={`app-shell screen-${active}`}><aside className="sidebar"><div className="brand"><div><span className="brand-wordmark">eve</span><b>Business World</b><small>DIAPER OPERATING SYSTEM</small></div></div><nav>{nav.map(([id,label,Icon]) => <button key={id} className={active===id?'active':''} aria-label={label} aria-current={active===id?'page':undefined} onClick={() => goTo(id)}><Icon size={18}/><span>{label}</span></button>)}</nav><a href="?screen=experiment" className="sidebar-promo" aria-label="模拟工作区"><Box size={25}/><div>模拟工作区<small>建模 · 验证 · 成长<br/>让每一次决策更可靠</small></div></a></aside><section className="workspace"><div className="topbar"><BusinessSearch snapshot={snapshot} pages={nav.map(([id,label])=>[id,label] as const)} query={search} setQuery={setSearch} inputRef={searchRef}/><button className="date" onClick={() => void load()}><RefreshCw size={13}/>刷新</button><button className="team" onClick={() => { window.location.href = "/chat"; }}><Sparkles size={13}/>问 Agent</button><button className="team" onClick={() => setEditing(true)}><Database size={13}/>数据源</button></div><div className="canvas"><Header title={nav.find(([id]) => id === active)?.[1] ?? 'Business World'} subtitle={screenDescriptions[active]} onExperiment={() => goTo('experiment')}/><SourceBanner snapshot={snapshot} onEdit={() => setEditing(true)}/>{loading ? <section className="panel empty-panel">正在读取经营数据…</section> : error ? <section className="panel empty-panel"><h3>数据暂时不可用</h3><p>{error}</p><button className="primary" onClick={() => void load()}>重试</button></section> : <>{entityId && active !== 'world' && <EntitySearchDetail snapshot={snapshot} entityId={entityId} onClose={()=>{setEntityId('');const url=new URL(location.href);url.searchParams.delete('entity');history.replaceState(null,'',url);}} onSource={()=>setEditing(true)}/>} {view}</>}</div></section>{editing && !loading && <DataEditor snapshot={sourceSnapshot} onSaved={load} onClose={closeEditor} readOnly={!snapshot?.provenance.writable}/>}</main>;
 }

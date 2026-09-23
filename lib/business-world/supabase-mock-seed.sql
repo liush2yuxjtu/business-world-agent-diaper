@@ -80,31 +80,37 @@ values (
     "topTopics": [
       {
         "title": "宝宝整夜不漏尿挑战",
+        "opportunityScore": {"competition":20,"opportunity":85,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "新手家庭",
         "potential": "high"
       },
       {
         "title": "夏季透气纸尿裤测评",
+        "opportunityScore": {"competition":50,"opportunity":80,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "新手家庭",
         "potential": "high"
       },
       {
         "title": "新生儿囤货清单",
+        "opportunityScore": {"competition":20,"opportunity":40,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "复购家庭",
         "potential": "high"
       },
       {
         "title": "红屁屁护理误区",
+        "opportunityScore": {"competition":80,"opportunity":45,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "长辈照护",
         "potential": "medium"
       },
       {
         "title": "纸尿裤尺码怎么选",
+        "opportunityScore": {"competition":50,"opportunity":20,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "长辈照护",
         "potential": "high"
       },
       {
         "title": "夜用纸尿裤真实对比",
+        "opportunityScore": {"competition":80,"opportunity":90,"source":"PR9 数据库演示集 · 人工设定的合成评分","methodology":"为演示0–100竞争强度与市场机会坐标人工设定，未使用平台采样、真实订单或模型预测；仅用于交互演示，不构成业务排序建议。","asOf":"2026-09-22T00:00:00.000Z","mode":"simulated"},
         "persona": "内容分享者",
         "potential": "medium"
       }
@@ -128,6 +134,9 @@ values (
     ]
   },
   "live": {
+    "questions": {"source": "PR9 数据库演示集 · 人工构造的直播问题", "asOf": "2026-09-22T00:00:00.000Z", "mode": "simulated", "methodology": "参照设计稿的商品、物流、尺码、正品咨询类别人工构造；不来自真实客户或实时平台。问题以明确sessionId关联现有演示场次，时间为演示时间，不代表平台采集时间。", "items": [{"id": "demo-q-product", "sessionId": "live-001", "at": "2026-09-22T06:31:00.000Z", "text": "这个纸尿裤适合敏感肌吗？", "category": "product"}, {"id": "demo-q-shipping", "sessionId": "live-002", "at": "2026-09-22T06:28:00.000Z", "text": "什么时候发货？", "category": "shipping"}, {"id": "demo-q-size", "sessionId": "live-001", "at": "2026-09-22T06:26:00.000Z", "text": "有没有大尺码？", "category": "size"}, {"id": "demo-q-authenticity", "sessionId": "live-002", "at": "2026-09-22T06:24:00.000Z", "text": "这是正品吗？", "category": "authenticity"}]},
+    "audience": {"source": "PR9 数据库演示集 · 人工构造的直播分段", "asOf": "2026-09-22T00:00:00.000Z", "period": "2026-09-22 独立观众分段演示", "methodology": "人工构造的虚构观众分段，组内按观众标识去重；同一观众可能属于多个分段，组间不求和、不推算占比。以personaId明确关联现有人群档案，不由名称或人群库规模推断；独立于页面观看人数与直播漏斗样本。", "mode": "simulated", "segments": [{"personaId": "xiaoyu", "viewers": 1200}, {"personaId": "alin", "viewers": 800}, {"personaId": "wangyi", "viewers": 400}, {"personaId": "mia", "viewers": 200}]},
+    "funnel": {"source":"PR9 数据库演示集 · 人工构造的递进人群样本","asOf":"2026-09-22T00:00:00.000Z","period":"2026-09-22 演示场次（独立合成样本）","cohort":"固定10000个虚构观众标识，同一场次按曝光→进房→停留→商品点击→加购→支付逐级取子集。","methodology":"所有数值为人工构造的演示人数；各阶段按同一虚构观众标识去重，停留为累计观看至少30秒，支付为至少一笔已支付订单的去重观众。后续阶段均为前一阶段子集。该样本独立于页面整体快照指标，不与观看UV、订单数或来源报告比例混算；人数差不代表已证实原因。","unit":"unique_people","mode":"simulated","counts":{"exposure":10000,"entry":3600,"retained":2400,"productClick":960,"cart":480,"paid":144}},
     "roomEntryRate": 18.6,
     "cartRate": 10.2,
     "avgWatchSec": 214,
@@ -249,6 +258,7 @@ values (
     ]
   },
   "commerce": {
+    "associations": {"source": "PR9 数据库演示集 · 人工构造的同单组合", "asOf": "2026-09-22T00:00:00.000Z", "period": "2026-09-22 独立关联购买演示样本", "methodology": "人工构造的汇总演示：分母为1000个虚构订单的假设样本，未采集或保存逐单交易。口径为同一订单内同时含全部成员商品去重。日夜组合240单，成长阶段组合120单；组合可重叠，不求和。与整体GMV、客单价和真实订单无关，不推算因果、增收或客单提升。", "mode": "simulated", "sampleOrders": 1000, "rows": [{"id": "day-night", "title": "日夜场景组合", "productIds": ["daily", "night"], "jointOrders": 240, "hypothesis": "研究日常与夜间使用场景是否适合组合介绍；先核对同一使用人群、尺码和库存，不能从同单比例推断优惠或增收。"}, {"id": "growth-stage", "title": "成长阶段组合", "productIds": ["newborn", "daily"], "jointOrders": 120, "hypothesis": "研究不同成长阶段的备货需求；先核对家庭是否确有跨阶段需求，避免将不适用的尺码强行组合。"}]},
     "conversionRate": 3.24,
     "gmv": 2483221,
     "newCustomers": 18640,
@@ -258,6 +268,7 @@ values (
     "products": [
       {
         "id": "newborn",
+        "category": "日常护理",
         "name": "新生儿系列",
         "size": "NB / S",
         "price": 79,
@@ -269,6 +280,7 @@ values (
       },
       {
         "id": "daily",
+        "category": "日常护理",
         "name": "日常成长系列",
         "size": "M / L",
         "price": 89,
@@ -280,6 +292,7 @@ values (
       },
       {
         "id": "night",
+        "category": "夜间护理",
         "name": "夜间加强系列",
         "size": "XL+",
         "price": 109,

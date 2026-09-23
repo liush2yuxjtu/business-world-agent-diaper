@@ -1,4 +1,13 @@
+import { scenarioMetrics } from './scenario-model';
+import { productAssociationsSchema } from './product-associations';
+import { liveQuestionsSchema } from './live-questions';
+import { liveAudienceSchema } from './live-audience';
+import { liveFunnelSchema } from './live-funnel';
+import { topicOpportunitySchema } from './topic-opportunity';
+import { scenarioEntity } from './scenario-context';
+import { personaEvidenceSchema } from "./persona-evidence";
 import { randomUUID } from "node:crypto";
+import { BaselineUnavailableError, SourceReadOnlyError } from "./public-errors";
 import { sql } from "drizzle-orm";
 import { z } from "zod";
 import { db, isDatabaseConfigured } from "@/lib/db/client";
@@ -18,6 +27,7 @@ export const businessWorldPayloadSchema = z.object({
   }),
   personas: z.array(z.object({
     id: z.string(),
+    evidence: personaEvidenceSchema.optional(),
     name: z.string(),
     title: z.string(),
     goal: z.string(),
@@ -34,10 +44,13 @@ export const businessWorldPayloadSchema = z.object({
     weeklyOpportunities: z.number().int().min(0).nullable(),
     totalPlays: z.number().int().min(0).nullable(),
     interactions: z.number().int().min(0).nullable(),
-    topTopics: z.array(z.object({ title: z.string(), persona: z.string(), potential: z.string() })),
+    topTopics: z.array(z.object({ title: z.string(), persona: z.string(), potential: z.string(), opportunityScore: topicOpportunitySchema.optional() })),
     scripts: z.array(z.object({ name: z.string(), durationSec: z.number().int().min(0), format: z.string() })),
   }),
   live: z.object({
+    funnel: liveFunnelSchema.optional(),
+    audience: liveAudienceSchema.optional(),
+    questions: liveQuestionsSchema.optional(),
     roomEntryRate: z.number().min(0).max(100).nullable(),
     cartRate: z.number().min(0).max(100).nullable(),
     avgWatchSec: z.number().min(0).nullable(),
@@ -53,6 +66,7 @@ export const businessWorldPayloadSchema = z.object({
     })),
   }),
   commerce: z.object({
+    associations: productAssociationsSchema.optional(),
     conversionRate: z.number().min(0).max(100).nullable(),
     gmv: z.number().min(0).nullable(),
     newCustomers: z.number().int().min(0).nullable(),
@@ -60,7 +74,7 @@ export const businessWorldPayloadSchema = z.object({
     sellThroughRate: z.number().min(0).max(100).nullable(),
     aov: z.number().min(0).nullable(),
     products: z.array(z.object({
-      id: z.string(), name: z.string(), size: z.string(), price: z.number().min(0), gmv: z.number().min(0),
+      id: z.string(), name: z.string(), category: z.string().trim().min(1).max(120).nullable().optional(), size: z.string(), price: z.number().min(0), gmv: z.number().min(0),
       conversionRate: z.number().min(0).max(100), stockDays: z.number().min(0), refundRate: z.number().min(0).max(100),
       image: z.string(),
     })),
@@ -213,6 +227,7 @@ export async function saveBusinessWorldState(input: unknown): Promise<BusinessWo
         updated_at: new Date().toISOString(),
       }),
     });
+    if (response.status === 401 || response.status === 403) throw new SourceReadOnlyError();
     if (!response.ok) throw new Error(`Supabase Business World write failed: ${response.status}`);
   }
 
@@ -230,7 +245,8 @@ function provenance(state: BusinessWorldState | null) {
         asOf: state.observedAt,
         updatedAt: state.updatedAt,
         storage: isDatabaseConfigured() && state.sourceType !== "system-record" ? "Primary Postgres" : "Supabase Postgres",
-        writable: true,
+        // The public Supabase fallback has read access only; do not advertise a save capability.
+        writable: isDatabaseConfigured(),
       }
     : {
         sourceMode: "unavailable" as const,
@@ -282,19 +298,20 @@ export async function runScenarioExperiment(input: unknown) {
     prompt: z.string().trim().min(3).max(1000).default("Business World scenario"),
     lever: leverSchema,
     changePercent: z.number().min(-80).max(200),
+    entityId: z.string().max(500).optional(),
   }).parse(input);
   const state = await getBusinessWorldState();
-  const baselineRoi = state?.payload.ads.roi ?? null;
+  if (!state) throw new BaselineUnavailableError();
+  const entity = parsed.entityId ? scenarioEntity(state.payload, parsed.entityId) : null;
+  if (parsed.entityId) z.string().refine(() => entity !== null).parse(parsed.entityId);
+  const baselineRoi = state.payload.ads.roi;
   const baselineConversion = state?.payload.commerce.conversionRate ?? null;
-  const multiplier = 1 + parsed.changePercent / 100;
+  const metrics = scenarioMetrics(baselineRoi, baselineConversion, parsed.changePercent)!;
   const result = {
     modeled: true,
+    context: { entity, baseline: { stateId: state.id, datasetVersion: state.payload.meta.datasetVersion, sourceLabel: state.sourceLabel, observedAt: state.observedAt, dataMode: state.payload.meta.dataMode } },
     assumption: `${parsed.lever} changes by ${parsed.changePercent}%`,
-    baselineRoi,
-    modeledRoi: baselineRoi == null ? null : Number((baselineRoi * multiplier).toFixed(2)),
-    baselineConversionRate: baselineConversion,
-    modeledConversionRate:
-      baselineConversion == null ? null : Number((baselineConversion * multiplier).toFixed(2)),
+    ...metrics,
     warning: "Scenario output is a transparent mathematical model over the persisted baseline, not an observed market outcome or AI prediction.",
   };
   const id = randomUUID();
@@ -332,11 +349,11 @@ export async function runScenarioExperiment(input: unknown) {
   return { id, persisted: true, persistedAt: persisted.createdAt, provenance: provenance(state), result };
 }
 
-export async function getScenarioExperiment(id: string) {
+export async function getScenarioExperiment(id: string, includeBaseline = false) {
   if (isDatabaseConfigured()) {
     await ensureSchema();
     const result = await db.execute(sql`
-      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      select id, prompt, lever, change_percent, result, baseline, source_state_id, created_at
       from business_world_scenario_run
       where id = ${id}
       limit 1
@@ -349,13 +366,14 @@ export async function getScenarioExperiment(id: string) {
       lever: String(row.lever),
       changePercent: Number(row.change_percent),
       result: row.result,
+      ...(includeBaseline ? { baseline: businessWorldPayloadSchema.parse(row.baseline) } : {}),
       sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
       createdAt: new Date(String(row.created_at)).toISOString(),
     };
   }
 
   const response = await fetch(
-    `${SUPABASE_SCENARIO_ENDPOINT}?id=eq.${encodeURIComponent(id)}&select=id,prompt,lever,change_percent,result,source_state_id,created_at`,
+    `${SUPABASE_SCENARIO_ENDPOINT}?id=eq.${encodeURIComponent(id)}&select=id,prompt,lever,change_percent,result,baseline,source_state_id,created_at`,
     {
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,
@@ -374,19 +392,23 @@ export async function getScenarioExperiment(id: string) {
     lever: String(row.lever),
     changePercent: Number(row.change_percent),
     result: row.result,
+    ...(includeBaseline ? { baseline: businessWorldPayloadSchema.parse(row.baseline) } : {}),
     sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
     createdAt: new Date(String(row.created_at)).toISOString(),
   };
 }
 
-export async function listScenarioExperiments(limit = 8) {
-  const safeLimit = Math.max(1, Math.min(20, Math.trunc(limit)));
+export async function listScenarioExperiments(limit = 8, query = '', before?: { createdAt: string; id: string }) {
+  const safeLimit = Math.max(1, Math.min(21, Math.trunc(limit)));
+  const pattern = `%${query.replace(/[\\%_]/g, '\\$&')}%`;
   if (isDatabaseConfigured()) {
     await ensureSchema();
     const result = await db.execute(sql`
-      select id, prompt, lever, change_percent, result, source_state_id, created_at
+      select id, prompt, lever, change_percent, result, source_state_id, created_at, created_at::text as cursor_created_at
       from business_world_scenario_run
-      order by created_at desc
+      where (prompt ilike ${pattern} or lever ilike ${pattern} or id::text ilike ${pattern})
+      ${before ? sql`and (created_at < ${before.createdAt}::timestamptz or (created_at = ${before.createdAt}::timestamptz and id < ${before.id}))` : sql``}
+      order by created_at desc, id desc
       limit ${safeLimit}
     `);
     return result.rows.map((row) => ({
@@ -397,11 +419,15 @@ export async function listScenarioExperiments(limit = 8) {
       result: row.result,
       sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
       createdAt: new Date(String(row.created_at)).toISOString(),
+      cursorCreatedAt: String(row.cursor_created_at ?? row.created_at).replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
     }));
   }
 
+  const literal = `"${pattern.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+  const filter = query ? `&or=${encodeURIComponent(`(prompt.ilike.${literal},lever.ilike.${literal}${/^[a-f0-9-]{36}$/i.test(query) ? `,id.eq.${query}` : ''})`)}` : '';
+  const cursorFilter = before ? `&and=${encodeURIComponent(`(or(created_at.lt.${before.createdAt},and(created_at.eq.${before.createdAt},id.lt.${before.id})))`)}` : '';
   const response = await fetch(
-    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc&limit=${safeLimit}`,
+    `${SUPABASE_SCENARIO_ENDPOINT}?select=id,prompt,lever,change_percent,result,source_state_id,created_at&order=created_at.desc,id.desc&limit=${safeLimit}${filter}${cursorFilter}`,
     {
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,
@@ -420,5 +446,6 @@ export async function listScenarioExperiments(limit = 8) {
     result: row.result,
     sourceStateId: row.source_state_id == null ? null : String(row.source_state_id),
     createdAt: new Date(String(row.created_at)).toISOString(),
+      cursorCreatedAt: String(row.cursor_created_at ?? row.created_at).replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
   }));
 }

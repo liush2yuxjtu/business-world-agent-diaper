@@ -3,7 +3,8 @@
 import { useEveAgent } from "eve/react";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { chatErrorMessage } from '@/lib/business-world/chat-errors';
 import { AgentMessage } from "@/components/chat/message";
 import { ChatComposer } from "@/components/chat/composer";
 
@@ -11,20 +12,25 @@ export function BusinessWorldEveChat() {
   const agent = useEveAgent({});
   const [draft, setDraft] = useState("");
   const [clientError, setClientError] = useState<string | null>(null);
+  const [lastSent, setLastSent] = useState('');
   const isBusy = agent.status === "submitted" || agent.status === "streaming";
+  useEffect(() => {
+    if (agent.error && !isBusy) setDraft(current => current || lastSent);
+  }, [agent.error, isBusy, lastSent]);
 
   const send = async (text: string) => {
     const message = text.trim();
     if (!message || isBusy) return;
 
     setClientError(null);
+    setLastSent(message);
     setDraft("");
 
     try {
       await agent.send(message);
     } catch (error) {
       setDraft(message);
-      setClientError(error instanceof Error ? error.message : "Failed to send message.");
+      setClientError(chatErrorMessage(error));
     }
   };
 
@@ -41,7 +47,7 @@ export function BusinessWorldEveChat() {
           </Link>
           <div className="text-right">
             <div className="text-sm font-semibold">Business World Agent</div>
-            <div className="text-[11px] text-[#7b879a]">Vercel Eve · evidence first</div>
+            <div className="text-[11px] text-[#7b879a]">eve · 先核对证据，再形成建议</div>
           </div>
         </header>
 
@@ -49,14 +55,14 @@ export function BusinessWorldEveChat() {
           <section className="flex flex-1 flex-col items-center justify-center px-5 py-12">
             <div className="w-full max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4f6fa8]">
-                Ask the operating world
+                询问经营世界
               </p>
               <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-                Read the world before changing it.
+                先理解现状，再决定行动。
               </h1>
               <p className="mt-3 max-w-xl text-sm leading-6 text-[#68758b]">
-                Ask about personas, content, live, ads, commerce, or run a direction-only scenario.
-                The Agent separates persisted evidence, simulated data, and inference.
+                可以询问人群、内容、直播、投放与商品，或比较情景假设。
+                回答应区分保存的证据、合成数据和推断；外部操作需要明确确认。
               </p>
               <div className="mt-8">
                 <ChatComposer
@@ -105,8 +111,8 @@ export function BusinessWorldEveChat() {
         )}
 
         {clientError || agent.error ? (
-          <div className="border-t border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 sm:px-6">
-            {clientError ?? agent.error?.message}
+          <div role="alert" className="border-t border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 sm:px-6">
+            {clientError ?? chatErrorMessage(agent.error)}
           </div>
         ) : null}
       </div>

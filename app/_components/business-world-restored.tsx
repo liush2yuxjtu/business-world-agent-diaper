@@ -1,6 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import type { PersonaEvidence } from '@/lib/business-world/persona-evidence';
+import { publicErrorMessage, publicMessages } from '@/lib/business-world/public-errors';
+
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { scenarioMetrics } from '@/lib/business-world/scenario-model';
+import { scenarioEntity, worldPresets } from '@/lib/business-world/scenario-context';
+import { ScenarioHistory } from './scenario-history';
+import { readRun, saveScenario, type ScenarioRun } from '@/lib/business-world/scenario-client';
 import Image from 'next/image';
 import {
   BarChart3, Bot, ChevronRight, Heart, Megaphone, Package, Play, Radio,
@@ -10,23 +17,28 @@ import {
 export type BusinessPayload = {
   meta: { dataMode: 'simulated' | 'observed'; datasetVersion: string; designSource: string; warning: string };
   personas: Array<{
+    evidence?: PersonaEvidence;
     id: string; name: string; title: string; goal: string; pain: string; content: string; trigger: string;
     population: number | null; conversionRate: number | null; repeatRate: number | null; gmvShare: number | null;
   }>;
   content: {
     engagementRate: number | null; weeklyOpportunities: number | null; totalPlays: number | null; interactions: number | null;
-    topTopics: Array<{ title: string; persona: string; potential: string }>;
+    topTopics: Array<{ title: string; persona: string; potential: string; opportunityScore?: import('@/lib/business-world/topic-opportunity').TopicOpportunity }>;
     scripts: Array<{ name: string; durationSec: number; format: string }>;
   };
   live: {
+    funnel?: import('@/lib/business-world/live-funnel').LiveFunnel;
+    audience?: import('@/lib/business-world/live-audience').LiveAudience;
+    questions?: import('zod').infer<typeof import('@/lib/business-world/live-questions').liveQuestionsSchema>;
     roomEntryRate: number | null; cartRate: number | null; avgWatchSec: number | null; payConversionRate: number | null;
     exposureUv: number | null; watchUv: number | null; peakOnline: number | null; paidOrders: number | null; gmv: number | null;
     sessions: Array<{ id: string; title: string; durationMin: number; watchUv: number; cartRate: number; paidOrders: number; gmv: number }>;
   };
   commerce: {
+    associations?: import('@/lib/business-world/product-associations').ProductAssociations;
     conversionRate: number | null; gmv: number | null; newCustomers: number | null; refundRate: number | null;
     sellThroughRate: number | null; aov: number | null;
-    products: Array<{ id: string; name: string; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;
+    products: Array<{ id: string; name: string; category?: string | null; size: string; price: number; gmv: number; conversionRate: number; stockDays: number; refundRate: number; image: string }>;
   };
   ads: {
     budget: number | null; spend: number | null; roi: number | null; cpa: number | null; ctr: number | null; newCustomerCost: number | null;
@@ -206,35 +218,88 @@ export function ProductRestored({ data }: { data: BusinessPayload | null }) {
   </>;
 }
 
-export function ExperimentRestored({ snapshot }: { snapshot: BusinessSnapshot | null }) {
-  const [prompt,setPrompt]=useState('评估当前投放效率提升 10% 的方向性影响');
+export function ExperimentRestored({ snapshot, worldMode = false, selectedEntity, onSelectedEntity }: { snapshot: BusinessSnapshot | null; worldMode?: boolean; selectedEntity?: string; onSelectedEntity?: (id: string) => void }) {
+  const [prompt,setPrompt]=useState(worldMode ? '评估当前经营基线' : '评估当前投放效率提升 10% 的方向性影响');
   const [lever,setLever]=useState('ad_efficiency');
-  const [changePercent,setChangePercent]=useState('10');
-  const [result,setResult]=useState<{
-    id: string;
-    persisted: boolean;
-    persistedAt: string;
-    result: {
-      assumption: string;
-      baselineRoi: number | null;
-      modeledRoi: number | null;
-      baselineConversionRate: number | null;
-      modeledConversionRate: number | null;
-    };
-  }|null>(null);
+  const [changePercent,setChangePercent]=useState(worldMode ? '0' : '10');
+  const [entityId,setEntityId]=useState('');
+  const [preset,setPreset]=useState('baseline');
+  const [result,setResult]=useState<ScenarioRun|null>(null);
   const [status,setStatus]=useState('');
+  const [historyVersion, setHistoryVersion] = useState(0);
+  const [historyReading, setHistoryReading] = useState(false);
+  const [validationAttempted, setValidationAttempted] = useState(false);
+  const validationId = useId();
+  const promptRef = useRef<HTMLTextAreaElement>(null);
+  const changeRef = useRef<HTMLInputElement>(null);
+  const promptInvalid = prompt.trim().length < 3 || prompt.trim().length > 1000;
+  const changeInvalid = !changePercent.trim() || !Number.isFinite(Number(changePercent)) || Number(changePercent) < -80 || Number(changePercent) > 200;
+  const selectSaved = useCallback((saved: ScenarioRun) => {
+    setResult(saved); setValidationAttempted(false);
+    setEntityId(saved.result.context?.entity?.id ?? "");
+    onSelectedEntity?.(saved.result.context?.entity?.id ?? "");
+    setPreset(worldPresets.find(p=>p.change===saved.changePercent)?.id ?? "custom");
+    setPrompt(saved.prompt); setLever(saved.lever); setChangePercent(String(saved.changePercent));
+    setStatus(`已读取保存的情景 · ${new Date(saved.createdAt).toLocaleString('zh-CN')}`);
+    const url = new URL(window.location.href);
+    url.searchParams.set('run', saved.id);
+    if(saved.result.context?.entity) url.searchParams.set('entity',saved.result.context.entity.id); else url.searchParams.delete('entity');
+    window.history.replaceState(null, '', url);
+  }, [onSelectedEntity]);
+  useEffect(() => {
+    const id = new URL(window.location.href).searchParams.get('run');
+    if (!id) return;
+    let cancelled = false;
+    setStatus('正在读取保存的情景…'); setHistoryReading(true);
+    readRun(id).then(saved => { if (!cancelled) selectSaved(saved); })
+      .catch(() => { if (!cancelled) setStatus('链接中的情景无法读取，请从历史记录重新选择。'); })
+      .finally(() => { if (!cancelled) setHistoryReading(false); });
+    return () => { cancelled = true; };
+  }, [selectSaved]);
+  useEffect(() => {
+    const id = selectedEntity ?? new URL(window.location.href).searchParams.get('entity') ?? '';
+    if (!worldMode && new URL(window.location.href).searchParams.has('run')) return;
+    if (result && (result.result.context?.entity?.id ?? '') === id) return;
+    setEntityId(id);
+    const entity = scenarioEntity(snapshot?.data ?? null,id);
+    if(entity){setLever(entity.lever);setPrompt(`评估「${entity.label}」相关经营假设的方向性影响`);}
+    if (!worldMode && entity && new URL(window.location.href).searchParams.get('draft') === 'campaign-review') {
+      setChangePercent('0');
+      setStatus('来自投放建议核查的实验草稿 · 尚未运行或保存，请编辑假设与变化幅度。');
+    }
+  }, [selectedEntity, snapshot, worldMode]);
+  const currentEntity = scenarioEntity(snapshot?.data ?? null,entityId);
+  const invalidEntity = !!entityId && !currentEntity;
+  const busy = historyReading || status === '运行中…';
+  function choosePreset(id: string) {
+    const next=worldPresets.find(p=>p.id===id); if(!next)return;
+    setValidationAttempted(false);setPreset(id);setChangePercent(String(next.change));setPrompt(`评估${currentEntity ? `「${currentEntity.label}」相关` : '整体'}经营的${next.label}情景（变量变化 ${next.change}%）`);setResult(null);setStatus('');
+    const url=new URL(window.location.href);url.searchParams.delete('run');window.history.replaceState(null,'',url);
+  }
   async function run(){
+    const change = Number(changePercent);
+    setValidationAttempted(true);
+    if (promptInvalid || changeInvalid) {
+      setResult(null); setStatus(publicMessages.INVALID_INPUT);
+      if (promptInvalid) promptRef.current?.focus(); else changeRef.current?.focus();
+      return;
+    }
+    if (!snapshot?.data) { setResult(null); setStatus(publicMessages.BASELINE_UNAVAILABLE); return; }
     setStatus('运行中…'); setResult(null);
     try{
-      const response=await fetch('/api/business-world/scenario',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,lever,changePercent:Number(changePercent)})});
-      const body=await response.json();
-      if(!response.ok) throw new Error(body.error||'模拟失败');
-      setResult(body); setStatus(body.persisted ? `数据库已保存并读回验证 · ${new Date(body.persistedAt).toLocaleString('zh-CN')}` : '模拟完成');
-    }catch(error){setStatus(error instanceof Error?error.message:'模拟失败')}
+      const saved = await saveScenario({ prompt, lever, changePercent: change, ...(entityId ? {entityId} : {}) });
+      selectSaved(saved);
+      setStatus(`情景已保存 · ${new Date(saved.createdAt).toLocaleString('zh-CN')}`);
+      setHistoryVersion(n => n + 1);
+    }catch(error){setStatus(error instanceof Error && Object.values(publicMessages).some(message => message === error.message) ? error.message : publicMessages.SCENARIO_FAILED)}
   }
-  return <div className="simulator restored-simulator"><section className="panel experiment-panel"><div className="section-title"><span>模拟实验</span><small>推演结果 · 非实际发生</small></div><p>以当前经营快照为基线进行情景推演；缺少基础指标时不会生成结果。</p><textarea aria-label="实验假设" value={prompt} onChange={e=>setPrompt(e.target.value)}/><div className="experiment-controls"><select aria-label="实验变量" value={lever} onChange={e=>setLever(e.target.value)}><option value="ad_efficiency">投放效率</option><option value="content_engagement">内容互动</option><option value="live_watch_time">直播观看</option><option value="checkout_conversion">交易转化</option><option value="repeat_purchase">复购</option></select><input aria-label="变化百分比" type="number" value={changePercent} onChange={e=>setChangePercent(e.target.value)}/><button className="primary" onClick={run} disabled={!snapshot?.data || status === '运行中…'}><Play size={16}/>运行并保存</button></div><div className="model-warning">模拟结果用于方案比较，不代表市场实际已经发生。</div></section>
-    <section className="panel scenario-comparison"><div className="section-title"><span>基线与情景比较</span></div><p>按单一变量计算；不推断时间趋势或置信区间。</p><div className="scenario-bars">{[{label:'基线 ROI',value:result?.result.baselineRoi ?? snapshot?.data?.ads.roi},{label:'情景 ROI',value:result?.result.modeledRoi}].map((item,i)=><div key={item.label}><b>{fmt(item.value)}</b><div style={{height:`${Math.max(0, (item.value ?? 0) / Math.max(1,result?.result.baselineRoi ?? snapshot?.data?.ads.roi ?? 0,result?.result.modeledRoi ?? 0) * 180)}px`}} className={i === 0 ? 'baseline-bar' : 'modeled-bar'}/><span>{item.label}</span></div>)}</div>{!result && <p className="caption">运行实验后显示情景值；当前只展示基线。</p>}</section>
-    <section className="panel sim-result restored-model-result"><div className="pulse">SIM</div><h3>方向性结果</h3>{status&&<p role="status" aria-live="polite">{status}</p>}{result?<><div className="scenario-result-grid"><div><span>基线 ROI</span><b>{fmt(result.result.baselineRoi)}</b></div><div><span>推演 ROI</span><b>{fmt(result.result.modeledRoi)}</b></div><div><span>基线转化率</span><b>{fmt(result.result.baselineConversionRate,'%')}</b></div><div><span>推演转化率</span><b>{fmt(result.result.modeledConversionRate,'%')}</b></div></div><p className="confidence">假设：{result.result.assumption}</p><p className="caption">数据库记录 ID：{result.id}</p></>:<p>运行后在这里展示推演结果；缺少基础指标时对应结果保持为空。</p>}</section></div>;
+  const preview = worldMode && !result && !busy && !changeInvalid && !invalidEntity && snapshot?.data ? scenarioMetrics(snapshot.data.ads.roi, snapshot.data.commerce.conversionRate, Number(changePercent)) : null;
+  const shownModeledRoi = result?.result.modeledRoi ?? preview?.modeledRoi;
+  const shownBaselineRoi = result ? result.result.baselineRoi : snapshot?.data?.ads.roi;
+  const leverLabels: Record<string, string> = { ad_efficiency: '投放效率', content_engagement: '内容互动', live_watch_time: '直播观看', checkout_conversion: '交易转化', repeat_purchase: '复购' };
+  return <>{worldMode && <section className="panel world-scenario-controls"><h2>World 情景</h2><div className="section-tabs" role="group" aria-label="World 情景选择">{worldPresets.map(p=><button key={p.id} aria-pressed={preset===p.id} disabled={busy} onClick={()=>choosePreset(p.id)}>{p.label}</button>)}</div><p>基线保持原值；增长预设＋10%，下行预设−10%。切换后即时显示未保存预览；点击运行后保存推演结果，图中原有节点不随情景变化。</p></section>}<div className="simulator restored-simulator"><section className="panel experiment-panel"><div className="section-title"><span>模拟实验</span><small>推演结果 · 非实际发生</small></div><p>以当前经营快照为基线进行情景推演；缺少基础指标时不会生成结果。</p><p>实验对象：{currentEntity?.label ?? (invalidEntity?'对象已不在当前基线中，请重新选择。':'整体经营')}</p>{entityId&&<button disabled={busy} onClick={()=>setEntityId('')}>清除对象</button>}<p className="caption">对象用于保留研究上下文；当前模型计算整体 ROI 与转化率，不提供实体级归因。</p><label className="experiment-field">实验假设<textarea ref={promptRef} disabled={busy} aria-label="实验假设" aria-invalid={validationAttempted && promptInvalid} aria-describedby={`${validationId}-prompt-help`} value={prompt} onChange={e=>setPrompt(e.target.value)}/></label><p id={`${validationId}-prompt-help`} className="caption" role={validationAttempted && promptInvalid ? "alert" : undefined}>{validationAttempted && promptInvalid ? "请填写3–1000个字的实验假设，不能仅输入空白。" : "填写3–1000个字，描述要比较的经营假设。"}</p><div className="experiment-controls"><select disabled={busy} aria-label="实验变量" value={lever} onChange={e=>setLever(e.target.value)}><option value="ad_efficiency">投放效率</option><option value="content_engagement">内容互动</option><option value="live_watch_time">直播观看</option><option value="checkout_conversion">交易转化</option><option value="repeat_purchase">复购</option></select><label className="experiment-field">变化百分比<input ref={changeRef} disabled={busy} aria-label="变化百分比" aria-invalid={validationAttempted && changeInvalid} aria-describedby={`${validationId}-change-help`} type="number" min={-80} max={200} step="any" value={changePercent} onChange={e=>{setChangePercent(e.target.value);setPreset('custom');}}/></label><button className="primary" onClick={run} disabled={busy || !snapshot?.data || invalidEntity}><Play size={16}/>运行并保存</button></div><p id={`${validationId}-change-help`} className="caption" role={validationAttempted && changeInvalid ? "alert" : undefined}>{validationAttempted && changeInvalid ? "请输入-80%到200%之间的有效变化百分比，不能留空。" : "允许-80%到200%，0%表示保持基线；不是预测收益率。"}</p>{!snapshot?.data && <p role="status">尚无经营基线，暂不能运行实验。请先连接或恢复数据源。</p>}<div className="model-warning">模拟结果用于方案比较，不代表市场实际已经发生。</div></section>
+    <section className="panel scenario-comparison"><div className="section-title"><span>基线与情景比较</span></div><p>按单一变量计算；不推断时间趋势或置信区间。</p><div className="scenario-bars">{[{label:'基线 ROI',value:shownBaselineRoi},{label:'情景 ROI',value:shownModeledRoi}].map((item,i)=><div key={item.label}><b>{fmt(item.value)}</b><div style={{height:`${Math.max(0, (item.value ?? 0) / Math.max(1,shownBaselineRoi ?? 0,shownModeledRoi ?? 0) * 180)}px`}} className={i === 0 ? 'baseline-bar' : 'modeled-bar'}/><span>{item.label}</span></div>)}</div>{!result && <p className="caption">{preview ? "当前为未保存预览，运行后才生成可回读的情景记录。" : "运行实验后显示情景值；当前只展示基线。"}</p>}</section>
+    <section className="panel sim-result restored-model-result"><div className="pulse">SIM</div><h3>方向性结果</h3>{status&&<p role="status" aria-live="polite">{status}</p>}{result?<><div className="scenario-result-grid"><div><span>基线 ROI</span><b>{fmt(result.result.baselineRoi)}</b></div><div><span>推演 ROI</span><b>{fmt(result.result.modeledRoi)}</b></div><div><span>基线转化率</span><b>{fmt(result.result.baselineConversionRate,'%')}</b></div><div><span>推演转化率</span><b>{fmt(result.result.modeledConversionRate,'%')}</b></div></div><p className="confidence">假设：{leverLabels[result.lever] ?? '所选变量'}变化 {result.changePercent}%</p><p className="caption">情景编号：{result.id}</p>{result.result.context ? <dl className="detail-list"><div><dt>保存的对象</dt><dd>{result.result.context.entity?.label ?? '整体经营'}</dd></div><div><dt>基线来源</dt><dd>{result.result.context.baseline.sourceLabel}</dd></div><div><dt>基线编号</dt><dd>{result.result.context.baseline.stateId}</dd></div><div><dt>基线版本</dt><dd>{result.result.context.baseline.datasetVersion}</dd></div><div><dt>基线观测时间</dt><dd>{result.result.context.baseline.observedAt}</dd></div><div><dt>数据模式</dt><dd>{result.result.context.baseline.dataMode==='simulated'?'合成演示 · 非真实观测':'经营观测'}</dd></div></dl> : <p>旧记录未保存对象与来源元数据；不使用当前快照补填历史。</p>}<a className="primary" href={`/?screen=report&scenario=${result.id}`}>发送到报告</a>{!worldMode&&<a className="text-link" href={`/?screen=world&run=${encodeURIComponent(result.id)}${result.result.context?.entity ? `&entity=${encodeURIComponent(result.result.context.entity.id)}` : ""}`}>在 World Builder 中查看</a>}</>:preview?<div role="status" aria-live="polite"><p>未保存预览 · 变化 {Number(changePercent)}% · 非实际发生</p><div className="scenario-result-grid"><div><span>基线 ROI</span><b>{fmt(preview.baselineRoi)}</b></div><div><span>推演 ROI</span><b>{fmt(preview.modeledRoi)}</b></div><div><span>基线转化率</span><b>{fmt(preview.baselineConversionRate,'%')}</b></div><div><span>推演转化率</span><b>{fmt(preview.modeledConversionRate,'%')}</b></div></div><p>预览基于当前快照：{snapshot?.provenance.sourceLabel} · {snapshot?.provenance.asOf ?? '未提供观测时间'}。保存时服务端重新读取基线，若来源已更新，以保存结果为准。</p><p>尚未生成情景编号，不能发送到报告。</p></div>:<p>运行后在这里展示推演结果；缺少基础指标时对应结果保持为空。</p>}</section></div><ScenarioHistory onReading={setHistoryReading} disabled={status === '运行中…'} activeId={result?.id} refreshKey={historyVersion} onSelect={selectSaved}/></>;
 }
 
 export function ReportRestored({ snapshot }: { snapshot: BusinessSnapshot | null }) {

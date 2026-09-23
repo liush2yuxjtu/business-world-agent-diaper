@@ -47,7 +47,9 @@
     "eve": "^0.31.3",
     "lucide-react": "1.16.0",
     "next": "16.2.6",
+    "pdfkit": "^0.20.2",
     "posthog-js": "^1.433.7",
+    "pptxgenjs": "^4.0.1",
     "radix-ui": "1.4.3",
     "react": "19.2.6",
     "react-dom": "19.2.6",
@@ -60,11 +62,13 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
+    "@types/pdfkit": "^0.17.6",
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
     "@typescript/native-preview": "7.0.0-dev.20260523.1",
     "drizzle-kit": "0.31.9",
     "microsandbox": "^0.5.7",
+    "tsx": "^4.23.15",
     "typescript": "5.9.3"
   }
 }

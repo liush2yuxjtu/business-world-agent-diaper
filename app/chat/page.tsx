@@ -23,12 +23,8 @@ async function ResolvedChatPage() {
   if (!setupStatus.appReady) {
     return (
       <ChatGate
-        title="Eve chat is not configured"
-        description={
-          setupStatus.missing.length
-            ? `Missing: ${setupStatus.missing.join(", ")}`
-            : "Finish the Eve chat setup before sending messages."
-        }
+        title="对话服务尚未准备好"
+        description="项目管理员需要完成对话服务配置。经营工作区仍可继续使用。"
       />
     );
   }
@@ -39,8 +35,8 @@ async function ResolvedChatPage() {
     if (setupStatus.authMode === "password") {
       return (
         <ChatGate
-          title="Enter the Business World chat password"
-          description="This uses the existing Eve password session and does not expose the configured password."
+          title="输入经营工作区对话密码"
+          description="使用现有对话密码登录。请只在此页面输入。"
         >
           <PasswordSignInForm callbackPath="/chat" />
         </ChatGate>
@@ -50,11 +46,11 @@ async function ResolvedChatPage() {
     if (setupStatus.authMode === "vercel") {
       return (
         <ChatGate
-          title="Sign in to Business World Agent"
-          description="Use the existing Sign in with Vercel configuration for this project."
+          title="登录经营工作区"
+          description="请使用项目已有的登录方式继续。"
         >
           <SignInButton callbackPath="/chat" className="h-11 w-full">
-            Continue with Vercel
+            使用 Vercel 登录
           </SignInButton>
         </ChatGate>
       );
@@ -62,8 +58,8 @@ async function ResolvedChatPage() {
 
     return (
       <ChatGate
-        title="Authentication unavailable"
-        description="The project is configured, but no supported browser identity is available."
+        title="暂时无法确认登录状态"
+        description="当前浏览器没有可用的登录身份，请重新打开登录入口。"
       />
     );
   }
@@ -84,13 +80,13 @@ function ChatGate({
     <main className="grid min-h-dvh place-items-center bg-[#f6f8fb] px-5 text-[#13213a]">
       <section className="w-full max-w-sm rounded-2xl border border-[#e3e8f0] bg-white p-6 shadow-sm">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4f6fa8]">
-          Business World · Eve
+          Business World · eve
         </p>
         <h1 className="mt-3 text-xl font-semibold">{title}</h1>
         <p className="mt-2 text-sm leading-6 text-[#68758b]">{description}</p>
         {children ? <div className="mt-5">{children}</div> : null}
         <a className="mt-5 inline-block text-sm font-medium text-[#315da8] hover:underline" href="/">
-          Back to Business World
+          返回经营工作区
         </a>
       </section>
     </main>
@@ -100,7 +96,7 @@ function ChatGate({
 function ChatLoading() {
   return (
     <main className="grid min-h-dvh place-items-center bg-[#f6f8fb] text-sm text-[#68758b]">
-      Loading Business World Agent…
+      正在加载经营对话…
     </main>
   );
 }
